@@ -2,20 +2,172 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* @font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
 }
-
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+} */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Cairo", sans-serif;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.skiptranslate{
+  display: none;
+  position : absolute ; 
+}
+/* #google_translate display: none !_element {
+  display: none !important;
+} */
+
+.scroll-hidden::-webkit-scrollbar {
+ display: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px; 
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1f2300; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #afb3b7;
+  border: 3px outset  transparent ;
+
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.quill-editor-container .ql-container {
+  border: none !important; /* Removes border */
+  background-color: transparent;
+}
+
+.ql-toolbar.ql-snow {
+  border: none !important; 
+}
+
+.ql-container.ql-snow {
+  border: none !important; 
+  padding: 10px; /* Adjust padding for a clean look */
+}
+
+.ql-container ::placeholder {
+  color: #555;
+}
+
+.ql-blank::before {
+  content: attr(data-placeholder); /* Ensure placeholder text shows */
+  color: gray; /* Change this to your desired color */
+  font-style: italic;
+}
+
+.tailwind-form{
+  @apply p-16 rounded-xl bg-gray-200 dark:bg-gray-700/40 w-[780px] flex flex-col items-center gap-8
+}
+
+.tailwind-form input{
+  @apply dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6 border-Primary
+}
+
+.tailwind-form select{
+  @apply dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6 border-Primary
+}
+
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quill-editor-container .ql-toolbar {
+  background-color: #11111100;
+  border: none;
+}
+.quill-editor-container{
+border: none;
+}
+
+.quill-editor-container .ql-container {
+  background-color: #11111100;
+  color: white;
+  border: none;
+}
+
+.quill-editor-container .ql-editor {
+  min-height: 300px;
+  background-color: #11111100;
+  color: white;
+  border: none;
+
+}
+
+.quill-editor-container .ql-toolbar .ql-picker {
+  display: none; /* Removes font size dropdown */
+}
+
+.quill-editor-container img{
+  padding-top: 40px;
+  padding-bottom : 40px;
+  width: 350px;
+
+}
+
+
+
+
