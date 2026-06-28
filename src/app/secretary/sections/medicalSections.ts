@@ -1,7 +1,7 @@
 import type { IconType } from 'react-icons'
 import { FaHeartbeat, FaTeeth, FaBaby, FaBrain, FaLungs } from 'react-icons/fa'
 
-export type MedicalSection = {
+type MedicalSection = {
   name: string
   icon: IconType
   description: string
