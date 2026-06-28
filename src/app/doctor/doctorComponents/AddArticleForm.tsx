@@ -1,38 +1,42 @@
-'use client';
-import axios from 'axios';
-import React, { useState } from 'react';
-import QuillEditor from '../../../Components/QuillEditor';
-import axiosInstance from '../../AuthAxios';
-import { useAlert } from '../../../Components/Alert';
+"use client";
+import React, { useState } from "react";
+import QuillEditor from "../../../Components/QuillEditor";
+import axiosInstance from "../../AuthAxios";
+import { useAlert } from "../../../Components/Alert";
 
 export default function AddArticleForm() {
   const [formData, setFormData] = useState({
-    title: '',
-    content: '',
+    title: "",
+    content: "",
   });
 
-  const {showAlert} = useAlert()
+  const { showAlert } = useAlert();
 
-  const extractPlainTextWithImages = (html) => {
+  const extractPlainTextWithImages = (html: string) => {
+    if (typeof document === "undefined") return "";
+
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
 
     let formattedText = "";
 
-    tempDiv.childNodes.forEach(node => {
-      node.childNodes.forEach(node =>{
-        if (node.nodeName === "IMG") { 
-            formattedText += `\n[${node.getAttribute("src")}]\n`;
-        } else if (node.nodeType === Node.TEXT_NODE || node.nodeName === "P") {
-            formattedText += `${node.textContent.trim()}\n`;
+    tempDiv.childNodes.forEach((node) => {
+      node.childNodes.forEach((child) => {
+        if (child.nodeName === "IMG") {
+          formattedText += `\n[${(child as HTMLImageElement).getAttribute("src")}]\n`;
+        } else if (
+          child.nodeType === Node.TEXT_NODE ||
+          child.nodeName === "P"
+        ) {
+          formattedText += `${child.textContent?.trim() ?? ""}\n`;
         }
-      })
+      });
     });
 
-    return formattedText.replace(/\n+/g, "\n").trim(); // Clean extra new lines
+    return formattedText.replace(/\n+/g, "\n").trim();
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -43,30 +47,30 @@ export default function AddArticleForm() {
     setFormData((prev) => ({ ...prev, content: newContent }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     // Convert Quill content to formatted text with image URLs
     const processedContent = extractPlainTextWithImages(formData.content);
-    
-    console.log('Formatted Article:', {
+
+    console.log("Formatted Article:", {
       title: formData.title,
       body: processedContent,
     });
-   
-  try{
-    const response = await axiosInstance.post('api/postArticle',
-      {title : formData.title , body : processedContent},
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-    return `${process.env.NEXT_PUBLIC_API_URL}${response.data.data}`;
-  } catch (error) {
-    showAlert('error', 'filed to upload article')
-    return null;
-  }
 
+    try {
+      const response = await axiosInstance.post(
+        "api/postArticle",
+        { title: formData.title, body: processedContent },
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
+      return `${process.env.NEXT_PUBLIC_API_URL}${response.data.data}`;
+    } catch (error: any) {
+      showAlert("error", "filed to upload article");
+      return null;
+    }
 
     // TODO: Send processedContent to backend
   };
@@ -97,9 +101,9 @@ export default function AddArticleForm() {
       {/* Bottom Controls */}
       <div className="sticky bottom-0 z-10 p-4 border-t border-gray-200 dark:border-gray-800 bg-black flex justify-between gap-2">
         <button
-          type='submit'
+          type="submit"
           // onClick={()=>console.log(extractPlainTextWithImages(formData.content))}
-            className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300"
+          className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300"
         >
           Publish Article
         </button>

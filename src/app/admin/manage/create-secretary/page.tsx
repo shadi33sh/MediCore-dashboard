@@ -18,14 +18,14 @@ export default function page() {
   const [success, setSuccess] = useState('');
   const {showAlert} = useAlert()
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : any) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -33,7 +33,7 @@ export default function page() {
     try {
       const response = await axiosInstance.post('api/admin/secretary', formData);
       showAlert('success' , 'Secretary account created successfully.')
-    } catch (err) {showAlert('error' , err.response?.data?.msg)}
+    } catch (err : any) {showAlert('error' , err.response?.data?.msg)}
 
   };
 

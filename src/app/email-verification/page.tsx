@@ -10,7 +10,7 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -18,13 +18,13 @@ export default function VerificationPage() {
   };
 
   // Verify code after registration
-  const handleVerifyCode = async (e) => {
+  const handleVerifyCode = async (e : any) => {
     e.preventDefault();
     setLoading(true);
     try {
       const response = await axiosInstance.post('api/varify', formData);
       showAlert('success', 'Verification successful');
-    } catch (err) {
+    } catch (err : any) {
       showAlert('error', 'Invalid verification code');
     } finally {
       setLoading(false);

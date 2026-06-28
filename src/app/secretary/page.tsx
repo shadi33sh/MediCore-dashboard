@@ -5,6 +5,12 @@ import { motion } from "framer-motion";
 import { FaUsers, FaUserMd, FaCalendarAlt, FaStethoscope, FaTimesCircle, FaMoneyBill, FaCalendarCheck, FaUserClock } from "react-icons/fa";
 import DashboardLayout from "./secretaryComponents/DashboardLayout";
 
+
+
+
+export default function Page() {
+
+  
 const statistics = [
   {
     title: "Total Patients",
@@ -57,10 +63,8 @@ const statistics = [
 ];
 
 
-
-export default function Page() {
   return (
-    <DashboardLayout title="Clinic Statistics Overview">
+    <DashboardLayout loading={false} title="Clinic Statistics Overview">
        
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {statistics.map((stat, index) => (

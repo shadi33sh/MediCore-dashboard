@@ -16,7 +16,7 @@ function BMICalculator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -35,7 +35,7 @@ function BMICalculator() {
     }
 
     // **BMI Calculation**
-    const bmiValue = (weight / (heightM * heightM)).toFixed(2) as number;
+    const bmiValue = (weight / (heightM * heightM)).toFixed(2) as unknown as number;
     const bmiStatus = bmiValue < 18.5 ? 'Underweight'
                       : bmiValue >= 18.5 && bmiValue < 24.9 ? 'Normal weight'
                       : bmiValue >= 25 && bmiValue < 29.9 ? 'Overweight'
@@ -47,12 +47,12 @@ function BMICalculator() {
     const idealWeightRange = `${idealWeightMin}kg to ${idealWeightMax}kg`;
 
     // **Waist-to-Hip Ratio (WHR)**
-    const whrValue = (waist / hip).toFixed(2) as number;
+    const whrValue = (waist / hip).toFixed(2) as unknown as number;
     const whrStatus = sex === 'm' ? (whrValue < 0.9 ? 'Low Risk' : whrValue < 1 ? 'Moderate Risk' : 'High Risk')
                                    : (whrValue < 0.8 ? 'Low Risk' : whrValue < 0.85 ? 'Moderate Risk' : 'High Risk');
 
     // **Waist-to-Height Ratio (WHtR)**
-    const whtrValue = ((waist / heightCm) * 100).toFixed(1) as number;
+    const whtrValue = ((waist / heightCm) * 100).toFixed(1) as unknown as number;
     const whtrStatus = whtrValue < 35 ? 'Underweight'
                         : whtrValue >= 35 && whtrValue < 45 ? 'Healthy'
                         : whtrValue >= 45 && whtrValue < 55 ? 'Overweight'
@@ -72,7 +72,7 @@ function BMICalculator() {
     setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e : any) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {

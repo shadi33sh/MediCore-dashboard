@@ -151,7 +151,7 @@ function MedicalChatbot() {
       
       setChatHistory(prev => [...prev, newEntry]);
       setMessage('');
-    } catch (err) {
+    } catch (err : any) {
       showAlert('error', "Failed to retrieve the response. Please try again.");
     }
     setLoading(false);
@@ -253,7 +253,7 @@ function MedicalChatbot() {
           type="text"
           placeholder="Ask a medical question..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e : any) => setMessage(e.target.value)}
           className="flex-1 rounded-xl px-4 py-2 bg-gray-200 dark:bg-gray-900   dark:text-white"
         />
 
@@ -261,7 +261,7 @@ function MedicalChatbot() {
       <select
           id="specializationSelect"
           value={selectedSpecialization}
-          onChange={(e) => setSelectedSpecialization(e.target.value)}
+          onChange={(e : any) => setSelectedSpecialization(e.target.value)}
           className="px-4 py-2  rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
         >
           {specializations.map((spec) => (

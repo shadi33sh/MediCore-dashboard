@@ -61,7 +61,7 @@ export default function AppointmentForm() {
       } else {
         showAlert('error', response.data.message || 'Failed to create appointment.');
       }
-    } catch (err) {
+    } catch (err : any) {
       showAlert('error', 'Server error. Please try again.');
     }
 

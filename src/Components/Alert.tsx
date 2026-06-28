@@ -1,11 +1,11 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdCheckCircle, MdError } from "react-icons/md"; // Import success/error icons
 
 const AlertContext = createContext(null);
 
-export const AlertProvider = ({ children }) => {
+export const AlertProvider = ({ children} : {children : ReactNode}) => {
   const [alert, setAlert] = useState({ message: "", type: "" });
   const showAlert = (type: "success" | "error", message: string | object) => {
     let formattedMessage = "";
@@ -47,7 +47,7 @@ export const AlertProvider = ({ children }) => {
   
 
   return (
-    <AlertContext.Provider value={{ alert, showAlert }}>
+    <AlertContext.Provider value={{ alert, showAlert } as any}>
       <AnimatePresence>
         {alert.message && (
         <motion.div
@@ -86,4 +86,4 @@ export const AlertProvider = ({ children }) => {
   );
 };
 
-export const useAlert = () => useContext(AlertContext);
+export const useAlert : any = () => useContext(AlertContext)

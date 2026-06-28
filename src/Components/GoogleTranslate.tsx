@@ -17,12 +17,12 @@ const GoogleTranslate = () => {
     document.body.appendChild(script);
 
     // ✅ Define Google Translate init function globally
-    window.googleTranslateElementInit = () => {
-      new window.google.translate.TranslateElement(
-        { pageLanguage: "en" },
-        "google_translate_element"
-      );
-    };
+    // window.googleTranslateElementInit = () => {
+    //   new window.google.translate.TranslateElement(
+    //     { pageLanguage: "en" },
+    //     "google_translate_element"
+    //   );
+    // };
 
     // ✅ Check translation state on page load
     updateDirection();

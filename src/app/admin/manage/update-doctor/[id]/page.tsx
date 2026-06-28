@@ -24,7 +24,7 @@ export default function page() {
       try {
         const response = await  axiosInstance.get(`api/admin/doctor/${doctorId}`);
         setFormData(response.data.data);
-      } catch (err) {
+      } catch (err : any) {
         console.error('Error fetching doctor details:', err);
       }
     }
@@ -33,7 +33,7 @@ export default function page() {
       try {
         const response = await axiosInstance.get('api/department');
         setDepartments(response.data.data.departments);
-      } catch (err) {
+      } catch (err : any) {
         console.error('Error fetching departments:', err);
       }
     }
@@ -42,14 +42,14 @@ export default function page() {
     fetchDepartments();
   }, [doctorId]);
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : any) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -58,7 +58,7 @@ export default function page() {
       const response = await axiosInstance.put(`api/admin/doctor/${doctorId}`, formData);
       console.log('Doctor updated successfully:', response.data);
       setSuccess('Doctor details updated successfully.');
-    } catch (err) {
+    } catch (err : any) {
       setError(err.response?.data?.message || 'Update failed. Please try again.');
       console.log('Update error:', err);
     }

@@ -225,7 +225,7 @@ export default function page() {
   });
   
   const { showAlert } = useAlert();
-  const [departments, setDepartments] = useState(); 
+  const [departments, setDepartments] = useState([]); 
   const [loading , setLoading] = useState(false)
 
   useEffect(() => {
@@ -233,14 +233,14 @@ export default function page() {
       try {
         const response = await axiosInstance.get('api/department'); // Adjust endpoint if needed
         setDepartments(response.data.data.departments); // Store department list
-      } catch (err) {
+      } catch (err : any) {
         console.error('Error fetching departments:', err);
       }
     }
     fetchDepartments();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -253,7 +253,7 @@ export default function page() {
       try {
         const response = await axiosInstance.post('api/admin/doctor', doctor);
         console.log(`Registered: ${doctor.first_name} ${doctor.last_name}`, response.data);
-      } catch (error) {
+      } catch (error : any) {
         console.error(`Failed to register ${doctor.first_name} ${doctor.last_name}`, error.response?.data || error.message);
       }
     }
@@ -261,7 +261,7 @@ export default function page() {
   
 
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : any) => {
     setLoading(true)
     e.preventDefault();
 
@@ -270,7 +270,7 @@ export default function page() {
       showAlert('success' , 'Doctor registration successful')
       setLoading(false)
 
-    } catch (err) {
+    } catch (err : any) {
       console.log('Registration error:', err);
       setLoading(false)
       showAlert('error' , err.response.data.msg)
@@ -322,7 +322,7 @@ export default function page() {
           // required
         >
           <option value="" disabled>Select Department</option>
-          {departments.map((dept) => (
+          {departments?.map((dept : any) => (
             <option key={dept.id} value={dept.name}>
               {dept.name}
             </option>

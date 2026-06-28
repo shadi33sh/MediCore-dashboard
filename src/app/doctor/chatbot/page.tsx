@@ -371,7 +371,7 @@ export default function page() {
           
           setChatHistory(prev => [...prev, newEntry]);
           setMessage('');
-        } catch (err) {
+        } catch (err : any) {
           showAlert('error', "Failed to retrieve the response. Please try again.");
         }
         setLoading(false);
@@ -486,7 +486,7 @@ export default function page() {
               type="text"
               placeholder="Ask a medical question..."
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e : any) => setMessage(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="flex-1 rounded-xl px-4 py-2 bg-transparent dark:text-white focus:outline-none relative"
@@ -495,7 +495,7 @@ export default function page() {
             <select
               id="specializationSelect"
               value={selectedSpecialization}
-              onChange={(e) => setSelectedSpecialization(e.target.value)}
+              onChange={(e : any) => setSelectedSpecialization(e.target.value)}
               className="px-4 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
             >
               {specializations.map((spec) => (
@@ -531,7 +531,7 @@ export default function page() {
               type="text"
               placeholder="Ask a medical question..."
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e : any) => setMessage(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="flex-1 rounded-xl px-4 py-2 bg-transparent dark:text-white focus:outline-none relative"
@@ -540,7 +540,7 @@ export default function page() {
                 <select
                   id="specializationSelect"
                   value={selectedSpecialization}
-                  onChange={(e) => setSelectedSpecialization(e.target.value)}
+                  onChange={(e : any) => setSelectedSpecialization(e.target.value)}
                   className=" px-2 py-2 rounded-full basis-1/3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
                 >
                   {specializations.map((spec) => (

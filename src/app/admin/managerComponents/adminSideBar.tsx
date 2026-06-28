@@ -16,7 +16,7 @@ import {
 import { IoSettings } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion'
 import ToggleModeButton from '../../../Components/ToggleModeButton'
-import { medicalSections } from '../../secretary/sections/page'
+import { medicalSections } from '../../secretary/sections/medicalSections'
 
 const sidebarItems = [
   { label: 'Statistisc', icon: <FaCalendarAlt size={18} />, href: '/admin' },

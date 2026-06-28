@@ -1,99 +1,142 @@
-'use client'
+'use client';
+
 import Link from 'next/link';
 import React, { useState } from 'react';
 import axiosInstance from '../AuthAxios';
 import Loading from '../../Components/loading';
 import { useAlert } from '../../Components/Alert';
-import DarkModeToggle from '../../Components/toggleDarkMode';
-import ToggleModeButton from '../../Components/ToggleModeButton';
 import { useRouter } from 'next/navigation';
 
-
 export default function LoginPage() {
-  const [formData, setFormData] = useState({ email : '', password: '' });
-  const [error, setError] = useState('');
-  const [loading , setLoading] = useState(false)
-  const handleChange = (e) => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const { showAlert } = useAlert();
+  const router = useRouter();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-  const { showAlert } = useAlert();
-   
-  const navigator = useRouter()
-  const handleSubmit = async (e) => {
-    setLoading(true)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(''); 
+    setLoading(true);
+
     try {
-
       const response = await axiosInstance.post('api/auth/login', formData);
-      localStorage.setItem('token', response.data.access_token);
-      
-      const user = await axiosInstance.post('api/auth/me')
-      localStorage.setItem('user', user.data);
-      
-      navigator.push(user.data.role)
+      localStorage.setItem('token', response.data.token.access_token);
 
-      setLoading(false)
-      showAlert('success','logged is successfuly')
-      
-    } catch (err) {
-      showAlert('error','Invalid username or password')
-      setLoading(false)
+      const user = await axiosInstance.post('api/auth/me');
+      localStorage.setItem('user', JSON.stringify(user.data));
+
+      showAlert('success', 'Logged in successfully');
+      router.push(`/${user.data.role}`);
+    } catch (err : any) {
+      showAlert('error', 'Invalid email or password');
+    } finally {
+      setLoading(false);
     }
-  };  
+  };
 
   return (
-    <div className="w-screen h-screen bg-gradient-to-br dark:text-White from-white  to-Primary dark:from-gray-950 dark:to-gray-900 flex justify-center items-center dark:text-white">
-          <div className="absolute inset-0 z-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-Primary rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-72 h-72 bg-indigo-200 dark:bg-blue-800/20  rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse animation-delay-2000"></div>
-          <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-purple-200 dark:bg-teal-800/60 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse animation-delay-4000"></div>
-        </div>
-      <form
-        onSubmit={handleSubmit}
-        className="p-16 rounded-xl text-center md:bg-gray-200/30 md:dark:bg-gray-700/40 w-[580px] flex flex-col items-center gap-8 z-10"
-        >
-        {/* <ToggleModeButton/> */}
-        <h1 className="font-bold text-3xl">
-          Sign in as Doctor <span className="text-Primary">Medi</span>Core
-        </h1>
-        <img className="w-[120px]" src="/images/Logo.png" alt="Logo" />
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-Primary/10 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+      {/* LEFT SIDE - FORM AREA */}
+      <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-20">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-10">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-Primary/10">
+              <img src="/images/Logo.png" alt="Logo" className="h-9 w-9 object-contain" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Medi<span className="text-Primary">Core</span>
+            </h1>
+          </div>
 
+          {/* Title */}
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Sign in to your account
+            </h2>
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+              Enter your credentials to continue to your dashboard.
+            </p>
+          </div>
 
-        <input
-          type="text"
-          name="email"
-          value={formData.username}
-          onChange={handleChange}
-          className="dark:bg-black bg-gray-100 max-md:bg-gray-200 max-md:dark:bg-gray-700/40 p-4 w-full rounded-xl pl-6 border-Primary"
-          placeholder="email"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          className="dark:bg-black bg-gray-100 max-md:bg-gray-200 max-md:dark:bg-gray-700/40 p-4 w-full rounded-xl pl-6 border-Primary"
-          placeholder="Password"
-          required
-        />
-        <div className='w-full h-16 center'>
-          { !loading ?
-                  <button type="submit" className="p-4 bg-Primary rounded-xl w-full flex justify-center">
-                  <p className="font-bold text-white">Sign In</p>
-                </button>
-                :
-              <Loading/>
-          }
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                required
+                className="w-full rounded-xl bg-gray-50 px-4 py-3.5 text-gray-900 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-Primary/10 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 dark:focus:bg-gray-900"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                className="w-full rounded-xl bg-gray-50 px-4 py-3.5 text-gray-900 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-Primary/10 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 dark:focus:bg-gray-900"
+              />
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-500 dark:text-gray-400">Welcome back</span>
+              <Link href="/forgot-password" className="font-medium text-Primary hover:underline">
+                Forgot password?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex w-full max-h-12 items-center justify-center rounded-xl bg-Primary px-4 py-3.5 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {loading ? <Loading color='#fff' /> : 'Sign In'}
+            </button>
+          </form>
         </div>
-        <p className="text-Gray font-semibold">
-          Forgot password? <Link href="/forgot-password" className="text-Primary">Click here</Link>
-        </p>
-      </form>
+      </div>
+
+      {/* RIGHT SIDE - DECORATIVE AREA */}
+      <div className="hidden lg:flex flex-1 relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-Primary/20 via-indigo-200/30 to-purple-200/30 dark:from-Primary/10 dark:via-blue-900/20 dark:to-teal-900/20" />
+
+        {/* Decorative blobs */}
+        <div className="absolute top-20 left-10 w-80 h-80 bg-Primary rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse" />
+        <div className="absolute top-40 right-20 w-80 h-80 bg-indigo-300 dark:bg-blue-700/30 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse animation-delay-2000" />
+        <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-purple-300 dark:bg-teal-700/40 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse animation-delay-4000" />
+
+        {/* Content overlay */}
+        <div className="relative z-10 flex items-center justify-center w-full h-full">
+          <div className="text-center px-10 max-w-lg">
+            <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Welcome to Medi<span className="text-Primary">Core</span>
+            </h3>
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              The ultimate platform for doctors to manage patients, appointments, and medical records with ease.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

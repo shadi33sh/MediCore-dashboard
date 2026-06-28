@@ -32,7 +32,7 @@ export default function ScheduleAppointmentPage() {
   const [doctors, setDoctors] = useState([])
   const [departments, setDepartments] = useState([])
   const [scheduleTable, setScheduleTable] = useState([])
-  const [doctorAppiontments,setDoctorAppiontments ] = useState(null)
+  const [doctorAppiontments,setDoctorAppiontments ] = useState([])
   const [selectedAppointmentFinelTime, setAppointmentFinalTime] = useState(appointmentDate || null)
   const [isPatientInSystem, setIsPatientInSystem] = useState(true);
 
@@ -80,7 +80,7 @@ export default function ScheduleAppointmentPage() {
   ]
 
   const freeSlots = React.useMemo(() => {
-    return appointmentTimes.filter(t => !bookedSlots.includes(t))
+    return appointmentTimes.filter(t => !bookedSlots.includes(t as any))
   }, [appointmentTimes, bookedSlots])
   
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null)
@@ -229,7 +229,7 @@ export default function ScheduleAppointmentPage() {
     //   try {
     //     const res = await axiosInstance.post('api/patient', newPatientData);
     //     patientIdToUse = res.data.data.id;
-    //   } catch (err) {
+    //   } catch (err : any) {
     //     showAlert('error', 'Failed to create patient.');
     //     setLoading(false);
     //     return;
@@ -246,7 +246,7 @@ export default function ScheduleAppointmentPage() {
       setDoctorID(null);
       setAppointmentDate(null);
 
-    } catch (err) {
+    } catch (err : any) {
       showAlert('error', err.response.data.data?err.response.data.data : err.response.data?.msg );
       console.log(err)
     } finally {
@@ -290,7 +290,7 @@ export default function ScheduleAppointmentPage() {
                      placeholder="Enter Patient ID"
                      value={selectedPatientID}
                      className="dark:bg-gray-900 bg-gray-100 p-2 rounded-xl pl-4"
-                     onChange={(e) => setPatientID(e.target.value)}
+                     onChange={(e : any) => setPatientID(e.target.value)}
                    />
                    
                  </div>
@@ -304,7 +304,7 @@ export default function ScheduleAppointmentPage() {
                              placeholder={field}
                              name={field}
                              value={value}
-                             onChange={(e) =>
+                             onChange={(e : any) =>
                                setNewPatientData((prev) => ({
                                  ...prev,
                                  [field]: e.target.value,

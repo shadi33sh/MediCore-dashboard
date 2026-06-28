@@ -25,7 +25,7 @@ function RenderedArticle({ content }: { content: string }) {
 
 
 export default function ArticlePage() {
-  const [article, setArticle] = useState();
+  const [article, setArticle] = useState<{title :string , body : string}>();
   const [loading, setLoading] = useState(true); // Loading state
   const id = useParams().id
 
@@ -34,7 +34,7 @@ export default function ArticlePage() {
       try {
         const response = await axiosInstance.get(`api/getAtricleById/${id}`); 
         setArticle(response.data.data); 
-      } catch (err) {
+      } catch (err : any) {
         // console.error('Error fetching articles:', err);
       } finally {
         setLoading(false); // Turn off loading state
@@ -59,7 +59,7 @@ export default function ArticlePage() {
 
       {/* Article Content */}
     <div className="w-full max-w-3xl  p-6 rounded-xl  mt-20">
-       <h1 className="text-4xl max-md:text-3xl font-black">{article.title}</h1>
+       <h1 className="text-4xl max-md:text-3xl font-black">{article?.title}</h1>
         {/* <div className="flex items-center gap-3 py-5 relative">
             <img className="w-10 h-10 rounded-full shadow-md object-cover" src={article.doctor.image} alt={article.doctor.name} />
                 <div className="flex flex-col">

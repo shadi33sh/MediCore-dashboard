@@ -20,14 +20,14 @@ export default function page() {
   const navigator = useRouter();
   const { showAlert } = useAlert();
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : any) => {
     e.preventDefault();
     setLoading(true);
 
@@ -36,8 +36,8 @@ export default function page() {
       localStorage.setItem('token', response.data.token.access_token);
       showAlert('success', 'Registration successful. Redirecting to verification...');
       navigator.push('/email-verification'); // Navigate to email verification page
-    } catch (err) {
-      showAlert('error', err.response?.data?.data || 'Registration failed. Please try again.');
+    } catch (err : any) {
+      showAlert('error', err.response?.data || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }

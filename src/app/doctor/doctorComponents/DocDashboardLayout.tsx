@@ -6,6 +6,7 @@ import LoadingScreen from '../../../Components/loadingScreen'
 interface DashboardLayoutProps {
   children: React.ReactNode
   title?: string
+  loading? : boolean
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, loading = false}) => {

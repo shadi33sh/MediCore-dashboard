@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { FormEvent, FormEventHandler, useState } from 'react';
 import axiosInstance from '../../../AuthAxios';
 import LoadingScreen from '../../../../Components/loadingScreen';
 import Loading from '../../../../Components/loading';
@@ -20,20 +20,20 @@ export default function page() {
     { name: 'Cardiology', description: 'Heart-related conditions and treatments.' , image  : file },
 
   ];
-  const submitDepartments = async (departments) => {
+  const submitDepartments = async (departments : any) => {
     for (const department of departments) {
       try {
         const response = await axiosInstance.post('api/admin/department', department ,{
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        console.log(`✔ Successfully added: ${department.name}`);
-      } catch (err) {
-        console.error(`❌ Failed to add: ${department.name}`, err.response?.data);
+        console.log(`✔ Successfully added: ${department.name.en}`);
+      } catch (err : any) {
+        console.error(`❌ Failed to add: ${department.name.en}`, err.response?.data);
       }
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit  : FormEventHandler  = async (e : FormEvent) => {
     e.preventDefault();
 
     try {
@@ -50,14 +50,14 @@ export default function page() {
 
       setFormData({ name: '', description: '', image: null }); // Clear form after success
       showAlert('success', 'Department added successfully');
-    } catch (err) {
-      showAlert('error', err.response?.data?.msg || 'Something went wrong');
+    } catch (err : any) {
+      showAlert('error',  err?.response?.data?.msg || 'Something went wrong');
       console.log('Error:', err);
     }
   };
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     if (e.target.type === 'file' && e.target.files[0]) {
        setfile(e.target.files[0])
 

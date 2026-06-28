@@ -9,7 +9,7 @@ export default function ThemeInitializer() {
         } else {
           document.documentElement.classList.remove('dark')
         }
-      } catch (e) {
+      } catch (e : any) {
         // fail silently
       }
     }, [])

@@ -24,7 +24,7 @@ const SymptomForm = () => {
     try {
       const response = await axios.request(options);
       setData(response.data);
-    } catch (err) {
+    } catch (err : any) {
       setError("Failed to fetch data. Please try again.");
     }
   };
@@ -37,7 +37,7 @@ const SymptomForm = () => {
           type="text"
           placeholder="Enter organ name"
           value={organ}
-          onChange={(e) => setOrgan(e.target.value)}
+          onChange={(e : any) => setOrgan(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
           required
         />

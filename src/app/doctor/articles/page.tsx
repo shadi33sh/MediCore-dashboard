@@ -1,24 +1,31 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import DashboardLayout from '../doctorComponents/DocDashboardLayout';
-import { AnimatePresence, motion } from 'framer-motion';
-import { IoAddCircle } from 'react-icons/io5';
-import axiosInstance from '../../AuthAxios';
-import AddArticleForm from '../doctorComponents/AddArticleForm';
-import Loading from '../../../Components/loading';
+"use client";
+import React, { useState, useEffect } from "react";
+import DashboardLayout from "../doctorComponents/DocDashboardLayout";
+import { AnimatePresence, motion } from "framer-motion";
+import { IoAddCircle } from "react-icons/io5";
+import axiosInstance from "../../AuthAxios";
+import AddArticleForm from "../doctorComponents/AddArticleForm";
+import Loading from "../../../Components/loading";
 
 export default function Page() {
   const [addArticleModal, setAddArticleModal] = useState(false);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   useEffect(() => {
     async function fetchArticles() {
       try {
-        const response = await axiosInstance.get('api/getAtricles'); // Adjust endpoint if needed
+        const response = await axiosInstance.get("api/getAtricles"); // Adjust endpoint if needed
         setArticles(response.data.data.articles); // Store article list
-      } catch (err) {
-        console.error('Error fetching articles:', err);
+      } catch (err: any) {
+        console.error("Error fetching articles:", err);
       } finally {
         setLoading(false); // Turn off loading state
       }
@@ -71,15 +78,21 @@ export default function Page() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {articles.map((article, index) => (
-            <div key={index} className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md">
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md"
+            >
               <img
                 src={article.image}
                 alt={article.title}
                 className="rounded-md h-48 w-full object-cover mb-4"
               />
-              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{article.title}</h3>
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                {article.title}
+              </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                {new Date(article.date).toLocaleDateString()} • {article.doctorName}
+                {new Date(article.date).toLocaleDateString()} •{" "}
+                {article.doctorName}
               </p>
             </div>
           ))}

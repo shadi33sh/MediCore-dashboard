@@ -195,6 +195,11 @@ const schedules = [
   },
 ]
   const renderTable = (title: string, data: typeof schedules, type: 'accepted' | 'waiting') => {
+    const toggleTable = (type : any)=>{}
+    const openTables = {accepted : true , waiting : false}
+    const toggleDetails = (type : any)=>{}
+    const openDetails = {"string" : false}
+    const handleStatusChange = (idx : any, status : any)=>{}
     return (
       <div className="mb-3">
         <button
@@ -249,7 +254,7 @@ const schedules = [
                               <td className="p-4 space-x-2">
                                 <button
                                   className="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1 rounded-lg text-sm shadow"
-                                  onClick={(e) => {
+                                  onClick={(e : any) => {
                                     e.stopPropagation();
                                     handleStatusChange(idx, 'accepted');
                                   }}
@@ -258,7 +263,7 @@ const schedules = [
                                 </button>
                                 <button
                                   className="bg-red-500 hover:bg-red-700 text-white font-bold px-3 py-1 rounded-lg text-sm shadow"
-                                  onClick={(e) => {
+                                  onClick={(e : any) => {
                                     e.stopPropagation();
                                     handleStatusChange(idx, 'rejected');
                                   }}
@@ -440,7 +445,7 @@ const renderTable = (title: string, data: typeof schedules, type: 'accepted' | '
                             <td className="p-4 space-x-2">
                               <button
                                 className="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1 rounded-lg text-sm shadow"
-                                onClick={(e) => {
+                                onClick={(e : any) => {
                                   e.stopPropagation();
                                   handleStatusChange(idx, 'accepted');
                                 }}
@@ -449,7 +454,7 @@ const renderTable = (title: string, data: typeof schedules, type: 'accepted' | '
                               </button>
                               <button
                                 className="bg-red-500 hover:bg-red-700 text-white font-bold px-3 py-1 rounded-lg text-sm shadow"
-                                onClick={(e) => {
+                                onClick={(e : any) => {
                                   e.stopPropagation();
                                   handleStatusChange(idx, 'rejected');
                                 }}
@@ -534,7 +539,7 @@ const renderTable = (title: string, data: typeof schedules, type: 'accepted' | '
 };
 
   return (
-     <DashboardLayout title={`${sectionName} Doctors`}>      
+     <DashboardLayout loading={false} title={`${sectionName} Doctors`}>      
         <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 py-4">
             <div className="relative w-full max-w-md">
                 <IoSearch
@@ -545,13 +550,13 @@ const renderTable = (title: string, data: typeof schedules, type: 'accepted' | '
                   placeholder="Search by patient or doctor name..."
                   className="rounded-xl border px-10 py-2 bg-gray-200 dark:bg-gray-900 border-Cyan/40 dark:text-white w-full"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e : any) => setSearch(e.target.value)}
                 />
             </div>
           <select
           
             value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            onChange={(e : any) => setSortOrder(e.target.value)}
             className="px-4 h-10 border bg- bg-gray-200 dark:bg-gray-900 border-Cyan/40 rounded-xl text-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             <option value="default">Sort by Rating</option>

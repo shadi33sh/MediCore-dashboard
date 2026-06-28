@@ -9,7 +9,7 @@ import Pusher from 'pusher-js';
 // PUSHER_APP_KEY=efdc857648cf7ce3e669
 // PUSHER_APP_SECRET=ae449ed4efff501e5075
 
-export function PusherPrivateListener({ doctorId }) {
+export function PusherPrivateListener({ doctorId  }: any) {
   Pusher.logToConsole = true;
   useEffect(() => {
     const pusher = new Pusher( "efdc857648cf7ce3e669", {

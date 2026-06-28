@@ -6,7 +6,6 @@ export default function LoadingScreen() {
   return (
     <div className='w-full h-[90vh] center'>
         <Loading/>
-        
     </div>
   )
 }

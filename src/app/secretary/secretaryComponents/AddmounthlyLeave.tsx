@@ -23,7 +23,7 @@ export default function AddMonthlyWorkDays() {
     try {
       const response = await axiosInstance.get('/api/department');
       setDepartments(response.data.data.departments);
-    } catch (error) {
+    } catch (error : any) {
       showAlert( 'error' , 'Failed to fetch departments')
     }
   };
@@ -48,7 +48,7 @@ export default function AddMonthlyWorkDays() {
       });
 
       setAssignments(map);
-    } catch (error) {
+    } catch (error : any) {
       showAlert( 'error' , 'Failed to fetch current assignments')
 
     }
@@ -83,7 +83,7 @@ export default function AddMonthlyWorkDays() {
     try {
       await axiosInstance.post('/api/secretary/leave', mapped);
       showAlert('success', 'Schedule submitted successfully');
-    } catch (error) {
+    } catch (error : any) {
       console.error(error);
       showAlert('error', 'Error while adding the work days');
     }
@@ -156,11 +156,11 @@ export default function AddMonthlyWorkDays() {
                             </option>
                             {dept.doctors.map(doc => (
                               <option 
-                                key={doc.id} 
-                                value={doc.id}
+                                key={doc.doctor.id} 
+                                value={doc.doctor.id}
                                 className="text-gray-900 dark:text-white bg-white dark:bg-gray-700"
                               >
-                                Dr. {doc.user.first_name} {doc.user.last_name}
+                                Dr. {doc?.doctor.user?.first_name} {doc?.doctor.user?.last_name}
                               </option>
                             ))}
                           </select>
