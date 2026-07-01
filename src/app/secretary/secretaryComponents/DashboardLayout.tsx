@@ -15,7 +15,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, load
     <div className="flex w-screen h-screen dark:text-white bg-gray-100 dark:bg-gray-900">
       <SideBar />
       <div className="flex-1 md:p-6 md:pl-0 overflow-y-auto scroll-hidden">
-        <div className="bg-white h-full dark:bg-black shadow-xl md:rounded-2xl p-6 overflow-scroll space-y-6 border-gray-200 dark:border-gray-700 scroll-hidden">
+        <div className="bg-white h-full dark:bg-black md:rounded-2xl p-6 overflow-scroll space-y-6 border-gray-200 dark:border-gray-700 scroll-hidden">
           {
             loading ? <LoadingScreen />
               :

@@ -132,7 +132,7 @@ export default function SideBar() {
           width: !isMobile && collapsed ? 80 : 280,
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className={`fixed top-0 left-0 h-full z-50 md:z-auto bg-white dark:bg-gray-900 shadow-xl
+        className={`fixed top-0 left-0 h-full z-50 md:z-auto bg-gray-100 dark:bg-gray-900 
           ${isMobile ? 'w-[85%] max-w-sm' : ''} md:static overflow-hidden flex flex-col`}
       >
 
