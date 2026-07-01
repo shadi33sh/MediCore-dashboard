@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../AuthAxios';
 import { useAlert } from '../../../Components/Alert';
 import Loading from '../../../Components/loading';
-import { PusherPrivateListener } from '../../pusher';
 
 const weekDays = [
   { id: 1, name: 'Sunday' },

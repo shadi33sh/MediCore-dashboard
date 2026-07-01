@@ -3,6 +3,11 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import axiosInstance from '../../../../AuthAxios';
+import { useAlert } from '../../../../../Components/Alert';
+import Loading from '../../../../../Components/loading';
+import FormShell, { Field, SelectField, FieldRow, SubmitBtn } from '../../FormShell';
+import { FiUser, FiMail, FiPhone, FiFileText, FiDollarSign, FiAward } from 'react-icons/fi';
+import { MdOutlineLocalHospital } from 'react-icons/md';
 
 export default function page() {
   const [formData, setFormData] = useState({
@@ -12,19 +17,23 @@ export default function page() {
     department: '',
     email: '',
     phone: '',
+    subscription: '',
+    price_of_examination: '',
   });
 
   const [departments, setDepartments] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const doctorId = useParams().id
-  // Fetch doctor details and department list
+  const [loading, setLoading] = useState(false);
+  const doctorId = useParams().id;
+  const { showAlert } = useAlert();
+
   useEffect(() => {
     async function fetchDoctorData() {
       try {
-        const response = await  axiosInstance.get(`api/admin/doctor/${doctorId}`);
+        const response = await axiosInstance.get(`api/admin/doctor/${doctorId}`);
         setFormData(response.data.data);
-      } catch (err : any) {
+      } catch (err: any) {
         console.error('Error fetching doctor details:', err);
       }
     }
@@ -33,7 +42,7 @@ export default function page() {
       try {
         const response = await axiosInstance.get('api/department');
         setDepartments(response.data.data.departments);
-      } catch (err : any) {
+      } catch (err: any) {
         console.error('Error fetching departments:', err);
       }
     }
@@ -42,59 +51,57 @@ export default function page() {
     fetchDepartments();
   }, [doctorId]);
 
-  const handleChange = (e : any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const handleChange = (e: any) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e : any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
+    setLoading(true);
     try {
-      const response = await axiosInstance.put(`api/admin/doctor/${doctorId}`, formData);
-      console.log('Doctor updated successfully:', response.data);
+      await axiosInstance.put(`api/admin/doctor/${doctorId}`, formData);
+      showAlert('success', 'Doctor details updated successfully.');
       setSuccess('Doctor details updated successfully.');
-    } catch (err : any) {
-      setError(err.response?.data?.message || 'Update failed. Please try again.');
-      console.log('Update error:', err);
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Update failed. Please try again.';
+      setError(msg);
+      showAlert('error', msg);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-screen mt-20 flex justify-center items-center dark:text-white">
-      <form
-        onSubmit={handleSubmit}
-        className="p-16 rounded-xl bg-gray-200 dark:bg-gray-700/40 w-[780px] flex flex-col items-center gap-8"
-      >
-        <h1 className="font-bold text-3xl">Update Doctor Information</h1>
-        <img className="w-[120px]" src="/images/Logo.png" alt="Logo" />
+    <FormShell
+      title="Update Doctor"
+      subtitle="Edit doctor information in MediCore"
+      icon={<FiUser size={22} />}
+      accentColor="from-Primary to-Primary/80"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <FieldRow>
+          <Field label="First Name" icon={<FiUser size={14} />} type="text" name="first_name" value={formData.first_name} onChange={handleChange} placeholder="First name" required />
+          <Field label="Last Name"  icon={<FiUser size={14} />} type="text" name="last_name"  value={formData.last_name}  onChange={handleChange} placeholder="Last name"  required />
+        </FieldRow>
 
-        {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500">{success}</p>}
-
-        <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required />
-        <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />
-        <input type="text" name="bio" value={formData.bio} onChange={handleChange} required />
-
-        {/* Department Dropdown */}
-        <select name="department" value={formData.department} onChange={handleChange} required>
-          <option value="" disabled>Select Department</option>
-          {departments.map((dept) => (
+        <SelectField label="Department" icon={<MdOutlineLocalHospital size={15} />} name="department" value={formData.department} onChange={handleChange} required>
+          <option value="" disabled>Select department</option>
+          {departments.map((dept: any) => (
             <option key={dept.id} value={dept.name}>{dept.name}</option>
           ))}
-        </select>
+        </SelectField>
 
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
+        <Field label="Short Bio" icon={<FiFileText size={14} />} type="text" name="bio"   value={formData.bio}   onChange={handleChange} placeholder="Brief professional summary" required />
+        <Field label="Email"     icon={<FiMail size={14} />}    type="email" name="email" value={formData.email} onChange={handleChange} placeholder="doctor@hospital.com" required />
+        <Field label="Phone"     icon={<FiPhone size={14} />}   type="text" name="phone"  value={formData.phone} onChange={handleChange} placeholder="+963XXXXXXXXX" required />
 
-        <button type="submit" className="p-4 bg-Primary rounded-xl w-full flex justify-center">
-          <p className="font-bold text-white">Update Doctor</p>
-        </button>
+        <FieldRow>
+          <Field label="Subscription Fee" icon={<FiAward size={14} />}       type="number" name="subscription"        value={formData.subscription}        onChange={handleChange} placeholder="e.g. 50000" />
+          <Field label="Exam Price"        icon={<FiDollarSign size={14} />} type="number" name="price_of_examination" value={formData.price_of_examination} onChange={handleChange} placeholder="e.g. 15000" />
+        </FieldRow>
+
+        <SubmitBtn label="Update Doctor" loading={loading} loadingComponent={<Loading />} />
       </form>
-    </div>
+    </FormShell>
   );
 }

@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { motion } from 'framer-motion'
+import { FiStar, FiPhone, FiX, FiClock, FiUser, FiFileText } from 'react-icons/fi'
 
 interface Schedule {
   time: string
@@ -24,127 +25,229 @@ interface DoctorModalProps {
   onClose: () => void
 }
 
+// Section → gradient colour map (mirrors the page)
+const sectionGradients: Record<string, string> = {
+  Cardiology: 'from-rose-500 to-pink-600',
+  Neurology: 'from-violet-500 to-purple-600',
+  Pediatrics: 'from-sky-500 to-blue-600',
+  Orthopedics: 'from-amber-500 to-orange-600',
+  Dermatology: 'from-fuchsia-500 to-pink-600',
+  Oncology: 'from-emerald-500 to-teal-600',
+  Urology: 'from-cyan-500 to-teal-600',
+  Gynecology: 'from-indigo-500 to-blue-700',
+}
+
+function StarRow({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <FiStar
+          key={s}
+          size={14}
+          className={s <= Math.round(rating) ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-gray-600'}
+        />
+      ))}
+      <span className="ml-1.5 text-sm font-bold text-amber-500">{rating.toFixed(1)}</span>
+    </div>
+  )
+}
+
 const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
+  const gradient = sectionGradients[doctor.section] ?? 'from-teal-500 to-cyan-600'
+
   const generateTimeSlots = () => {
-    const slots = []
+    const slots: string[] = []
     const start = new Date()
     start.setHours(9, 0, 0, 0)
     const end = new Date()
     end.setHours(17, 0, 0, 0)
-
     while (start < end) {
-      const timeStr = start.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      })
-      slots.push(timeStr)
+      slots.push(start.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }))
       start.setMinutes(start.getMinutes() + 30)
     }
-
     return slots
   }
 
   const allSlots = generateTimeSlots()
-  const scheduleMap = new Map()
-
-  doctor.schedules.forEach((schedule) => {
-    const match = schedule.time.match(/(\d{1,2}:\d{2}\s[AP]M)/)
-    const time = match?.[1]
-    if (time) {
-      scheduleMap.set(time, schedule)
-    }
+  const scheduleMap = new Map<string, Schedule>()
+  doctor.schedules.forEach((s) => {
+    const match = s.time.match(/(\d{1,2}:\d{2}\s[AP]M)/)
+    if (match?.[1]) scheduleMap.set(match[1], s)
   })
+
+  const bookedCount = scheduleMap.size
+  const freeCount = allSlots.length - bookedCount
 
   return (
     <>
+      {/* Backdrop */}
       <motion.div
         className="absolute -top-6 left-0 center w-screen h-screen bg-black/70 z-40"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-      />
-
-      <motion.div
-        className="fixed scroll-hidden top-10 h-[90vh] overflow-scroll left-[25%] z-50 w-[50%] dark:text-white bg-gray-200 dark:bg-gray-900 rounded-xl shadow-lg p-8"
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 100 }}
-        transition={{ duration: 0.4 }}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 dark:hover:text-white text-xl"
+        {/* Modal panel */}
+        <motion.div
+          className="
+                   w-[95vw] max-w-2xl max-h-[92vh] overflow-hidden
+                   flex flex-col rounded-3xl shadow-2xl
+                   bg-white dark:bg-gray-900"
+          initial={{ opacity: 0, scale: 0.9, y: 40 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 40 }}
+          transition={{ type: 'spring', stiffness: 280, damping: 24 }}
         >
-          &times;
-        </button>
+          {/* ── Header gradient ── */}
+          <div className={`relative bg-gradient-to-br ${gradient} px-6 pt-8 pb-16 text-white flex-shrink-0`}>
+            {/* dot pattern */}
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '22px 22px' }}
+            />
 
-        <div className="flex flex-col items-center text-center">
-          <img
-            src={doctor.image}
-            className="w-28 h-28 rounded-full border-4 border-teal-500 mb-4 object-cover"
-            alt={doctor.name}
-          />
-          <h3 className="text-2xl font-bold">{doctor.name}</h3>
-          <p className="text-teal-400">{doctor.section}</p>
-          <p className="text-yellow-400 font-semibold mt-1">⭐ {doctor.rating}</p>
-          <p>{doctor.phone}</p>
-          <p className="text-sm dark:text-gray-300 mt-4">{doctor.description}</p>
+            {/* Close btn */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 transition-colors flex items-center justify-center"
+            >
+              <FiX size={15} />
+            </button>
 
-          <div className="mt-6 w-full">
-            <h4 className="dark:text-white font-semibold mb-4">Daily Schedule (9 AM – 5 PM):</h4>
-            <div className="overflow-x-auto rounded-lg border-2 border-gray-700">
-              <table className="min-w-full text-sm text-left text-gray-300">
-                <thead className="dark:bg-gray-800 bg-gray-300 text-gray-800 dark:text-teal-300">
-                  <tr>
-                    <th className="px-4 py-2 border-b">Time</th>
-                    <th className="px-4 py-2 border-b">Patient</th>
-                    <th className="px-4 py-2 border-b">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                         {allSlots.map((slot, i) => {
-                           const data = scheduleMap.get(slot)
-                           const isEmpty = !data
-                        
-                           return (
-                             <tr
-                               key={i}
-                               className={`relative group ${
-                                 data ? 'dark:hover:bg-gray-700/50 hover:bg-gray-300' : 'opacity-60'
-                               } text-gray-600 dark:text-gray-100`}
-                             >
-                               {isEmpty && (
-                                 <td colSpan={3} className="relative p-0 border-b border-gray-700">
-                                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-teal-600 bg-opacity-90 text-white text-sm sm:text-base md:text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded">
-                                     Add appointment in this time
-                                   </div>
-                                   <div className="flex">
-                                     <div className="px-4 py-5 w-1/3 ">{slot}</div>
-                                     <div className="px-4 py-5 w-1/3 "></div>
-                                     <div className="px-4 py-5 w-1/3 "></div>
-                                   </div>
-                                 </td>
-                               )}
-
-                               {!isEmpty && (
-                                 <>
-                                   <td className="px-4 py-5 border-b border-gray-700 relative z-0">{slot}</td>
-                                   <td className="px-4 py-5 border border-gray-700 relative z-0">{data.patientName}</td>
-                                   <td className="px-4 py-5 border-b border-gray-700 relative z-0">{data.description}</td>
-                                 </>
-                               )}
-                             </tr>
-                           )
-                         })}
-                        </tbody>
-
-              </table>
+            {/* Section label */}
+            <div className="relative z-10">
+              <span className="text-xs font-semibold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">
+                {doctor.section}
+              </span>
             </div>
           </div>
-        </div>
+
+          {/* ── Floating avatar ── */}
+          <div className="relative flex justify-center -mt-14 flex-shrink-0 z-10">
+            <div className={`ring-4 ring-white dark:ring-gray-900 ring-offset-0 rounded-full shadow-xl`}>
+              <img
+                src={doctor.image}
+                alt={doctor.name}
+                className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/images/Logo.png' }}
+              />
+            </div>
+          </div>
+
+          {/* ── Scrollable body ── */}
+          <div className="flex-1 overflow-y-auto px-6 pb-6">
+            {/* Doctor info */}
+            <div className="text-center mt-3 mb-5">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{doctor.name}</h2>
+              <StarRow rating={doctor.rating} />
+              <div className="flex items-center justify-center gap-1.5 mt-1 text-gray-400 dark:text-gray-500">
+                <FiPhone size={12} />
+                <span className="text-sm">{doctor.phone}</span>
+              </div>
+              <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+                {doctor.description}
+              </p>
+            </div>
+
+            {/* Stat pills */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-3 text-center border border-gray-100 dark:border-gray-700">
+                <p className="text-xl font-bold text-gray-800 dark:text-white">{allSlots.length}</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Total Slots</p>
+              </div>
+              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-2xl p-3 text-center border border-teal-100 dark:border-teal-800/40">
+                <p className="text-xl font-bold text-teal-600 dark:text-teal-400">{bookedCount}</p>
+                <p className="text-[11px] text-teal-500 dark:text-teal-400 mt-0.5">Booked</p>
+              </div>
+              <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-3 text-center border border-emerald-100 dark:border-emerald-800/40">
+                <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{freeCount}</p>
+                <p className="text-[11px] text-emerald-500 dark:text-emerald-400 mt-0.5">Available</p>
+              </div>
+            </div>
+
+            {/* Schedule table */}
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                <FiClock size={14} />
+                Daily Schedule <span className="text-gray-400 font-normal">(9 AM – 5 PM)</span>
+              </h4>
+
+              <div className="rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                      <th className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wide w-[28%]">
+                        <div className="flex items-center gap-1.5"><FiClock size={11} /> Time</div>
+                      </th>
+                      <th className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wide w-[28%]">
+                        <div className="flex items-center gap-1.5"><FiUser size={11} /> Patient</div>
+                      </th>
+                      <th className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wide">
+                        <div className="flex items-center gap-1.5"><FiFileText size={11} /> Note</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allSlots.map((slot, i) => {
+                      const data = scheduleMap.get(slot)
+                      const isBooked = !!data
+                      const isEven = i % 2 === 0
+
+                      return (
+                        <tr
+                          key={i}
+                          className={`relative group transition-colors duration-150
+                          ${isEven ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/60 dark:bg-gray-800/40'}
+                          ${isBooked ? 'hover:bg-teal-50 dark:hover:bg-teal-900/20' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}
+                        `}
+                        >
+                          {/* Time */}
+                          <td className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700/60">
+                            <span className={`font-mono text-xs font-semibold ${isBooked ? 'text-teal-600 dark:text-teal-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                              {slot}
+                            </span>
+                          </td>
+
+                          {/* Patient / free slot */}
+                          <td className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700/60">
+                            {isBooked ? (
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0">
+                                  <FiUser size={10} className="text-teal-600 dark:text-teal-400" />
+                                </div>
+                                <span className="text-gray-700 dark:text-gray-200 text-xs font-medium">{data!.patientName}</span>
+                              </div>
+                            ) : (
+                              <span className="text-gray-300 dark:text-gray-600 text-xs italic">—</span>
+                            )}
+                          </td>
+
+                          {/* Description / add hover */}
+                          <td className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700/60 relative">
+                            {isBooked ? (
+                              <span className="text-gray-500 dark:text-gray-400 text-xs">{data!.description}</span>
+                            ) : (
+                              <>
+                                <span className="text-gray-300 dark:text-gray-600 text-xs italic">Free</span>
+                                <div className="absolute inset-0 flex items-center justify-center bg-teal-500/90 text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-r">
+                                  + Add appointment
+                                </div>
+                              </>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
+
+
     </>
   )
 }

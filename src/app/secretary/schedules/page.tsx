@@ -13,6 +13,8 @@ import { IoAddCircle, IoArrowUp, IoSearch } from "react-icons/io5";
 import DashboardLayout from "../secretaryComponents/DashboardLayout";
 import axiosInstance from "../../AuthAxios";
 import { useAlert } from "../../../Components/Alert";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 function Page() {
   const [scheduleList, setScheduleList] = useState([]);
@@ -27,12 +29,19 @@ function Page() {
     waiting: true,
   });
 
-  const enterPatient = async (Id) => {
+  const enterPatient = async (id: number) => {
     try {
-      const response = await axiosInstance.get(`api/secretary/patient/${Id}`);
-      showAlert("success", "entered");
+      await axiosInstance.get(`api/secretary/patient/${id}`);
+
+      setScheduleList((prev) =>
+        prev.map((patient) =>
+          patient.id === id ? { ...patient, enter: 1 } : patient,
+        ),
+      );
+
+      showAlert("success", "Entered");
     } catch (error: any) {
-      showAlert("error", "not entered");
+      showAlert("error", "Not entered");
     }
   };
 
@@ -40,6 +49,7 @@ function Page() {
   const transformApiData = (apiData) => {
     return apiData.map((item) => ({
       id: item.id,
+      enter: item.enter,
       doctor: {
         name: `Dr. ${item.doctor.user.first_name} ${item.doctor.user.last_name}`,
         section: item.department.name.en,
@@ -335,12 +345,20 @@ function Page() {
                             ) : (
                               <>
                                 <td className="px-4 py-6 space-x-3 center">
-                                  <button
-                                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold px-4 w-32 py-2 rounded-lg text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                                    onClick={() => enterPatient(item.id)}
-                                  >
-                                    enter patient
-                                  </button>
+                                  {item.enter == 0 ? (
+                                    <button
+                                      className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold px-4 w-32 py-2 rounded-lg text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                      onClick={() => enterPatient(item.id)}
+                                    >
+                                      enter patient
+                                    </button>
+                                  ) : (
+                                    <>
+                                      <p className="text-sm text-gray-500">
+                                        no actions
+                                      </p>
+                                    </>
+                                  )}
                                 </td>
                               </>
                             )}
@@ -475,7 +493,16 @@ function Page() {
   };
 
   return (
-    <DashboardLayout title="Doctor Appointments" loading={false}>
+    <DashboardLayout
+      actions={
+        <>
+          <Link href="new-appiontment" className=" bg-Primary flex items-center gap-1 text-white px-4 py-2 rounded-xl font-medium transition-all">
+            <Plus className="w-5" />
+            <p >New Appointment</p>
+          </Link>
+        </>
+      }
+      title="Doctor Appointments" loading={false}>
       <div className="sticky -top-6 bg-white dark:bg-black py-4 z-10">
         <div className="flex items-center flex-wrap gap-3">
           <div className="relative w-full max-w-md">
@@ -492,11 +519,10 @@ function Page() {
             <button
               key={section}
               onClick={() => setSelectedSection(section)}
-              className={`px-4 py-2 rounded-xl font-medium transition-all ${
-                selectedSection !== section
-                  ? "dark:bg-gray-700/50 bg-gray-700/10"
-                  : "bg-Primary text-white"
-              }`}
+              className={`px-4 py-2 rounded-xl font-medium transition-all ${selectedSection !== section
+                ? "dark:bg-gray-700/50 bg-gray-700/10"
+                : "bg-Primary text-white"
+                }`}
             >
               {section}
             </button>
