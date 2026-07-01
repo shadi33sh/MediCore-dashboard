@@ -20,9 +20,7 @@ export function PusherPrivateListener({ doctorId  }: any) {
         },
       },
     });
-
     const channel = pusher.subscribe(`enter-patient.19`);
-
     channel.bind('patient.entered', (data: any) => {
       console.log('Received data from private channel:', data);
     });

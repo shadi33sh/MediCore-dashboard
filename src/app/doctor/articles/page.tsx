@@ -36,7 +36,7 @@ export default function Page() {
   useEffect(() => {
     async function fetchArticles() {
       try {
-        const response = await axiosInstance.get('api/getPreviews')
+        const response = await axiosInstance.get('api/getAtricles')
         setArticles(response.data.data.data || [])
       } catch (err: any) {
         console.error('Error fetching articles:', err)
