@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from './doctorComponents/DocDashboardLayout'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PusherPrivateListener } from '../pusher'
 import axiosInstance from '../AuthAxios'
 import dayjs from 'dayjs'
 import Loading from '../../Components/loading'
@@ -54,13 +53,13 @@ interface Appointment {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   accepted: { label: 'Accepted', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', icon: <FiCheckCircle size={12} /> },
-  pending:  { label: 'Pending',  color: 'bg-amber-100  text-amber-700  dark:bg-amber-900/30  dark:text-amber-400',  icon: <FiRefreshCw size={12} /> },
-  rejected: { label: 'Rejected', color: 'bg-red-100    text-red-700    dark:bg-red-900/30    dark:text-red-400',    icon: <FiXCircle size={12} /> },
+  pending: { label: 'Pending', color: 'bg-amber-100  text-amber-700  dark:bg-amber-900/30  dark:text-amber-400', icon: <FiRefreshCw size={12} /> },
+  rejected: { label: 'Rejected', color: 'bg-red-100    text-red-700    dark:bg-red-900/30    dark:text-red-400', icon: <FiXCircle size={12} /> },
 }
 
 const urgencyConfig: Record<string, { label: string; color: string }> = {
   immediate: { label: 'Immediate', color: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' },
-  scheduled: { label: 'Scheduled', color: 'bg-sky-100  text-sky-700  dark:bg-sky-900/30  dark:text-sky-400'  },
+  scheduled: { label: 'Scheduled', color: 'bg-sky-100  text-sky-700  dark:bg-sky-900/30  dark:text-sky-400' },
 }
 
 function InfoPill({ label, value, icon }: { label: string; value: string | number | null; icon?: React.ReactNode }) {
@@ -92,13 +91,13 @@ function AppointmentDetail({ appt }: { appt: Appointment }) {
       <div>
         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Patient Profile</p>
         <div className="grid grid-cols-2 gap-2">
-          <InfoPill icon={<FiUser size={13} />}    label="Full Name"   value={bi.patient_name} />
-          <InfoPill icon={<FiPhone size={13} />}   label="Phone"       value={bi.patient_phone} />
-          <InfoPill icon={<FiUser size={13} />}    label="Age"         value={`${pi.age} yrs`} />
-          <InfoPill icon={<FiUser size={13} />}    label="Gender"      value={pi.gender} />
-          <InfoPill icon={<FiCalendar size={13} />} label="Birth Date"  value={pi.birth_date} />
-          <InfoPill icon={<FiDroplet size={13} />} label="Blood Type"  value={pi.blood_type} />
-          <InfoPill icon={<FiStar size={13} />}    label="Trust Score" value={`${pi.honest_score}%`} />
+          <InfoPill icon={<FiUser size={13} />} label="Full Name" value={bi.patient_name} />
+          <InfoPill icon={<FiPhone size={13} />} label="Phone" value={bi.patient_phone} />
+          <InfoPill icon={<FiUser size={13} />} label="Age" value={`${pi.age} yrs`} />
+          <InfoPill icon={<FiUser size={13} />} label="Gender" value={pi.gender} />
+          <InfoPill icon={<FiCalendar size={13} />} label="Birth Date" value={pi.birth_date} />
+          <InfoPill icon={<FiDroplet size={13} />} label="Blood Type" value={pi.blood_type} />
+          <InfoPill icon={<FiStar size={13} />} label="Trust Score" value={`${pi.honest_score}%`} />
           {appt.price_after_discount != null && (
             <InfoPill icon={<FiDollarSign size={13} />} label="Price" value={`$${appt.price_after_discount}`} />
           )}
@@ -109,21 +108,21 @@ function AppointmentDetail({ appt }: { appt: Appointment }) {
       <div>
         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Medical History</p>
         <div className="flex flex-col gap-2">
-          <InfoPill icon={<FiAlertCircle size={13} />} label="Chronic Diseases"     value={pi.chronic_diseases} />
-          <InfoPill icon={<FiActivity size={13} />}    label="Medication Allergies" value={pi.medication_allergies} />
-          <InfoPill icon={<FiFileText size={13} />}    label="Permanent Medications" value={pi.permanent_medications} />
-          <InfoPill icon={<FiFileText size={13} />}    label="Previous Illnesses"   value={pi.previous_illnesses} />
-          <InfoPill icon={<FiFileText size={13} />}    label="Previous Surgeries"   value={pi.previous_surgeries} />
+          <InfoPill icon={<FiAlertCircle size={13} />} label="Chronic Diseases" value={pi.chronic_diseases} />
+          <InfoPill icon={<FiActivity size={13} />} label="Medication Allergies" value={pi.medication_allergies} />
+          <InfoPill icon={<FiFileText size={13} />} label="Permanent Medications" value={pi.permanent_medications} />
+          <InfoPill icon={<FiFileText size={13} />} label="Previous Illnesses" value={pi.previous_illnesses} />
+          <InfoPill icon={<FiFileText size={13} />} label="Previous Surgeries" value={pi.previous_surgeries} />
           {!pi.chronic_diseases && !pi.medication_allergies && !pi.permanent_medications &&
-           !pi.previous_illnesses && !pi.previous_surgeries && (
-            <p className="text-sm text-gray-400 italic">No significant medical history recorded.</p>
-          )}
+            !pi.previous_illnesses && !pi.previous_surgeries && (
+              <p className="text-sm text-gray-400 italic">No significant medical history recorded.</p>
+            )}
         </div>
       </div>
 
       {/* Action panel */}
       <div className="col-span-1 md:col-span-2 flex justify-end gap-3 pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
-        <Link 
+        <Link
           href={`/doctor/preview/${appt.patient_id}`}
           className="flex items-center gap-2 bg-gradient-to-r from-Primary to-teal-500 hover:from-Primary/95 hover:to-teal-500/95 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md shadow-Primary/10 hover:shadow-lg transition-all"
         >
@@ -160,8 +159,6 @@ export default function page() {
   const toggleRow = (id: number) =>
     setOpenRows(prev => ({ ...prev, [id]: !prev[id] }))
 
-  PusherPrivateListener(19)
-
   // Pull doctor name from localStorage
   const storedUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || '{}') : {}
   const doctorName = `${storedUser.first_name ?? ''} ${storedUser.last_name ?? ''}`.trim() || 'Doctor'
@@ -172,16 +169,16 @@ export default function page() {
 
         {/* ── Summary cards ── */}
         {!loading && appointments.length > 0 && (() => {
-          const accepted  = appointments.filter(a => a.status === 'accepted').length
-          const pending   = appointments.filter(a => a.status === 'pending').length
+          const accepted = appointments.filter(a => a.status === 'accepted').length
+          const pending = appointments.filter(a => a.status === 'pending').length
           const immediate = appointments.filter(a => a.apointment_status === 'immediate').length
           return (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
-                { label: 'Total',     value: appointments.length, color: 'from-Primary to-teal-400',   icon: <FiCalendar size={18} /> },
-                { label: 'Accepted',  value: accepted,            color: 'from-emerald-500 to-green-400', icon: <FiCheckCircle size={18} /> },
-                { label: 'Pending',   value: pending,             color: 'from-amber-500 to-yellow-400',  icon: <FiRefreshCw size={18} /> },
-                { label: 'Immediate', value: immediate,           color: 'from-rose-500 to-red-400',      icon: <FiAlertCircle size={18} /> },
+                { label: 'Total', value: appointments.length, color: 'from-Primary to-teal-400', icon: <FiCalendar size={18} /> },
+                { label: 'Accepted', value: accepted, color: 'from-emerald-500 to-green-400', icon: <FiCheckCircle size={18} /> },
+                { label: 'Pending', value: pending, color: 'from-amber-500 to-yellow-400', icon: <FiRefreshCw size={18} /> },
+                { label: 'Immediate', value: immediate, color: 'from-rose-500 to-red-400', icon: <FiAlertCircle size={18} /> },
               ].map(card => (
                 <div key={card.label} className={`bg-gradient-to-br ${card.color} rounded-2xl p-4 text-white shadow-lg`}>
                   <div className="flex items-center justify-between mb-2">
@@ -242,11 +239,11 @@ export default function page() {
                 </thead>
                 <tbody>
                   {appointments.map((appt) => {
-                    const dt        = dayjs(appt.apointment_date)
-                    const isOpen    = !!openRows[appt.id]
-                    const sCfg      = statusConfig[appt.status]  ?? statusConfig['pending']
-                    const uCfg      = urgencyConfig[appt.apointment_status] ?? urgencyConfig['scheduled']
-                    const initials  = appt.basic_info.patient_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+                    const dt = dayjs(appt.apointment_date)
+                    const isOpen = !!openRows[appt.id]
+                    const sCfg = statusConfig[appt.status] ?? statusConfig['pending']
+                    const uCfg = urgencyConfig[appt.apointment_status] ?? urgencyConfig['scheduled']
+                    const initials = appt.basic_info.patient_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 
                     return (
                       <React.Fragment key={appt.id}>

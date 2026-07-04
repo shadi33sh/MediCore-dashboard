@@ -1,100 +1,119 @@
-'use client'
-import React, { useState, useEffect, useRef } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import DashboardLayout from '../../doctorComponents/DocDashboardLayout'
-import axiosInstance from '../../../AuthAxios'
-import { useAlert } from '../../../../Components/Alert'
-import Loading from '../../../../Components/loading'
-import { motion, AnimatePresence } from 'framer-motion'
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
+import DashboardLayout from "../../doctorComponents/DocDashboardLayout";
+import axiosInstance from "../../../AuthAxios";
+import { useAlert } from "../../../../Components/Alert";
+import Loading from "../../../../Components/loading";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  FiUser, FiFileText, FiActivity, FiArrowLeft, FiCheck, FiInfo,
-  FiHeart, FiDroplet, FiStar, FiLock, FiPlus, FiEdit2,
-  FiAlertTriangle, FiCalendar, FiPhone, FiRefreshCw,
-} from 'react-icons/fi'
+  FiUser,
+  FiFileText,
+  FiActivity,
+  FiArrowLeft,
+  FiCheck,
+  FiInfo,
+  FiHeart,
+  FiDroplet,
+  FiStar,
+  FiLock,
+  FiEdit2,
+  FiAlertTriangle,
+  FiCalendar,
+  FiPhone,
+  FiRefreshCw,
+} from "react-icons/fi";
+import { useActivePatient } from "../../doctorComponents/ActivePatientContext";
+import PreviewDetailsModal from "../PreviewDetailsModal";
 
 /* ─────────────────────────── Types ─────────────────────────── */
 
 interface PatientDetails {
-  id: number
-  first_name: string
-  last_name: string
-  phone: string
-  age: number
-  gender: string
-  blood_type: string
-  honest_score: number
-  chronic_diseases: string | null
-  medication_allergies: string | null
-  permanent_medications: string | null
-  birth_date: string | null
-  discount_point: number
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  age: number;
+  gender: string;
+  blood_type: string;
+  honest_score: number;
+  chronic_diseases: string | null;
+  medication_allergies: string | null;
+  permanent_medications: string | null;
+  birth_date: string | null;
+  discount_point: number;
 }
 
 interface Preview {
-  id: number
-  patient_id: number
-  doctor_id: number
-  department_id: number
-  diagnoseis: string
-  diagnoseis_type: number   // 0 = Not Completed (editable), 1 = Completed (locked)
-  medicine: string
-  notes: string
-  status: string
-  price_after_discount: number | null
-  date: string
-  created_at: string
+  id: number;
+  patient_id: number;
+  doctor_id: number;
+  department_id: number;
+  diagnoseis: string;
+  diagnoseis_type: number; // 0 = Not Completed (editable), 1 = Completed (locked)
+  medicine: string;
+  notes: string;
+  status: string;
+  price_after_discount: number | null;
+  date: string;
+  created_at: string;
 }
 
 interface FormData {
-  diagnoseis: string
-  diagnoseis_type: string
-  medicine: string
-  notes: string
-  status: string
-}
-
-const EMPTY_FORM: FormData = {
-  diagnoseis: '',
-  diagnoseis_type: '0',
-  medicine: '',
-  notes: '',
-  status: 'Stable',
+  diagnoseis: string;
+  diagnoseis_type: string;
+  medicine: string;
+  notes: string;
+  status: string;
+  appointment_id: string;
 }
 
 /* ─────────────────────────── Page ─────────────────────────── */
 
 export default function PatientPreviewPage() {
-  const params = useParams()
-  const router = useRouter()
-  const { showAlert } = useAlert()
-  const scheduleId = params.id   // [id] is the schedule/appointment ID
+  const params = useParams();
+  const router = useRouter();
+  const { showAlert } = useAlert();
+  const { activeData, clearActiveData } = useActivePatient();
+  const scheduleId = params.id as string; // [id] is the schedule/appointment ID
+
+  const EMPTY_FORM: FormData = {
+    diagnoseis: "",
+    diagnoseis_type: "0",
+    medicine: "",
+    notes: "",
+    status: "Stable",
+    appointment_id: scheduleId,
+  };
 
   /* ── Data state ─────────────────────── */
-  const [loadingPatient, setLoadingPatient] = useState(true)
-  const [patient, setPatient] = useState<PatientDetails | null>(null)
-  const [previews, setPreviews] = useState<Preview[]>([])
-  const [noActivePatient, setNoActivePatient] = useState(false)
+  const [loadingPatient, setLoadingPatient] = useState(true);
+  const [patient, setPatient] = useState<PatientDetails | null>(null);
+  const [previews, setPreviews] = useState<Preview[]>([]);
+  const [noActivePatient, setNoActivePatient] = useState(false);
 
   /* ── Mode state ─────────────────────── */
-  const [selectedPreview, setSelectedPreview] = useState<Preview | null>(null)  // null = create mode
-  const [loadingPreview, setLoadingPreview] = useState(false)
-  const [showForm, setShowForm] = useState(false)
+  const [selectedPreview, setSelectedPreview] = useState<Preview | null>(null); // null = create mode
+  const [showForm, setShowForm] = useState(false);
 
   /* ── Form state ─────────────────────── */
-  const [formData, setFormData] = useState<FormData>(EMPTY_FORM)
-  const [submitting, setSubmitting] = useState(false)
+  const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
+  const [submitting, setSubmitting] = useState(false);
+  const [previewModalId, setPreviewModalId] = useState<number | null>(null);
+  const [isPreviewModalOpen, setPreviewModalOpen] = useState(false);
 
-  const formRef = useRef<HTMLDivElement>(null)
+  const formRef = useRef<HTMLDivElement>(null);
 
-  const isUpdateMode = selectedPreview !== null
+  const isUpdateMode = selectedPreview !== null;
+  const displayedPreviews = previews.filter((prev) => prev.diagnoseis_type === 1);
 
   /* ──────────────── Fetch active patient on mount ──────────── */
   useEffect(() => {
     async function fetchPatientDetails() {
       try {
-        const response = await axiosInstance.get('/api/getActivePatientInfo')
+        const response = await axiosInstance.get("/api/getActivePatientInfo");
         if (response.data.status) {
-          const { patient: p, previews: pv } = response.data.data
+          const { patient: p, previews: pv } = response.data.data;
           if (p) {
             setPatient({
               id: p.id,
@@ -110,110 +129,115 @@ export default function PatientPreviewPage() {
               permanent_medications: p.permanent_medications,
               birth_date: p.birth_date,
               discount_point: p.discount_point,
-            })
-            setPreviews(pv || [])
+            });
+
+            const fetchedPreviews: Preview[] = pv || [];
+            setPreviews(fetchedPreviews);
+
+            const incompletePreview = fetchedPreviews.find(
+              (pr) => pr.diagnoseis_type === 0,
+            );
+
+            const contextPreview = activeData?.preview
+              ? fetchedPreviews.find((pr) => pr.id === activeData.preview.id)
+              : null;
+
+            const previewToUse = contextPreview ?? incompletePreview;
+
+            if (previewToUse && previewToUse.diagnoseis_type === 0) {
+              setSelectedPreview(previewToUse);
+              setFormData({
+                diagnoseis: previewToUse.diagnoseis,
+                diagnoseis_type: String(previewToUse.diagnoseis_type),
+                medicine: previewToUse.medicine,
+                notes: previewToUse.notes,
+                status: previewToUse.status,
+                appointment_id: scheduleId,
+              });
+              setShowForm(true);
+            }
           } else {
-            setNoActivePatient(true)
+            setNoActivePatient(true);
           }
         } else {
-          setNoActivePatient(true)
+          setNoActivePatient(true);
         }
       } catch (err) {
-        console.error('Failed to fetch patient info:', err)
-        setNoActivePatient(true)
+        console.error("Failed to fetch patient info:", err);
+        setNoActivePatient(true);
       } finally {
-        setLoadingPatient(false)
+        setLoadingPatient(false);
       }
     }
 
-    fetchPatientDetails()
-  }, [])
+    fetchPatientDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ──────────────── Select existing preview ──────────────────── */
   const handleSelectPreview = async (preview: Preview) => {
-    // Only diagnoseis_type === 0 (Not Completed) can be edited
-    if (preview.diagnoseis_type === 1) return
-
-    setLoadingPreview(true)
-    setShowForm(false)
-    try {
-      const response = await axiosInstance.get(`/api/getPreviewById/${preview.id}`)
-      if (response.data.status) {
-        const d = response.data.data
-        setSelectedPreview(preview)
-        setFormData({
-          diagnoseis: d.diagnoseis ?? preview.diagnoseis,
-          diagnoseis_type: String(d.diagnoseis_type ?? preview.diagnoseis_type),
-          medicine: d.medicine ?? preview.medicine,
-          notes: d.notes ?? preview.notes,
-          status: d.status ?? preview.status,
-        })
-        setShowForm(true)
-        setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
-      }
-    } catch (err) {
-      console.error('Failed to fetch preview:', err)
-      showAlert('error', 'Failed to load preview details')
-    } finally {
-      setLoadingPreview(false)
-    }
-  }
-
-  /* ──────────────── Start a new preview ─────────────────────── */
-  const handleNewPreview = () => {
-    setSelectedPreview(null)
-    setFormData(EMPTY_FORM)
-    setShowForm(true)
-    setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
-  }
+    if (preview.diagnoseis_type === 1) return;
+    setPreviewModalId(preview.id);
+    setPreviewModalOpen(true);
+  };
 
   /* ──────────────── Form field change ───────────────────────── */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   /* ──────────────── Submit (create or update) ────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
+    e.preventDefault();
+    setSubmitting(true);
 
     try {
-      if (isUpdateMode) {
-        // UPDATE existing preview
-        const response = await axiosInstance.put(`/api/updatePreview/${selectedPreview!.id}`, formData)
-        if (response.data) {
-          showAlert('success', 'Preview updated successfully!')
-          // Refresh previews list
-          setPreviews(prev =>
-            prev.map(p => p.id === selectedPreview!.id
-              ? { ...p, ...formData, diagnoseis_type: Number(formData.diagnoseis_type) }
-              : p
-            )
-          )
-          setShowForm(false)
-          setSelectedPreview(null)
-        }
-      } else {
-        // CREATE new preview
-        const response = await axiosInstance.post(`/api/postPreview/${scheduleId}`, formData)
-        if (response.data) {
-          showAlert('success', 'Medical report submitted successfully!')
-          router.push('/doctor')
-        }
+      if (!isUpdateMode || !selectedPreview) {
+        showAlert("error", "No preview selected to update.");
+        return;
+      }
+
+      const response = await axiosInstance.put(
+        `/api/updatePreview/${selectedPreview.id}`,
+        formData,
+      );
+
+      if (response.data) {
+        showAlert("success", "Preview updated successfully!");
+        setPreviews((prev) =>
+          prev.map((p) =>
+            p.id === selectedPreview.id
+              ? {
+                  ...p,
+                  ...formData,
+                  diagnoseis_type: Number(formData.diagnoseis_type),
+                }
+              : p,
+          ),
+        );
+        setShowForm(false);
+        setSelectedPreview(null);
+        clearActiveData();
       }
     } catch (err: any) {
-      showAlert('error', err?.response?.data?.message || 'Something went wrong')
+      showAlert(
+        "error",
+        err?.response?.data?.message || "Something went wrong",
+      );
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   /* ─────────────────────────── Render ─────────────────────────── */
   return (
     <DashboardLayout title="Patient Checkup">
       <div className="space-y-6 pb-12">
-
         {/* ── Back button ── */}
         <button
           onClick={() => router.back()}
@@ -239,9 +263,12 @@ export default function PatientPreviewPage() {
               <FiAlertTriangle size={28} className="text-amber-500" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-amber-800 dark:text-amber-300 mb-1">No Active Patient</h3>
+              <h3 className="text-base font-bold text-amber-800 dark:text-amber-300 mb-1">
+                No Active Patient
+              </h3>
               <p className="text-sm text-amber-600 dark:text-amber-400">
-                There is no patient currently checked in on this schedule.<br />
+                There is no patient currently checked in on this schedule.
+                <br />
                 You cannot create a preview without an active patient.
               </p>
             </div>
@@ -265,7 +292,9 @@ export default function PatientPreviewPage() {
                   <FiHeart size={80} className="text-Primary" />
                 </div>
 
-                <h2 className="text-xs font-bold uppercase tracking-widest text-Primary mb-4">Patient Information</h2>
+                <h2 className="text-xs font-bold uppercase tracking-widest text-Primary mb-4">
+                  Patient Information
+                </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="space-y-1">
                     <p className="text-xs text-gray-400">Name</p>
@@ -305,7 +334,7 @@ export default function PatientPreviewPage() {
                     <p className="text-xs text-gray-400">Birth Date</p>
                     <p className="text-sm font-semibold text-gray-800 dark:text-white flex items-center gap-1.5">
                       <FiCalendar size={13} className="text-gray-400" />
-                      {patient.birth_date ?? 'N/A'}
+                      {patient.birth_date ?? "N/A"}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -316,126 +345,44 @@ export default function PatientPreviewPage() {
                   </div>
                 </div>
 
-                {(patient.chronic_diseases || patient.medication_allergies || patient.permanent_medications) && (
+                {(patient.chronic_diseases ||
+                  patient.medication_allergies ||
+                  patient.permanent_medications) && (
                   <div className="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50 grid grid-cols-1 md:grid-cols-3 gap-4">
                     {patient.chronic_diseases && (
                       <div>
-                        <p className="text-xs text-rose-500 font-semibold mb-0.5">Chronic Diseases</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">{patient.chronic_diseases}</p>
+                        <p className="text-xs text-rose-500 font-semibold mb-0.5">
+                          Chronic Diseases
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
+                          {patient.chronic_diseases}
+                        </p>
                       </div>
                     )}
                     {patient.medication_allergies && (
                       <div>
-                        <p className="text-xs text-amber-500 font-semibold mb-0.5">Medication Allergies</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">{patient.medication_allergies}</p>
+                        <p className="text-xs text-amber-500 font-semibold mb-0.5">
+                          Medication Allergies
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
+                          {patient.medication_allergies}
+                        </p>
                       </div>
                     )}
                     {patient.permanent_medications && (
                       <div>
-                        <p className="text-xs text-blue-500 font-semibold mb-0.5">Permanent Medications</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">{patient.permanent_medications}</p>
+                        <p className="text-xs text-blue-500 font-semibold mb-0.5">
+                          Permanent Medications
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300">
+                          {patient.permanent_medications}
+                        </p>
                       </div>
                     )}
                   </div>
                 )}
               </motion.div>
 
-              {/* ── Previous Previews + New button ── */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.08 }}
-                className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xs font-bold uppercase tracking-widest text-Primary flex items-center gap-2">
-                    <FiFileText size={14} />
-                    Previews
-                    {previews.length > 0 && (
-                      <span className="px-1.5 py-0.5 rounded-full bg-Primary/10 text-Primary text-xs font-bold">
-                        {previews.length}
-                      </span>
-                    )}
-                  </h2>
-                  {/* New Preview button */}
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={handleNewPreview}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-Primary to-Primary/80 text-white text-xs font-bold shadow-md shadow-Primary/20 hover:shadow-lg transition-all"
-                  >
-                    <FiPlus size={14} />
-                    New Preview
-                  </motion.button>
-                </div>
-
-                {previews.length === 0 ? (
-                  <p className="text-sm text-gray-400 text-center py-6">No previous previews for this patient.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {/* Loading overlay while fetching preview detail */}
-                    {loadingPreview && (
-                      <div className="flex items-center gap-2 text-xs text-Primary py-2">
-                        <FiRefreshCw size={13} className="animate-spin" />
-                        Loading preview details…
-                      </div>
-                    )}
-                    {previews.map((prev) => {
-                      const isLocked = prev.diagnoseis_type === 1
-                      const isSelected = selectedPreview?.id === prev.id
-
-                      return (
-                        <motion.div
-                          key={prev.id}
-                          whileHover={isLocked ? {} : { scale: 1.005 }}
-                          onClick={() => !isLocked && handleSelectPreview(prev)}
-                          className={`p-4 rounded-xl border text-sm transition-all
-                            ${isLocked
-                              ? 'bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-60 cursor-not-allowed'
-                              : isSelected
-                                ? 'bg-Primary/5 border-Primary/40 dark:border-Primary/50 cursor-pointer ring-2 ring-Primary/30'
-                                : 'bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-Primary/30 hover:bg-Primary/5 cursor-pointer'
-                            }`}
-                        >
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <div>
-                              <p className="text-xs text-gray-400 mb-0.5">Date</p>
-                              <p className="font-semibold text-gray-800 dark:text-white">{prev.date}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-400 mb-0.5">Diagnosis</p>
-                              <p className="font-semibold text-gray-800 dark:text-white truncate">{prev.diagnoseis}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-400 mb-0.5">Medicine</p>
-                              <p className="font-semibold text-gray-800 dark:text-white truncate">{prev.medicine}</p>
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                              <div>
-                                <p className="text-xs text-gray-400 mb-0.5">Status</p>
-                                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${prev.status === 'Stable'
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400'
-                                    : 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-400'
-                                  }`}>{prev.status}</span>
-                              </div>
-                              {isLocked ? (
-                                <span className="inline-flex items-center gap-1 text-xs text-gray-400 font-semibold">
-                                  <FiLock size={11} /> Completed
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center gap-1 text-xs text-Primary font-semibold">
-                                  <FiEdit2 size={11} />
-                                  {isSelected ? 'Selected' : 'Click to edit'}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
-                )}
-              </motion.div>
 
               {/* ── Form (shown after selection or "New Preview") ── */}
               <AnimatePresence>
@@ -450,20 +397,16 @@ export default function PatientPreviewPage() {
                     className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden"
                   >
                     {/* Form header */}
-                    <div className={`px-6 py-4 flex items-center gap-3 border-b border-gray-100 dark:border-gray-800 ${isUpdateMode
-                        ? 'bg-gradient-to-r from-amber-500/10 to-orange-500/10'
-                        : 'bg-gradient-to-r from-Primary/10 to-teal-500/10'
-                      }`}>
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white ${isUpdateMode ? 'bg-amber-500' : 'bg-Primary'
-                        }`}>
-                        {isUpdateMode ? <FiEdit2 size={16} /> : <FiPlus size={16} />}
+                    <div className="px-6 py-4 flex items-center gap-3 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-amber-500">
+                        <FiEdit2 size={16} />
                       </div>
                       <div>
-                        <h3 className={`font-bold text-sm ${isUpdateMode ? 'text-amber-700 dark:text-amber-400' : 'text-Primary'}`}>
-                          {isUpdateMode ? `Editing Preview #${selectedPreview!.id}` : 'New Preview'}
+                        <h3 className="font-bold text-sm text-amber-700 dark:text-amber-400">
+                          {selectedPreview ? `Editing Preview #${selectedPreview.id}` : "Editing Preview"}
                         </h3>
                         <p className="text-xs text-gray-500">
-                          {isUpdateMode ? 'Update this preview record' : 'Create a new checkup report'}
+                          Update this preview record
                         </p>
                       </div>
                     </div>
@@ -486,7 +429,14 @@ export default function PatientPreviewPage() {
                               <option value="1">Completed</option>
                             </select>
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
                                 <path d="m6 9 6 6 6-6" />
                               </svg>
                             </span>
@@ -508,7 +458,14 @@ export default function PatientPreviewPage() {
                               <option value="Unstable">Unstable</option>
                             </select>
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
                                 <path d="m6 9 6 6 6-6" />
                               </svg>
                             </span>
@@ -578,18 +535,22 @@ export default function PatientPreviewPage() {
                               type="submit"
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              className={`px-10 py-3.5 rounded-2xl text-white font-bold text-sm shadow-lg transition-all flex items-center gap-2 ${isUpdateMode
-                                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-amber-500/20 hover:shadow-xl'
-                                  : 'bg-gradient-to-r from-Primary to-Primary/80 shadow-Primary/20 hover:shadow-xl'
-                                }`}
+                              className={`px-10 py-3.5 rounded-2xl text-white font-bold text-sm shadow-lg transition-all flex items-center gap-2 ${
+                                isUpdateMode
+                                  ? "bg-gradient-to-r from-amber-500 to-orange-500 shadow-amber-500/20 hover:shadow-xl"
+                                  : "bg-gradient-to-r from-Primary to-Primary/80 shadow-Primary/20 hover:shadow-xl"
+                              }`}
                             >
                               <FiCheck size={16} />
-                              {isUpdateMode ? 'Update Report' : 'Submit Report'}
+                              {isUpdateMode ? "Update Report" : "Submit Report"}
                             </motion.button>
 
                             <button
                               type="button"
-                              onClick={() => { setShowForm(false); setSelectedPreview(null) }}
+                              onClick={() => {
+                                setShowForm(false);
+                                setSelectedPreview(null);
+                              }}
                               className="px-5 py-3.5 rounded-2xl text-sm font-semibold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
                             >
                               Cancel
@@ -601,10 +562,108 @@ export default function PatientPreviewPage() {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+
+              
+              {/* ── Previous Previews + New button ── */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 }}
+                className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+              >
+                <div className="mb-4">
+                  <h2 className="text-xs font-bold uppercase tracking-widest text-Primary flex items-center gap-2">
+                    <FiFileText size={14} />
+                    Previous Previews
+                    {displayedPreviews.length > 0 && (
+                      <span className="px-1.5 py-0.5 rounded-full bg-Primary/10 text-Primary text-xs font-bold">
+                        {displayedPreviews.length}
+                      </span>
+                    )}
+                  </h2>
+                </div>
+
+                {displayedPreviews.length === 0 ? (
+                  <p className="text-sm text-gray-400 text-center py-6">
+                    No previous previews for this patient.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {displayedPreviews.map((prev) => {
+                      const isLocked = prev.diagnoseis_type === 1;
+
+                      return (
+                        <motion.div
+                          key={prev.id}
+                          whileHover={isLocked ? {} : { scale: 1.005 }}
+                          onClick={() => !isLocked && handleSelectPreview(prev)}
+                          className={`p-4 rounded-xl border text-sm transition-all ${
+                            isLocked
+                              ? "bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-60 cursor-not-allowed"
+                              : "bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-Primary/30 hover:bg-Primary/5 cursor-pointer"
+                          }`}
+                        >
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div>
+                              <p className="text-xs text-gray-400 mb-0.5">Date</p>
+                              <p className="font-semibold text-gray-800 dark:text-white">
+                                {prev.date}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400 mb-0.5">Diagnosis</p>
+                              <p className="font-semibold text-gray-800 dark:text-white truncate">
+                                {prev.diagnoseis || "No diagnosis"}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400 mb-0.5">Medicine</p>
+                              <p className="font-semibold text-gray-800 dark:text-white truncate">
+                                {prev.medicine || "No medicine"}
+                              </p>
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                              <div>
+                                <p className="text-xs text-gray-400 mb-0.5">Status</p>
+                                <span
+                                  className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${
+                                    prev.status === "Stable"
+                                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
+                                      : "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-400"
+                                  }`}
+                                >
+                                  {prev.status}
+                                </span>
+                              </div>
+                              {isLocked ? (
+                                <span className="inline-flex items-center gap-1 text-xs text-gray-400 font-semibold">
+                                  <FiLock size={11} /> Completed
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 text-xs text-Primary font-semibold">
+                                  <FiEdit2 size={11} />
+                                  View details
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
+              </motion.div>
+              <PreviewDetailsModal
+                previewId={previewModalId}
+                isOpen={isPreviewModalOpen}
+                onClose={() => setPreviewModalOpen(false)}
+              />
+
             </>
           )
         )}
       </div>
     </DashboardLayout>
-  )
+  );
 }

@@ -7,13 +7,15 @@ import axiosInstance from '../../AuthAxios'
 import AddArticleForm from '../doctorComponents/AddArticleForm'
 import Loading from '../../../Components/loading'
 import dayjs from 'dayjs'
+import { useAlert } from '../../../Components/Alert'
+import ArticleReviewModal from '../doctorComponents/ArticleReviewModal'
 
 interface Article {
   id: number
   title: string
   body: string
   image: string
-  date: string
+  created_at: string
   doctorName?: string
   doctor?: {
     user: {
@@ -28,24 +30,42 @@ export default function Page() {
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
-
+  const [deletingArticleId, setDeletingArticleId] = useState<number | null>(null)
+  const [reviewArticle, setReviewArticle] = useState<Article | null>(null)
+  const {showAlert} = useAlert()
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    async function fetchArticles() {
-      try {
-        const response = await axiosInstance.get('api/getAtricles')
-        setArticles(response.data.data.data || [])
-      } catch (err: any) {
-        console.error('Error fetching articles:', err)
-      } finally {
-        setLoading(false)
-      }
+  const fetchArticles = async () => {
+    try {
+      const response = await axiosInstance.get('api/getAtricles')
+      setArticles(response.data.data.data || [])
+    } catch (err: any) {
+      console.error('Error fetching articles:', err)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchArticles()
   }, [])
+
+  const handleDeleteArticle = async (articleId: number) => {
+    if (!window.confirm('Are you sure you want to delete this article?')) return
+    setDeletingArticleId(articleId)
+    try {
+      await axiosInstance.delete(`api/deleteArticle/${articleId}`)
+      setArticles((prev) => prev.filter((article) => article.id !== articleId))
+      showAlert('success', 'Article deleted successfully.')
+    } catch (err: any) {
+      console.error('Error deleting article:', err)
+      showAlert('error', err?.response?.data?.message || 'Failed to delete article')
+    } finally {
+      setDeletingArticleId(null)
+    }
+  }
 
   if (!mounted) return null
 
@@ -126,7 +146,7 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article, index) => {
               // Format date nicely
-              const formattedDate = article.date ? dayjs(article.date).format('MMMM DD, YYYY') : 'N/A'
+              const formattedDate = article.created_at ? dayjs(article.created_at).format('MMMM DD, YYYY') : 'N/A'
 
               // Handle author names cleanly
               const authorName = article.doctorName
@@ -138,7 +158,9 @@ export default function Page() {
               const initials = authorName.replace('Dr. ', '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 
               return (
-                <motion.div
+                <motion.a
+                  href={`/doctor/articles/${article.id}`}
+                  target='_blank'
                   key={article.id || index}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -181,14 +203,34 @@ export default function Page() {
                       <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                         {authorName}
                       </span>
-                    </div>
+                      <button
+                      type="button"
+                      onClick={() => setReviewArticle(article)}
+                      className="px-3 py-2 rounded-2xl text-[11px] font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition"
+                    >
+                      Review
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteArticle(article.id)}
+                      disabled={deletingArticleId === article.id}
+                      className={`px-3 py-2 rounded-2xl text-[11px] font-semibold transition ${
+                        deletingArticleId === article.id
+                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400'
+                          : 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/60'
+                      }`}
+                    >
+                      {deletingArticleId === article.id ? 'Deleting...' : 'Delete'}
+                    </button>
                   </div>
-                </motion.div>
-              )
-            })}
-          </div>
-        )}
-      </div>
-    </DashboardLayout>
+                </div>
+              </motion.a>
+            )
+          })}
+        </div>
+      )}
+      <ArticleReviewModal article={reviewArticle} isOpen={Boolean(reviewArticle)} onClose={() => setReviewArticle(null)} />
+    </div>
+  </DashboardLayout>
   )
 }

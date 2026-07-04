@@ -111,7 +111,8 @@ export default function ScheduleAppointmentPage() {
       case 2: return 3
       case 3: return 4
       case 4: return 5
-      case 6: return 6
+      case 5: return 6
+      case 6: return 7
       default: return null
     }
   }
@@ -122,6 +123,18 @@ export default function ScheduleAppointmentPage() {
     const month = today.month()
     const daysInMonth = dayjs().daysInMonth()
     const days = []
+
+    const firstDayOfMonth = dayjs(new Date(year, month, 1)).day()
+    for (let empty = 0; empty < firstDayOfMonth; empty++) {
+      days.push({
+        date: null,
+        doctors: [],
+        doctorNames: [],
+        doctorIds: [],
+        clickable: false,
+        placeholder: true,
+      })
+    }
 
     for (let i = 1; i <= daysInMonth; i++) {
       const date = dayjs(new Date(year, month, i))
@@ -135,6 +148,7 @@ export default function ScheduleAppointmentPage() {
         doctorNames: doctorsForThatDay.map((d: any) => d.doctor_name),
         doctorIds: doctorsForThatDay.map((d: any) => d.doctor_id),
         clickable: doctorsForThatDay.length > 0,
+        placeholder: false,
       })
     }
 
@@ -328,7 +342,13 @@ export default function ScheduleAppointmentPage() {
 
             {/* Day grid */}
             <div className="grid grid-cols-7 gap-2">
-              {generateMonthDays().map((day) => {
+              {generateMonthDays().map((day, index) => {
+                if (day.placeholder) {
+                  return (
+                    <div key={`empty-${index}`} className="p-2 rounded-xl text-sm shadow-sm transition-all text-center bg-transparent" />
+                  )
+                }
+
                 const isToday = dayjs(day.date).isSame(today, 'day')
                 const isPast = dayjs(day.date).isBefore(today, 'day')
                 const isSelected = dayjs(selectedAppointmentDate).isSame(day.date, 'day')

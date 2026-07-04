@@ -1,8 +1,12 @@
 'use client'
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaUsers, FaUserMd, FaCalendarAlt, FaStethoscope, FaTimesCircle, FaMoneyBill, FaCalendarCheck, FaUserClock } from "react-icons/fa";
+import { FaUsers, FaUserMd, FaCalendarAlt, FaStethoscope, FaTimesCircle, FaMoneyBill, FaCalendarCheck, FaUserClock, FaPlus } from "react-icons/fa";
 import DashboardLayout from "./managerComponents/adminDashboardLayout";
+import CreateDoctorModal from "./manage/CreateDoctorModal";
+import CreateSecretaryModal from "./manage/CreateSecretaryModal";
+import CreateDepartmentModal from "./manage/CreateDepartmentModal";
+
 const statistics = [
   {
     title: "Total Patients",
@@ -57,28 +61,47 @@ const statistics = [
 
 
 export default function Page() {
+  const [isDoctorModalOpen, setIsDoctorModalOpen] = useState(false);
+  const [isSecretaryModalOpen, setIsSecretaryModalOpen] = useState(false);
+  const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
+
   return (
     <DashboardLayout loading={false} title="Clinic Statistics Overview">
-       
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {statistics.map((stat, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.3 }}
-                className={`p-5 rounded-2xl shadow-xl bg-gradient-to-br ${stat.color} text-white flex flex-col justify-between space-y-3`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-2 rounded-full">
-                    {stat.icon}
-                  </div>
-                  <h3 className="text-lg font-semibold">{stat.title}</h3>
-                </div>
-                <p className="text-4xl font-bold text-right">{stat.value}</p>
-              </motion.div>
-            ))}
-          </div>
+      <div className="flex flex-wrap gap-4 mb-6">
+        <button onClick={() => setIsDoctorModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl shadow-lg hover:opacity-90 transition">
+          <FaPlus size={14} /> Create Doctor
+        </button>
+        <button onClick={() => setIsSecretaryModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:opacity-90 transition">
+          <FaPlus size={14} /> Create Secretary
+        </button>
+        <button onClick={() => setIsDepartmentModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-teal-600 text-white rounded-xl shadow-lg hover:opacity-90 transition">
+          <FaPlus size={14} /> Create Department
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {statistics.map((stat, index) => (
+          <motion.div
+            key={index}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.3 }}
+            className={`p-5 rounded-2xl shadow-xl bg-gradient-to-br ${stat.color} text-white flex flex-col justify-between space-y-3`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 p-2 rounded-full">
+                {stat.icon}
+              </div>
+              <h3 className="text-lg font-semibold">{stat.title}</h3>
+            </div>
+            <p className="text-4xl font-bold text-right">{stat.value}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      <CreateDoctorModal isOpen={isDoctorModalOpen} onClose={() => setIsDoctorModalOpen(false)} onSuccess={() => { }} />
+      <CreateSecretaryModal isOpen={isSecretaryModalOpen} onClose={() => setIsSecretaryModalOpen(false)} onSuccess={() => { }} />
+      <CreateDepartmentModal isOpen={isDepartmentModalOpen} onClose={() => setIsDepartmentModalOpen(false)} onSuccess={() => { }} />
     </DashboardLayout>
   );
 }

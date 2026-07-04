@@ -323,8 +323,8 @@ export default function EnhancedSideBar() {
                             {item.badge && (
                               <span
                                 className={`px-2 py-1 text-xs font-bold rounded-full ${isActive
-                                    ? "bg-white/20 text-white"
-                                    : "bg-red-500 text-white"
+                                  ? "bg-white/20 text-white"
+                                  : "bg-red-500 text-white"
                                   }`}
                               >
                                 {item.badge}
@@ -350,8 +350,8 @@ export default function EnhancedSideBar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: sidebarItems.length * 0.05 }}
                 className={`rounded-xl transition-all duration-200 ${pathname.includes("/secretary/sections")
-                    ? "bg-gradient-to-r from-Primary to-purple-600 text-white shadow-lg"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  ? "bg-gradient-to-r from-Primary to-purple-600 text-white shadow-lg"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
               >
                 <div className="flex items-center">
@@ -363,7 +363,7 @@ export default function EnhancedSideBar() {
                     <FaUserMd size={18} />
                     {!collapsed && <span>Sections</span>}
                   </Link>
-                  {!collapsed && (
+                  {/* {!collapsed && (
                     <button
                       onClick={() => setShowSections(!showSections)}
                       className="p-3 hover:bg-black/10 rounded-r-xl transition-colors"
@@ -374,12 +374,12 @@ export default function EnhancedSideBar() {
                         <FaChevronDown size={14} />
                       )}
                     </button>
-                  )}
+                  )} */}
                 </div>
               </motion.div>
 
               {/* Section List */}
-              <AnimatePresence>
+              {/* <AnimatePresence>
                 {!collapsed && showSections && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
@@ -414,7 +414,7 @@ export default function EnhancedSideBar() {
                     })}
                   </motion.div>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
 
               {/* Schedule Appointment Button */}
               <motion.button
@@ -479,8 +479,8 @@ export default function EnhancedSideBar() {
                         key={idx}
                         onClick={() => handleSettingsAction(item.action)}
                         className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 text-left ${settingsTab === item.action
-                            ? "bg-Primary text-white shadow-lg"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          ? "bg-Primary text-white shadow-lg"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                           }`}
                       >
                         {item.icon}

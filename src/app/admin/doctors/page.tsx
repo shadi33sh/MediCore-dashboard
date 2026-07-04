@@ -19,7 +19,7 @@ function Page() {
       try {
         const response = await axiosInstance.get("api/doctor");
         setDoctors(response?.data?.data?.doctors);
-      } catch (err : any) {
+      } catch (err: any) {
         console.error("Error fetching doctors:", err);
       }
     }
@@ -27,7 +27,7 @@ function Page() {
     getDoctors();
   }, []);
 
-  const filteredDoctors = doctors.filter(({ department, user } : any) => {
+  const filteredDoctors = doctors.filter(({ department, user }: any) => {
     const departmentMatch =
       selectedDepartment === "All" || department.name === selectedDepartment;
     const searchLower = searchTerm.toLowerCase();
@@ -38,7 +38,7 @@ function Page() {
     return departmentMatch && searchMatch;
   });
 
-  const departments = [...new Set(doctors.map((doc : any) => doc.department.name))];
+  const departments = [...new Set(doctors.map((doc: any) => doc.department.name))];
   console.log(departments);
   const handleSort = (column: string) => {
     setSortOrder((prevOrder) =>
@@ -47,7 +47,7 @@ function Page() {
     setSortColumn(column);
   };
 
-  const sortedData = [...filteredDoctors].sort((a : any, b : any) => {
+  const sortedData = [...filteredDoctors].sort((a: any, b: any) => {
     if (!sortColumn) return 0;
 
     const valueA =
@@ -118,7 +118,7 @@ function Page() {
                   </thead>
 
                   <tbody>
-                    {data.map((item  : any, idx : any) => (
+                    {data.map((item: any, idx: any) => (
                       <tr
                         key={`${item.id} ${idx}`}
                         className="transition duration-300 ease-in-out dark:hover:bg-gray-700 hover:bg-gray-100 even:bg-gray-50 dark:even:bg-gray-800 border-b border-gray-300 dark:border-gray-700 cursor-pointer"
@@ -162,25 +162,24 @@ function Page() {
               placeholder="Search by doctor name..."
               className="rounded-xl border px-10 py-2 bg-gray-200 dark:bg-gray-900 border-Cyan/40 dark:text-white w-full"
               value={searchTerm}
-              onChange={(e : any) => setSearchTerm(e.target.value)}
+              onChange={(e: any) => setSearchTerm(e.target.value)}
             />
           </div>
 
           {/* Department Filter Buttons */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex overflow-x-auto scroll-hidden gap-2">
             {departments.map((dept, idx) => (
               <button
                 key={idx}
                 onClick={() =>
                   setSelectedDepartment((perv) => (perv == dept ? "All" : dept))
                 }
-                className={`px-4 py-2 rounded-xl font-medium transition-all ${
-                  selectedDepartment !== dept
-                    ? "dark:bg-gray-700/50 bg-gray-700/10"
-                    : "dark:bg-Primary bg-Cyan/70"
-                }`}
+                className={`px-4 py-2 rounded-xl font-medium transition-all ${selectedDepartment !== dept
+                  ? "dark:bg-gray-700/50 bg-gray-700/10"
+                  : "dark:bg-Primary bg-Cyan/70"
+                  }`}
               >
-                <p className="font-semibold text-sm">{dept.en}</p>
+                <p className="font-semibold text-sm">{dept}</p>
               </button>
             ))}
           </div>

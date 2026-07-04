@@ -52,8 +52,8 @@ export default function ArticlePage() {
       {/* Header */}
       <div className="flex items-center gap-3 fixed top-0 p-4 w-screen dark:bg-gray-900 z-50">
         <img className="w-[60px] h-[60px]" src="/images/Logo.png" alt="Logo" />
-        <h1 className="font-extrabold  text-4xl  ">
-          <span className="text-Primary">Medi</span>Core <span className="text-sm italic font-semibold">Medical Articles</span>
+        <h1 className="font-bold  text-2xl  ">
+          <span className="text-Primary">Medi</span>Core <span className="text-sm italic font-thin">Medical Articles</span>
         </h1>
       </div>
 

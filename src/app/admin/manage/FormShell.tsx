@@ -13,12 +13,12 @@ interface FormShellProps {
 
 export default function FormShell({ title, subtitle, icon, accentColor, children }: FormShellProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50 dark:bg-gray-950">
+    <div className="flex items-center justify-center p-6">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="w-full max-w-xl"
+        className="w-full"
       >
         {/* Card */}
         <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
@@ -167,7 +167,7 @@ export function SubmitBtn({ label, loading, accentColor = 'from-Primary to-teal-
           type="submit"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
-          className={`w-full py-3.5 rounded-2xl bg-gradient-to-r from-Primary/90 to-Primary text-white font-bold text-sm shadow-lg shadow-Primary/20 transition-shadow hover:shadow-xl`}
+          className={`w-full py-3.5 mt-3 rounded-2xl bg-gradient-to-r from-Primary/90 to-Primary text-white font-bold text-sm shadow-lg shadow-Primary/20 transition-shadow hover:shadow-xl`}
         >
           {label}
         </motion.button>
