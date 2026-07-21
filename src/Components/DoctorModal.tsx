@@ -1,7 +1,8 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FiStar, FiPhone, FiX, FiClock, FiUser, FiFileText } from 'react-icons/fi'
+import { useAlert } from './Alert'
 
 interface Schedule {
   time: string
@@ -11,6 +12,7 @@ interface Schedule {
 }
 
 interface Doctor {
+  id: number
   name: string
   phone: string
   section: string
@@ -52,8 +54,80 @@ function StarRow({ rating }: { rating: number }) {
   )
 }
 
+import axiosInstance from '../app/AuthAxios'
+import Loading from './loading'
+
 const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
+  const { showAlert } = useAlert();
+  const [localSchedules, setLocalSchedules] = useState<Schedule[]>(doctor.schedules);
+  const [schedulingSlot, setSchedulingSlot] = useState<string | null>(null);
+  const [patientId, setPatientId] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const gradient = sectionGradients[doctor.section] ?? 'from-teal-500 to-cyan-600'
+
+  const getFormattedDate = (slotTime: string) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const match = slotTime.match(/(\d+):(\d+)\s(AM|PM)/i);
+    if (!match) return "";
+    let h = parseInt(match[1]);
+    const m = match[2];
+    const ampm = match[3].toUpperCase();
+    if (ampm === 'PM' && h !== 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+
+    const hh = String(h).padStart(2, '0');
+    return `${year}-${month}-${day} ${hh}:${m}`;
+  }
+
+  const handleSchedule = async (slot: string) => {
+    if (!patientId.trim()) {
+      setErrorMsg("Patient ID is required");
+      return;
+    }
+    setSubmitting(true);
+    setErrorMsg("");
+    try {
+      const formattedDate = getFormattedDate(slot);
+      const payload = {
+        patient_id: patientId,
+        doctor_id: doctor.id,
+        apointment_date: formattedDate
+      };
+
+      const res = await axiosInstance.post("api/secretary/appointment", payload);
+      showAlert("success", "Appointment created successfully!");
+
+      const newAppt = res.data.data.apointment;
+      const patientName = newAppt.patient ? `${newAppt.patient.first_name} ${newAppt.patient.last_name}` : `Patient ${newAppt.patient_id}`;
+
+      setLocalSchedules(prev => [
+        ...prev,
+        {
+          id: newAppt.id,
+          time: slot,
+          patientId: newAppt.patient_id,
+          patientName: patientName,
+          description: "Instant Appointment"
+        }
+      ]);
+
+      setSchedulingSlot(null);
+      setPatientId("");
+      // Since we don't have a callback to refetch, we instantly updated local state
+    } catch (err: any) {
+
+      showAlert("error", err.response?.data.msg || "Failed to schedule");
+
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   const generateTimeSlots = () => {
     const slots: string[] = []
@@ -70,7 +144,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
 
   const allSlots = generateTimeSlots()
   const scheduleMap = new Map<string, Schedule>()
-  doctor.schedules.forEach((s) => {
+  localSchedules.forEach((s) => {
     const match = s.time.match(/(\d{1,2}:\d{2}\s[AP]M)/)
     if (match?.[1]) scheduleMap.set(match[1], s)
   })
@@ -86,7 +160,6 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
       >
         {/* Modal panel */}
         <motion.div
@@ -125,11 +198,11 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
 
           {/* ── Floating avatar ── */}
           <div className="relative flex justify-center -mt-14 flex-shrink-0 z-10">
-            <div className={`ring-4 ring-white dark:ring-gray-900 ring-offset-0 rounded-full shadow-xl`}>
+            <div className={`bg-gray-900 rounded-full shadow-xl`}>
               <img
                 src={doctor.image}
                 alt={doctor.name}
-                className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800"
+                className="w-24 h-24 rounded-full object-cover p-2 border-white dark:border-gray-800"
                 onError={(e) => { (e.target as HTMLImageElement).src = '/images/Logo.png' }}
               />
             </div>
@@ -194,12 +267,71 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
                       const isBooked = !!data
                       const isEven = i % 2 === 0
 
+                      if (schedulingSlot === slot) {
+                        return (
+                          <tr key={i} className="bg-[#0f172a]">
+                            <td colSpan={3} className="p-4 border-b border-gray-800">
+                              <div className="flex flex-col gap-3">
+                                <div className="flex items-center gap-2 ml-1">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                                  <span className="text-gray-200 text-xs font-bold">{slot}</span>
+                                </div>
+                                <div className="bg-Primary/20 rounded-xl p-3  shadow-inner">
+                                  <label className="block text-[10px] text-gray-400 mb-1.5 ml-1 font-medium">Patient ID</label>
+                                  <input
+                                    type="text"
+                                    placeholder="Enter patient ID..."
+                                    value={patientId}
+                                    onChange={(e) => setPatientId(e.target.value)}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="w-full px-3 py-2 text-xs border border-Primary rounded-lg bg-Primary/20 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-teal-400 transition-colors mb-3"
+                                    autoFocus
+                                  />
+                                  {errorMsg && <span className="text-xs text-red-400 block mb-2">{errorMsg}</span>}
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleSchedule(slot);
+                                      }}
+                                      disabled={submitting}
+                                      className="flex-1 py-1.5 bg-Primary text-white text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                                    >
+                                      {submitting ? <Loading size={14} stroke='2' color='#fff' /> : <><span>✓</span> Book Appointment</>}
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSchedulingSlot(null);
+                                        setPatientId("");
+                                        setErrorMsg("");
+                                      }}
+                                      className="px-4 py-1.5 bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 text-xs font-medium rounded-md transition-colors"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      }
+
                       return (
                         <tr
                           key={i}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            if (!isBooked) {
+                              setSchedulingSlot(slot === schedulingSlot ? null : slot);
+                              setPatientId("");
+                              setErrorMsg("");
+                            }
+                          }}
                           className={`relative group transition-colors duration-150
                           ${isEven ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/60 dark:bg-gray-800/40'}
-                          ${isBooked ? 'hover:bg-teal-50 dark:hover:bg-teal-900/20' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}
+                          ${isBooked ? 'hover:bg-teal-50 dark:hover:bg-teal-900/20' : 'hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'}
                         `}
                         >
                           {/* Time */}

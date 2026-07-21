@@ -4,7 +4,7 @@ import React from "react";
 import DarkModeToggle from "../Components/toggleDarkMode";
 import NProgressHandler from "../Components/NProgressHandler";
 import GoogleTranslate from "../Components/GoogleTranslate"; // ✅ import the component
-import { AlertProvider} from "../Components/Alert";
+import { AlertProvider } from "../Components/Alert";
 
 export const metadata: Metadata = {
   title: "SpaceFlightNews",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="text-black dark:text-white transition-colors duration-1000">
+    <html lang="en" style={{ fontSize: '80%' }} className="text-black dark:text-white transition-colors duration-1000">
       <head>
         {/* <script
           dangerouslySetInnerHTML={{
