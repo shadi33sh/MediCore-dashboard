@@ -10,7 +10,7 @@ import DashboardLayout from "../secretaryComponents/DashboardLayout";
 import axiosInstance from "../../AuthAxios";
 import { useAlert } from "../../../Components/Alert";
 import { Plus } from "lucide-react";
-import Link from "next/link";
+import NewAppointmentModal from "../secretaryComponents/NewAppointmentModal";
 import {
   FiCalendar, FiClock, FiUser, FiActivity,
   FiCheckCircle, FiXCircle, FiLogIn, FiChevronDown,
@@ -44,6 +44,7 @@ function Page() {
   const [searchTerm, setSearchTerm] = useState("");
   const [actionLoading, setActionLoading] = useState<Record<number, boolean>>({});
   const [openTables, setOpenTables] = useState<Record<string, boolean>>({ accepted: true, waiting: true, today: true });
+  const [showNewAppt, setShowNewAppt] = useState(false);
   const { showAlert } = useAlert();
 
   const formateDate = (date: string) => {
@@ -453,13 +454,13 @@ function Page() {
   return (
     <DashboardLayout
       actions={
-        <Link
-          href="new-appiontment"
+        <button
+          onClick={() => setShowNewAppt(true)}
           className="bg-Primary flex items-center gap-1.5 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-Primary/90 shadow-md shadow-Primary/20"
         >
           <Plus className="w-4" />
           New Appointment
-        </Link>
+        </button>
       }
       title="Doctor Appointments"
       loading={loading}
@@ -521,7 +522,10 @@ function Page() {
           </div>
         </div>
       )}
+      <NewAppointmentModal open={showNewAppt} onClose={() => setShowNewAppt(false)} />
+
     </DashboardLayout>
+
   );
 }
 

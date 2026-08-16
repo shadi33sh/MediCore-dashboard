@@ -134,7 +134,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
     const start = new Date()
     start.setHours(9, 0, 0, 0)
     const end = new Date()
-    end.setHours(17, 0, 0, 0)
+    end.setHours(23, 30, 0, 0)
     const now = new Date()
     while (start < end) {
       if (start > now) {
@@ -148,6 +148,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
   const allSlots = generateTimeSlots()
   const scheduleMap = new Map<string, Schedule>()
   localSchedules.forEach((s) => {
+    //fron
     const match = s.time.match(/(\d{1,2}:\d{2}\s[AP]M)/)
     if (match?.[1]) scheduleMap.set(match[1], s)
   })
@@ -352,7 +353,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
                                     exit={{ height: 0, opacity: 0 }}
                                     className="overflow-hidden bg-teal-50/30 dark:bg-teal-900/10 shadow-inner"
                                   >
-                                    <div className="p-5 border-l-2 border-teal-500 ml-4 my-4 mr-4 rounded-r-2xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800">
+                                    <div className="p-5 border-l-2  shadow-sm border border-gray-100 dark:border-gray-800">
                                       <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">Patient ID</label>
                                       <div className="relative mb-4">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
