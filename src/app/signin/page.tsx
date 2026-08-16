@@ -2,16 +2,14 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import axiosInstance from '../AuthAxios';
 import Loading from '../../Components/loading';
 import { useAlert } from '../../Components/Alert';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
-  const router = useRouter();
+  const { login, loading } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -22,21 +20,12 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
-      const response = await axiosInstance.post('api/auth/login', formData);
-      localStorage.setItem('token', response.data.token.access_token);
-
-      const user = await axiosInstance.post('api/auth/me');
-      localStorage.setItem('user', JSON.stringify(user.data));
-
+      await login(formData.email, formData.password);
       showAlert('success', 'Logged in successfully');
-      router.push(`/${user.data.role}`);
-    } catch (err : any) {
+    } catch {
       showAlert('error', 'Invalid email or password');
-    } finally {
-      setLoading(false);
     }
   };
 

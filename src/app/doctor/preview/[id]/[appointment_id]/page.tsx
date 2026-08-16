@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import DashboardLayout from "../../doctorComponents/DocDashboardLayout";
-import axiosInstance from "../../../AuthAxios";
-import { useAlert } from "../../../../Components/Alert";
-import Loading from "../../../../Components/loading";
+import DashboardLayout from "../../../doctorComponents/DocDashboardLayout";
+import axiosInstance from "../../../../AuthAxios";
+import { useAlert } from "../../../../../Components/Alert";
+import Loading from "../../../../../Components/loading";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiUser,
@@ -23,8 +23,8 @@ import {
   FiPhone,
   FiRefreshCw,
 } from "react-icons/fi";
-import { useActivePatient } from "../../doctorComponents/ActivePatientContext";
-import PreviewDetailsModal from "../PreviewDetailsModal";
+import { useActivePatient } from "../../../doctorComponents/ActivePatientContext";
+import PreviewDetailsModal from "../../PreviewDetailsModal";
 
 /* ─────────────────────────── Types ─────────────────────────── */
 
@@ -75,7 +75,7 @@ export default function PatientPreviewPage() {
   const router = useRouter();
   const { showAlert } = useAlert();
   const { activeData, clearActiveData } = useActivePatient();
-  const scheduleId = params.id as string; // [id] is the schedule/appointment ID
+  const scheduleId = params.appointment_id as string; // appointment ID
 
   const EMPTY_FORM: FormData = {
     diagnoseis: "",
@@ -213,10 +213,10 @@ export default function PatientPreviewPage() {
           prev.map((p) =>
             p.id === selectedPreview.id
               ? {
-                  ...p,
-                  ...formData,
-                  diagnoseis_type: Number(formData.diagnoseis_type),
-                }
+                ...p,
+                ...formData,
+                diagnoseis_type: Number(formData.diagnoseis_type),
+              }
               : p,
           ),
         );
@@ -348,39 +348,39 @@ export default function PatientPreviewPage() {
                 {(patient.chronic_diseases ||
                   patient.medication_allergies ||
                   patient.permanent_medications) && (
-                  <div className="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {patient.chronic_diseases && (
-                      <div>
-                        <p className="text-xs text-rose-500 font-semibold mb-0.5">
-                          Chronic Diseases
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">
-                          {patient.chronic_diseases}
-                        </p>
-                      </div>
-                    )}
-                    {patient.medication_allergies && (
-                      <div>
-                        <p className="text-xs text-amber-500 font-semibold mb-0.5">
-                          Medication Allergies
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">
-                          {patient.medication_allergies}
-                        </p>
-                      </div>
-                    )}
-                    {patient.permanent_medications && (
-                      <div>
-                        <p className="text-xs text-blue-500 font-semibold mb-0.5">
-                          Permanent Medications
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">
-                          {patient.permanent_medications}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
+                    <div className="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {patient.chronic_diseases && (
+                        <div>
+                          <p className="text-xs text-rose-500 font-semibold mb-0.5">
+                            Chronic Diseases
+                          </p>
+                          <p className="text-xs text-gray-600 dark:text-gray-300">
+                            {patient.chronic_diseases}
+                          </p>
+                        </div>
+                      )}
+                      {patient.medication_allergies && (
+                        <div>
+                          <p className="text-xs text-amber-500 font-semibold mb-0.5">
+                            Medication Allergies
+                          </p>
+                          <p className="text-xs text-gray-600 dark:text-gray-300">
+                            {patient.medication_allergies}
+                          </p>
+                        </div>
+                      )}
+                      {patient.permanent_medications && (
+                        <div>
+                          <p className="text-xs text-blue-500 font-semibold mb-0.5">
+                            Permanent Medications
+                          </p>
+                          <p className="text-xs text-gray-600 dark:text-gray-300">
+                            {patient.permanent_medications}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
               </motion.div>
 
 
@@ -535,11 +535,10 @@ export default function PatientPreviewPage() {
                               type="submit"
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              className={`px-10 py-3.5 rounded-2xl text-white font-bold text-sm shadow-lg transition-all flex items-center gap-2 ${
-                                isUpdateMode
-                                  ? "bg-gradient-to-r from-amber-500 to-orange-500 shadow-amber-500/20 hover:shadow-xl"
-                                  : "bg-gradient-to-r from-Primary to-Primary/80 shadow-Primary/20 hover:shadow-xl"
-                              }`}
+                              className={`px-10 py-3.5 rounded-2xl text-white font-bold text-sm shadow-lg transition-all flex items-center gap-2 ${isUpdateMode
+                                ? "bg-gradient-to-r from-amber-500 to-orange-500 shadow-amber-500/20 hover:shadow-xl"
+                                : "bg-gradient-to-r from-Primary to-Primary/80 shadow-Primary/20 hover:shadow-xl"
+                                }`}
                             >
                               <FiCheck size={16} />
                               {isUpdateMode ? "Update Report" : "Submit Report"}
@@ -564,7 +563,7 @@ export default function PatientPreviewPage() {
               </AnimatePresence>
 
 
-              
+
               {/* ── Previous Previews + New button ── */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
@@ -598,11 +597,10 @@ export default function PatientPreviewPage() {
                           key={prev.id}
                           whileHover={isLocked ? {} : { scale: 1.005 }}
                           onClick={() => !isLocked && handleSelectPreview(prev)}
-                          className={`p-4 rounded-xl border text-sm transition-all ${
-                            isLocked
-                              ? "bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-60 cursor-not-allowed"
-                              : "bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-Primary/30 hover:bg-Primary/5 cursor-pointer"
-                          }`}
+                          className={`p-4 rounded-xl border text-sm transition-all ${isLocked
+                            ? "bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-60 cursor-not-allowed"
+                            : "bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-Primary/30 hover:bg-Primary/5 cursor-pointer"
+                            }`}
                         >
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div>
@@ -627,11 +625,10 @@ export default function PatientPreviewPage() {
                               <div>
                                 <p className="text-xs text-gray-400 mb-0.5">Status</p>
                                 <span
-                                  className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${
-                                    prev.status === "Stable"
-                                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
-                                      : "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-400"
-                                  }`}
+                                  className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${prev.status === "Stable"
+                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
+                                    : "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-400"
+                                    }`}
                                 >
                                   {prev.status}
                                 </span>

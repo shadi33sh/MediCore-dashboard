@@ -5,6 +5,7 @@ import DarkModeToggle from "../Components/toggleDarkMode";
 import NProgressHandler from "../Components/NProgressHandler";
 import GoogleTranslate from "../Components/GoogleTranslate"; // ✅ import the component
 import { AlertProvider } from "../Components/Alert";
+import { AuthProvider } from "../context/AuthContext";
 
 export const metadata: Metadata = {
   title: "SpaceFlightNews",
@@ -34,9 +35,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased dark:bg-black">
         <AlertProvider>
-          <NProgressHandler />
-          <DarkModeToggle />
-          {children}
+          <AuthProvider>
+            <NProgressHandler />
+            <DarkModeToggle />
+            {children}
+          </AuthProvider>
         </AlertProvider>
       </body>
     </html>

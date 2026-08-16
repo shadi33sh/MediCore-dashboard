@@ -32,6 +32,7 @@ export interface ActivePatientData {
     department_id: number
     diagnoseis: string
     diagnoseis_type: number
+    apointment_id: number,
     medicine: string
     notes: string
     date: string
@@ -200,10 +201,11 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
   const [showFloating, setShowFloating] = useState(false)
 
   const clearActiveData = useCallback(() => {
-    setActiveData(null)
+    // setActiveData(null)
     setShowModal(false)
-    setShowFloating(false)
   }, [])
+
+  console.log(activeData)
 
   /* ── Pusher subscription — reads doctor_id from the stored user object ── */
   useEffect(() => {
@@ -236,7 +238,6 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
       console.log('[Pusher] patient.entered:', data)
       setActiveData(data)
       setShowModal(true)
-      setShowFloating(false)
     })
 
     return () => {
@@ -250,14 +251,11 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
   const handleConfirm = useCallback(() => {
     setShowModal(false)
     setShowFloating(false)
-    // Read schedule_id from user object or dedicated key
-    const rawUser = localStorage.getItem('user')
-    const user = rawUser ? JSON.parse(rawUser) : null
-    const scheduleId = user?.schedule_id ?? localStorage.getItem('schedule_id')
-    if (scheduleId) {
-      router.push(`/doctor/preview/${scheduleId}`)
+
+    if (activeData?.preview.apointment_id) {
+      router.push(`/doctor/preview/${activeData?.preview?.patient_id}/${activeData?.preview?.apointment_id}`)
     } else {
-      router.push('/doctor/preview/current')
+      router.push(`/doctor/preview/${activeData?.patient.id}`)
     }
   }, [router])
 
@@ -267,7 +265,6 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const handleFloatingClick = useCallback(() => {
-    setShowFloating(false)
     setShowModal(true)
   }, [])
 

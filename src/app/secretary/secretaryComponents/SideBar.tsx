@@ -35,6 +35,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ToggleModeButton from "../../../Components/ToggleModeButton";
 import AddMounthlyWorkDays from "./AddmounthlyLeave";
 import { medicalSections } from "../sections/medicalSections";
+import SettingsModal from "../../../Components/SettingsModal";
 
 const sidebarItems = [
   {
@@ -59,26 +60,7 @@ const sidebarItems = [
   // { label: 'Appointments', icon: <IoDocument size={18} />, href: '/secretary/appointments', badge: '12' },
 ];
 
-const settingsItems = [
-  {
-    label: "Profile Settings",
-    icon: <FaUserCircle size={16} />,
-    action: "profile",
-  },
-  { label: "Appearance", icon: <FaPalette size={16} />, action: "appearance" },
-  {
-    label: "Notifications",
-    icon: <FaBell size={16} />,
-    action: "notifications",
-  },
-  { label: "Language", icon: <FaLanguage size={16} />, action: "language" },
-  { label: "Security", icon: <FaShieldAlt size={16} />, action: "security" },
-  {
-    label: "Help & Support",
-    icon: <FaQuestionCircle size={16} />,
-    action: "help",
-  },
-];
+
 
 export default function EnhancedSideBar() {
   const [showSections, setShowSections] = useState(false);
@@ -96,19 +78,6 @@ export default function EnhancedSideBar() {
   const pathname = usePathname();
   const sidebarRef = useRef(null);
   const searchRef = useRef(null);
-
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        setUser(null);
-      }
-    }
-  }, []);
 
   // Detect mobile and handle resize
   useEffect(() => {
@@ -171,12 +140,6 @@ export default function EnhancedSideBar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleSettingsAction = (action) => {
-    setSettingsTab(action);
-    // Add your settings logic here
-    console.log("Settings action:", action);
-  };
-
   return (
     <>
       {/* Hamburger Button for Mobile */}
@@ -213,7 +176,7 @@ export default function EnhancedSideBar() {
           width: !isMobile && collapsed ? 80 : 320,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className={`fixed top-0 max-w-[260px] left-0 h-full z-50 md:z-auto bg-white dark:bg-gray-900 shadow-xl 
+        className={`fixed top-0 max-w-[220px] left-0 h-full z-50 md:z-auto bg-gray-100 dark:bg-gray-900 
 md:static overflow-hidden`}
       >
         <div className="h-full flex flex-col">
@@ -307,19 +270,19 @@ md:static overflow-hidden`}
                         onClick={handleMobileNavigation}
                         className={`flex items-center gap-3 font-medium p-3 rounded-xl transition-all duration-200 relative group
                       ${isActive
-                            ? "bg-Primary  text-white shadow-lg"
+                            ? "bg-Primary/10  text-Primary"
                             : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                           }`}
                       >
                         <span
-                          className={`${isActive ? "text-white" : "text-gray-500 dark:text-gray-400 group-hover:text-Primary dark:group-hover:text-blue-400"} transition-colors`}
+                          className={`${isActive ? "text-Primary" : "text-gray-500 dark:text-gray-400 group-hover:text-Primary dark:group-hover:text-blue-400"} transition-colors`}
                         >
                           {item.icon}
                         </span>
 
                         {!collapsed && (
                           <>
-                            <span className="flex-1">{item.label}</span>
+                            <span className="flex-1 text-sm font-semibold">{item.label}</span>
                             {item.badge && (
                               <span
                                 className={`px-2 py-1 text-xs font-bold rounded-full ${isActive
@@ -361,7 +324,7 @@ md:static overflow-hidden`}
                     className="flex items-center gap-3 font-medium p-3 flex-1"
                   >
                     <FaUserMd size={18} />
-                    {!collapsed && <span>Sections</span>}
+                    {!collapsed && <span className="flex-1 text-sm font-semibold" >Sections</span>}
                   </Link>
                   {/* {!collapsed && (
                     <button
@@ -430,7 +393,7 @@ md:static overflow-hidden`}
                   size={18}
                   className="group-hover:text-white transition-colors"
                 />
-                {!collapsed && <span>Schedule Appointment</span>}
+                {!collapsed && <span className=" text-sm font-semibold" >Schedule Appointmen</span>}
               </motion.button>
             </div>
           </div>
@@ -451,175 +414,12 @@ md:static overflow-hidden`}
       </motion.div>
 
       {/* Enhanced Settings Modal */}
-      <AnimatePresence>
-        {showSettings && (
-          <>
-            <motion.div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-              onClick={() => setShowSettings(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-            <motion.div
-              className="fixed top-[20%] left-[25%] w-[95%] md:w-[70%] max-w-4xl -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl z-50 overflow-hidden"
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            >
-              <div className="flex h-[600px]">
-                {/* Settings Sidebar */}
-                <div className="w-1/3 bg-gray-50 dark:bg-gray-900 p-6 border-r border-gray-200 dark:border-gray-700">
-                  <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">
-                    Settings
-                  </h2>
-                  <div className="space-y-2">
-                    {settingsItems.map((item, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleSettingsAction(item.action)}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 text-left ${settingsTab === item.action
-                          ? "bg-Primary text-white shadow-lg"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                          }`}
-                      >
-                        {item.icon}
-                        <span className="text-sm font-medium">
-                          {item.label}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <button
-                      onClick={() => {
-                        localStorage.removeItem("user");
-                        localStorage.removeItem("token");
-                        navigator.push("/");
-                      }}
-                      className="w-full flex items-center gap-3 p-3 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
-                    >
-                      <FaSignOutAlt size={16} />
-                      <span className="text-sm font-medium">Logout</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Settings Content */}
-                <div className="flex-1 p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white capitalize">
-                      {settingsTab.replace("_", " ")}
-                    </h3>
-                    <button
-                      onClick={() => setShowSettings(false)}
-                      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <FaTimes size={20} className="text-gray-500" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-6">
-                    {settingsTab === "profile" && (
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-Primary to-purple-600 rounded-full flex items-center justify-center">
-                            <FaUserCircle size={32} className="text-white" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-gray-800 dark:text-white">
-                              {user.name} {user.last_name}
-                            </h4>
-                            <p className="text-gray-600 dark:text-gray-400">
-                              {user.role}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <input
-                            value={user.first_name}
-                            type="text"
-                            placeholder="First Name"
-                            className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800"
-                          />
-                          <input
-                            value={user.last_name}
-                            type="text"
-                            placeholder="Last Name"
-                            className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800"
-                          />
-                          <input
-                            value={user.email}
-                            type="email"
-                            placeholder="Email"
-                            className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 col-span-2"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {settingsTab === "appearance" && (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-700 dark:text-gray-300">
-                            Dark Mode
-                          </span>
-                          <ToggleModeButton />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-700 dark:text-gray-300">
-                            Compact Sidebar
-                          </span>
-                          <button
-                            onClick={() => setCollapsed(!collapsed)}
-                            className={`w-12 h-6 rounded-full transition-colors ${collapsed ? "bg-Primary" : "bg-gray-300 dark:bg-gray-600"}`}
-                          >
-                            <div
-                              className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${collapsed ? "translate-x-6" : "translate-x-0.5"}`}
-                            />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {settingsTab === "notifications" && (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-gray-800 dark:text-white">
-                              Email Notifications
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              Receive notifications via email
-                            </p>
-                          </div>
-                          <button className="w-12 h-6 bg-Primary rounded-full">
-                            <div className="w-5 h-5 bg-white rounded-full shadow-md transform translate-x-6 transition-transform" />
-                          </button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-gray-800 dark:text-white">
-                              Push Notifications
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              Receive push notifications
-                            </p>
-                          </div>
-                          <button className="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full">
-                            <div className="w-5 h-5 bg-white rounded-full shadow-md transform translate-x-0.5 transition-transform" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        compactSidebar={collapsed}
+        onToggleCompactSidebar={() => setCollapsed(!collapsed)}
+      />
 
       <AnimatePresence>
         {showReserveForm && (

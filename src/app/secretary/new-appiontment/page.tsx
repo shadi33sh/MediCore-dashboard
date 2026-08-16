@@ -477,39 +477,14 @@ export default function ScheduleAppointmentPage() {
           </div>
         )}
 
-        {/* ── Confirm button ── */}
-        {isPatientInSystem
-          ? selectedPatientID && selectedAppointmentFinelTime && !loadingAppointments && selectedTimeSlot && (
-            <div className="flex justify-end">
-              <motion.button
-                type="button"
-                onClick={() => setModal(true)}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 bg-gradient-to-r from-Primary to-teal-500 text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-Primary/30 hover:shadow-xl transition-shadow"
-              >
-                <FiCheck size={16} />
-                Confirm Appointment
-              </motion.button>
-            </div>
-          )
-          : newPatientData.first_name && newPatientData.last_name && selectedAppointmentFinelTime && !loadingAppointments && selectedTimeSlot && (
-            <div className="flex justify-end">
-              <motion.button
-                type="button"
-                onClick={() => setModal(true)}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 bg-gradient-to-r from-Primary to-teal-500 text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-Primary/30 hover:shadow-xl transition-shadow"
-              >
-                <FiCheck size={16} />
-                Confirm Appointment
-              </motion.button>
-            </div>
-          )
-        }
+
+        <div className="flex justify-end">
+
+        </div>
+
 
       </form>
+
 
       {/* ── Confirmation Modal ── */}
       <AnimatePresence>
@@ -533,7 +508,7 @@ export default function ScheduleAppointmentPage() {
                 transition={{ type: 'spring', stiffness: 300, damping: 26 }}
               >
                 {/* Gradient header strip */}
-                <div className="h-2 w-full bg-gradient-to-r from-Primary to-teal-400" />
+                {/* <div className="h-2 w-full bg-gradient-to-r from-Primary to-teal-400" /> */}
 
                 <div className="p-7">
                   {/* Header row */}
@@ -637,6 +612,25 @@ export default function ScheduleAppointmentPage() {
           </>
         )}
       </AnimatePresence>
+
+      {/* ── Sticky Bottom Confirm Bar ── */}
+      <div className="sticky -bottom-6 -mx-6 px-6 py-4 bg-white/90 dark:bg-black/90 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 flex justify-end z-20">
+        <motion.button
+          type="button"
+          onClick={() => setModal(true)}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-Primary to-teal-500 text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-Primary/30 hover:shadow-xl transition-all"
+          disabled={
+            isPatientInSystem
+              ? !(selectedPatientID && selectedAppointmentFinelTime && !loadingAppointments && selectedTimeSlot)
+              : !(newPatientData.first_name && newPatientData.last_name && selectedAppointmentFinelTime && !loadingAppointments && selectedTimeSlot)
+          }
+        >
+          <FiCheck size={16} />
+          Confirm Appointment
+        </motion.button>
+      </div>
 
     </DashboardLayout>
   )

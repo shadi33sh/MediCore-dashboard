@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { FiStar, FiPhone, FiX, FiClock, FiUser, FiFileText } from 'react-icons/fi'
 import { useAlert } from './Alert'
 
@@ -135,8 +135,11 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
     start.setHours(9, 0, 0, 0)
     const end = new Date()
     end.setHours(17, 0, 0, 0)
+    const now = new Date()
     while (start < end) {
-      slots.push(start.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }))
+      if (start > now) {
+        slots.push(start.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }))
+      }
       start.setMinutes(start.getMinutes() + 30)
     }
     return slots
@@ -156,34 +159,40 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
     <>
       {/* Backdrop */}
       <motion.div
-        className="absolute -top-6 left-0 center w-screen h-screen bg-black/70 z-40"
+        className="fixed -inset-10 bg-black/70 z-50 flex items-center justify-center p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        onClick={onClose}
       >
         {/* Modal panel */}
         <motion.div
           className="
                    w-[95vw] max-w-2xl max-h-[92vh] overflow-hidden
                    flex flex-col rounded-3xl shadow-2xl
-                   bg-white dark:bg-gray-900"
+                   bg-white dark:bg-gray-900 relative"
           initial={{ opacity: 0, scale: 0.9, y: 40 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 40 }}
           transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* ── Header gradient ── */}
           <div className={`relative bg-gradient-to-br ${gradient} px-6 pt-8 pb-16 text-white flex-shrink-0`}>
             {/* dot pattern */}
             <div
-              className="absolute inset-0 opacity-10"
+              className="absolute inset-0 opacity-10 pointer-events-none"
               style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '22px 22px' }}
             />
 
             {/* Close btn */}
             <button
-              onClick={onClose}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 transition-colors flex items-center justify-center"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 transition-colors flex items-center justify-center cursor-pointer"
             >
               <FiX size={15} />
             </button>
@@ -198,11 +207,12 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
 
           {/* ── Floating avatar ── */}
           <div className="relative flex justify-center -mt-14 flex-shrink-0 z-10">
-            <div className={`bg-gray-900 rounded-full shadow-xl`}>
+            <div className="relative p-1 rounded-full bg-white dark:bg-gray-900 shadow-xl group cursor-default">
+              <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${gradient} blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-300`}></div>
               <img
                 src={doctor.image}
                 alt={doctor.name}
-                className="w-24 h-24 rounded-full object-cover p-2 border-white dark:border-gray-800"
+                className="relative z-10 w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800"
                 onError={(e) => { (e.target as HTMLImageElement).src = '/images/Logo.png' }}
               />
             </div>
@@ -211,53 +221,56 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
           {/* ── Scrollable body ── */}
           <div className="flex-1 overflow-y-auto px-6 pb-6">
             {/* Doctor info */}
-            <div className="text-center mt-3 mb-5">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{doctor.name}</h2>
+            <div className="text-center mt-3 mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">{doctor.name}</h2>
               <StarRow rating={doctor.rating} />
-              <div className="flex items-center justify-center gap-1.5 mt-1 text-gray-400 dark:text-gray-500">
-                <FiPhone size={12} />
-                <span className="text-sm">{doctor.phone}</span>
+              <div className="flex items-center justify-center gap-1.5 mt-2 text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800/50 w-max mx-auto px-3 py-1 rounded-full">
+                <FiPhone size={12} className="text-Primary" />
+                <span className="text-sm font-medium">{doctor.phone}</span>
               </div>
-              <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
                 {doctor.description}
               </p>
             </div>
 
             {/* Stat pills */}
-            <div className="grid grid-cols-3 gap-3 mb-6">
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-3 text-center border border-gray-100 dark:border-gray-700">
-                <p className="text-xl font-bold text-gray-800 dark:text-white">{allSlots.length}</p>
-                <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Total Slots</p>
+            <div className="grid grid-cols-3 gap-3 mb-8">
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-3.5 text-center border border-gray-100 dark:border-gray-700/50 hover:shadow-md transition-shadow">
+                <p className="text-2xl font-black text-gray-800 dark:text-white">{allSlots.length}</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wider">Total</p>
               </div>
-              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-2xl p-3 text-center border border-teal-100 dark:border-teal-800/40">
-                <p className="text-xl font-bold text-teal-600 dark:text-teal-400">{bookedCount}</p>
-                <p className="text-[11px] text-teal-500 dark:text-teal-400 mt-0.5">Booked</p>
+              <div className="bg-teal-50/50 dark:bg-teal-900/10 rounded-2xl p-3.5 text-center border border-teal-100 dark:border-teal-800/30 hover:shadow-md transition-shadow">
+                <p className="text-2xl font-black text-teal-600 dark:text-teal-400">{bookedCount}</p>
+                <p className="text-xs font-semibold text-teal-500/80 dark:text-teal-400/80 mt-1 uppercase tracking-wider">Booked</p>
               </div>
-              <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-3 text-center border border-emerald-100 dark:border-emerald-800/40">
-                <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{freeCount}</p>
-                <p className="text-[11px] text-emerald-500 dark:text-emerald-400 mt-0.5">Available</p>
+              <div className="bg-emerald-50/50 dark:bg-emerald-900/10 rounded-2xl p-3.5 text-center border border-emerald-100 dark:border-emerald-800/30 hover:shadow-md transition-shadow">
+                <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{freeCount}</p>
+                <p className="text-xs font-semibold text-emerald-500/80 dark:text-emerald-400/80 mt-1 uppercase tracking-wider">Available</p>
               </div>
             </div>
 
             {/* Schedule table */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-                <FiClock size={14} />
-                Daily Schedule <span className="text-gray-400 font-normal">(9 AM – 5 PM)</span>
-              </h4>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                  <FiClock className="text-Primary" size={16} />
+                  Daily Schedule
+                </h4>
+                <span className="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-md">9 AM – 5 PM</span>
+              </div>
 
-              <div className="rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
                 <table className="min-w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                      <th className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wide w-[28%]">
-                        <div className="flex items-center gap-1.5"><FiClock size={11} /> Time</div>
+                    <tr className="bg-gray-50 dark:bg-gray-800/80 text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                      <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider w-[28%]">
+                        <div className="flex items-center gap-1.5"><FiClock size={12} /> Time</div>
                       </th>
-                      <th className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wide w-[28%]">
-                        <div className="flex items-center gap-1.5"><FiUser size={11} /> Patient</div>
+                      <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider w-[35%]">
+                        <div className="flex items-center gap-1.5"><FiUser size={12} /> Patient</div>
                       </th>
-                      <th className="px-4 py-3 text-left font-medium text-xs uppercase tracking-wide">
-                        <div className="flex items-center gap-1.5"><FiFileText size={11} /> Note</div>
+                      <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5"><FiFileText size={12} /> Status</div>
                       </th>
                     </tr>
                   </thead>
@@ -266,109 +279,128 @@ const DoctorModal: React.FC<DoctorModalProps> = ({ doctor, onClose }) => {
                       const data = scheduleMap.get(slot)
                       const isBooked = !!data
                       const isEven = i % 2 === 0
-
-                      if (schedulingSlot === slot) {
-                        return (
-                          <tr key={i} className="bg-[#0f172a]">
-                            <td colSpan={3} className="p-4 border-b border-gray-800">
-                              <div className="flex flex-col gap-3">
-                                <div className="flex items-center gap-2 ml-1">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
-                                  <span className="text-gray-200 text-xs font-bold">{slot}</span>
-                                </div>
-                                <div className="bg-Primary/20 rounded-xl p-3  shadow-inner">
-                                  <label className="block text-[10px] text-gray-400 mb-1.5 ml-1 font-medium">Patient ID</label>
-                                  <input
-                                    type="text"
-                                    placeholder="Enter patient ID..."
-                                    value={patientId}
-                                    onChange={(e) => setPatientId(e.target.value)}
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="w-full px-3 py-2 text-xs border border-Primary rounded-lg bg-Primary/20 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-teal-400 transition-colors mb-3"
-                                    autoFocus
-                                  />
-                                  {errorMsg && <span className="text-xs text-red-400 block mb-2">{errorMsg}</span>}
-                                  <div className="flex gap-2">
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleSchedule(slot);
-                                      }}
-                                      disabled={submitting}
-                                      className="flex-1 py-1.5 bg-Primary text-white text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
-                                    >
-                                      {submitting ? <Loading size={14} stroke='2' color='#fff' /> : <><span>✓</span> Book Appointment</>}
-                                    </button>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSchedulingSlot(null);
-                                        setPatientId("");
-                                        setErrorMsg("");
-                                      }}
-                                      className="px-4 py-1.5 bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 text-xs font-medium rounded-md transition-colors"
-                                    >
-                                      Cancel
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      }
+                      const isSelected = schedulingSlot === slot
 
                       return (
-                        <tr
-                          key={i}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            if (!isBooked) {
-                              setSchedulingSlot(slot === schedulingSlot ? null : slot);
-                              setPatientId("");
-                              setErrorMsg("");
-                            }
-                          }}
-                          className={`relative group transition-colors duration-150
-                          ${isEven ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/60 dark:bg-gray-800/40'}
-                          ${isBooked ? 'hover:bg-teal-50 dark:hover:bg-teal-900/20' : 'hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'}
-                        `}
-                        >
-                          {/* Time */}
-                          <td className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700/60">
-                            <span className={`font-mono text-xs font-semibold ${isBooked ? 'text-teal-600 dark:text-teal-400' : 'text-gray-400 dark:text-gray-500'}`}>
-                              {slot}
-                            </span>
-                          </td>
-
-                          {/* Patient / free slot */}
-                          <td className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700/60">
-                            {isBooked ? (
+                        <React.Fragment key={i}>
+                          <tr
+                            onClick={(e) => {
+                              e.preventDefault()
+                              if (!isBooked) {
+                                setSchedulingSlot(isSelected ? null : slot);
+                                setPatientId("");
+                                setErrorMsg("");
+                              }
+                            }}
+                            className={`relative group transition-all duration-200
+                            ${isEven ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/40 dark:bg-gray-800/30'}
+                            ${isBooked ? 'opacity-70 cursor-default' : 'cursor-pointer hover:bg-teal-50 dark:hover:bg-teal-900/20'}
+                            ${isSelected ? 'bg-teal-50/80 dark:bg-teal-900/30' : ''}
+                          `}
+                          >
+                            {/* Time */}
+                            <td className="px-4 py-4 border-b border-gray-100 dark:border-gray-800">
                               <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0">
-                                  <FiUser size={10} className="text-teal-600 dark:text-teal-400" />
-                                </div>
-                                <span className="text-gray-700 dark:text-gray-200 text-xs font-medium">{data!.patientName}</span>
+                                <div className={`w-1.5 h-1.5 rounded-full ${isBooked ? 'bg-gray-300 dark:bg-gray-600' : (isSelected ? 'bg-teal-500' : 'bg-emerald-400')} shadow-sm`}></div>
+                                <span className={`font-mono text-xs font-bold ${isBooked ? 'text-gray-500 dark:text-gray-400' : (isSelected ? 'text-teal-700 dark:text-teal-300' : 'text-gray-700 dark:text-gray-300')}`}>
+                                  {slot}
+                                </span>
                               </div>
-                            ) : (
-                              <span className="text-gray-300 dark:text-gray-600 text-xs italic">—</span>
-                            )}
-                          </td>
+                            </td>
 
-                          {/* Description / add hover */}
-                          <td className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700/60 relative">
-                            {isBooked ? (
-                              <span className="text-gray-500 dark:text-gray-400 text-xs">{data!.description}</span>
-                            ) : (
-                              <>
-                                <span className="text-gray-300 dark:text-gray-600 text-xs italic">Free</span>
-                                <div className="absolute inset-0 flex items-center justify-center bg-teal-500/90 text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-r">
-                                  + Add appointment
+                            {/* Patient / free slot */}
+                            <td className="px-4 py-4 border-b border-gray-100 dark:border-gray-800">
+                              {isBooked ? (
+                                <div className="flex items-center gap-2.5">
+                                  <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                    <FiUser size={11} className="text-gray-600 dark:text-gray-300" />
+                                  </div>
+                                  <span className="text-gray-600 dark:text-gray-300 text-xs font-semibold truncate max-w-[120px]">{data!.patientName}</span>
                                 </div>
-                              </>
+                              ) : (
+                                <span className={`text-xs font-medium ${isSelected ? 'text-teal-600 dark:text-teal-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                                  {isSelected ? 'Scheduling...' : 'Available'}
+                                </span>
+                              )}
+                            </td>
+
+                            {/* Description / add hover */}
+                            <td className="px-4 py-4 border-b border-gray-100 dark:border-gray-800 relative overflow-hidden">
+                              {isBooked ? (
+                                <span className="text-gray-400 dark:text-gray-500 text-xs">{data!.description}</span>
+                              ) : (
+                                <>
+                                  <span className="text-gray-300 dark:text-gray-600 text-xs italic">—</span>
+                                  {!isSelected && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-inner">
+                                      <span>+ Book Slot</span>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </td>
+                          </tr>
+
+                          {/* Expandable Form Row */}
+                          <AnimatePresence>
+                            {isSelected && (
+                              <tr>
+                                <td colSpan={3} className="p-0 border-b border-gray-200 dark:border-gray-800">
+                                  <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="overflow-hidden bg-teal-50/30 dark:bg-teal-900/10 shadow-inner"
+                                  >
+                                    <div className="p-5 border-l-2 border-teal-500 ml-4 my-4 mr-4 rounded-r-2xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800">
+                                      <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">Patient ID</label>
+                                      <div className="relative mb-4">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                          <FiUser className="text-gray-400" size={14} />
+                                        </div>
+                                        <input
+                                          type="text"
+                                          placeholder="Enter patient ID to book..."
+                                          value={patientId}
+                                          onChange={(e) => setPatientId(e.target.value)}
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all"
+                                          autoFocus
+                                        />
+                                      </div>
+
+                                      {errorMsg && <span className="text-xs font-medium text-rose-500 block mb-3">{errorMsg}</span>}
+
+                                      <div className="flex gap-3">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleSchedule(slot);
+                                          }}
+                                          disabled={submitting}
+                                          className="flex-1 py-2.5 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 shadow-md shadow-teal-500/20"
+                                        >
+                                          {submitting ? <Loading size={16} stroke='2' color='#fff' /> : <><span>✓</span> Confirm Booking</>}
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSchedulingSlot(null);
+                                            setPatientId("");
+                                            setErrorMsg("");
+                                          }}
+                                          className="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 text-sm font-bold rounded-xl transition-all"
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                </td>
+                              </tr>
                             )}
-                          </td>
-                        </tr>
+                          </AnimatePresence>
+                        </React.Fragment>
                       )
                     })}
                   </tbody>

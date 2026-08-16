@@ -109,8 +109,9 @@ function StarRating({ rating }: { rating: number }) {
 
 // ─── Doctor Card (inside dialog) ─────────────────────────────────────────────
 function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
-  const firstName = doctor.user?.first_name ?? ''
-  const lastName = doctor.user?.last_name ?? ''
+  console.log(doctor, 'this is doctor')
+  const firstName = doctor.doctor.user?.first_name ?? ''
+  const lastName = doctor.doctor.user?.last_name ?? ''
   const initials = `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase()
   const avatarGrad = avatarGradients[index % avatarGradients.length]
 
@@ -139,11 +140,11 @@ function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
             Dr. {firstName} {lastName}
           </p>
           <StarRating rating={doctor.doctor?.average_rating ?? 0} />
-          {doctor.user?.email && (
+          {doctor.doctor.user?.email && (
             <div className="flex items-center gap-1 mt-1">
               <FiMail size={9} className="text-gray-400 flex-shrink-0" />
               <span className="text-[10px] text-gray-400 truncate">
-                {doctor.user.email}
+                {doctor.doctor.user.email}
               </span>
             </div>
           )}
@@ -322,7 +323,6 @@ function DepartmentCard({
       id={`dept-card-${dept.id}`}
     >
       {/* Top gradient accent line */}
-      <div className={`h-1 w-full bg-gradient-to-r ${colorScheme.gradient}`} />
 
       {/* Image area */}
       <div className="relative h-36 overflow-hidden">

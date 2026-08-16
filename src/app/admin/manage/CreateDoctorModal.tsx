@@ -59,7 +59,7 @@ export default function CreateDoctorModal({ isOpen, onClose, onSuccess }: Props)
       {isOpen &&
 
         <motion.div
-          className="fixed inset-0 -top-6 flex items-center justify-center bg-black/70 z-10"
+          className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -73,7 +73,14 @@ export default function CreateDoctorModal({ isOpen, onClose, onSuccess }: Props)
             transition={{ type: 'spring', stiffness: 280, damping: 24 }}
             onClick={e => e.stopPropagation()}
           >
-            <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-white z-10">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-white z-20 cursor-pointer"
+            >
               <FiX size={20} />
             </button>
 

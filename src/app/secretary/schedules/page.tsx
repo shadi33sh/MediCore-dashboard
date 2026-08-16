@@ -43,7 +43,7 @@ function Page() {
   const [selectedSection, setSelectedSection] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [actionLoading, setActionLoading] = useState<Record<number, boolean>>({});
-  const [openTables, setOpenTables] = useState({ accepted: true, waiting: true });
+  const [openTables, setOpenTables] = useState<Record<string, boolean>>({ accepted: true, waiting: true, today: true });
   const { showAlert } = useAlert();
 
   const formateDate = (date: string) => {
@@ -118,13 +118,15 @@ function Page() {
     })
   );
 
+  const todayDateString = dayjs().format("YYYY-MM-DD");
+  const todaysSchedules = filteredSchedules.filter((i) => i.appiontmant_date === todayDateString);
   const acceptedSchedules = filteredSchedules.filter((i) => i.status === "accepted");
   const waitingSchedules = filteredSchedules.filter((i) => i.status === "waiting");
 
   const toggleDetails = (key: string) =>
     setOpenDetails((prev) => ({ [key]: !prev[key] }));
 
-  const toggleTable = (key: "accepted" | "waiting") =>
+  const toggleTable = (key: string) =>
     setOpenTables((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const handleStatusChange = async (itemIndex: number, newStatus: string) => {
@@ -162,7 +164,7 @@ function Page() {
   const renderTable = (
     title: string,
     data: any[],
-    type: "accepted" | "waiting",
+    type: string,
     accentColor: string,
     Icon: React.ElementType
   ) => (
@@ -229,211 +231,216 @@ function Page() {
 
               {/* Tbody */}
               <div className="divide-y divide-gray-50 dark:divide-gray-800">
-                {data.map((item, idx) => {
-                  const uniqueKey = `${type}-${item.appiontmant_date}-${item.time}-${item.id}`;
-                  const isOpen = openDetails[uniqueKey];
+                {data.length === 0 ? (
+                  <div className="py-8 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {type === "today" ? "No schedules today" : "No schedules found"}
+                  </div>
+                ) : (
+                  data.map((item, idx) => {
+                    const uniqueKey = `${type}-${item.appiontmant_date}-${item.time}-${item.id}`;
+                    const isOpen = openDetails[uniqueKey];
 
-                  return (
-                    <React.Fragment key={uniqueKey}>
-                      {/* Main row */}
-                      <motion.div
-                        initial={false}
-                        className={`grid grid-cols-[1fr_1fr_1.6fr_1.2fr_1.2fr_1.4fr] px-4 py-4 items-center cursor-pointer transition-all duration-150 group
+                    return (
+                      <React.Fragment key={uniqueKey}>
+                        {/* Main row */}
+                        <motion.div
+                          initial={false}
+                          className={`grid grid-cols-[1fr_1fr_1.6fr_1.2fr_1.2fr_1.4fr] px-4 py-4 items-center cursor-pointer transition-all duration-150 group
                           ${isOpen
-                            ? "bg-Primary/5 dark:bg-Primary/10"
-                            : idx % 2 === 0
-                              ? "bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/60"
-                              : "bg-gray-50/50 dark:bg-gray-800/20 hover:bg-gray-50 dark:hover:bg-gray-800/60"
-                          }`}
-                        onClick={() => toggleDetails(uniqueKey)}
-                      >
-                        {/* Date */}
-                        <div className="px-2">
-                          <p className="text-sm font-semibold text-gray-800 dark:text-white">{formateDate(item.appiontmant_date)}</p>
-                        </div>
-
-                        {/* Time */}
-                        <div className="px-2">
-                          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                            <FiClock size={12} />
-                            {item.time}
-                          </span>
-                        </div>
-
-                        {/* Doctor */}
-                        <div className="px-2 flex items-center gap-2.5">
-                          <img
-                            src={item.doctor.image}
-                            alt={item.doctor.name}
-                            className="w-8 h-8 rounded-full object-cover border-2 border-Primary/20 flex-shrink-0"
-                            onError={(e: any) => { e.target.src = "/images/default-doctor.jpg"; }}
-                          />
-                          <p className="text-sm font-bold text-gray-800 dark:text-white truncate">{item.doctor.name}</p>
-                        </div>
-
-                        {/* Section */}
-                        <div className="px-2">
-                          <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                            {item.doctor.section}
-                          </span>
-                        </div>
-
-                        {/* Patient */}
-                        <div className="px-2">
-                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.patient.name}</p>
-                          <p className="text-xs text-gray-400 mt-0.5 capitalize">{item.patient.gender}, {item.patient.age} yrs</p>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="px-2 flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                          {type === "waiting" ? (
-                            <>
-                              <motion.button
-                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                onClick={() => handleStatusChange(idx, "accepted")}
-                                disabled={actionLoading[item.id]}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                              >
-                                {actionLoading[item.id]
-                                  ? <FiLoader size={13} className="animate-spin" />
-                                  : <FiCheckCircle size={13} />}
-                                Accept
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                onClick={() => handleStatusChange(idx, "rejected")}
-                                disabled={actionLoading[item.id]}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                              >
-                                {actionLoading[item.id]
-                                  ? <FiLoader size={13} className="animate-spin" />
-                                  : <FiXCircle size={13} />}
-                                Reject
-                              </motion.button>
-                            </>
-                          ) : (
-                            item.enter === 0 ? (
-                              <motion.button
-                                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                onClick={() => enterPatient(item.id)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-Primary hover:bg-Primary/90 text-white text-xs font-bold shadow-sm transition-all"
-                              >
-                                <FiLogIn size={13} />
-                                Enter Patient
-                              </motion.button>
-                            ) : (
-                              <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                                <FiCheckCircle size={13} />
-                                Entered
-                              </span>
-                            )
-                          )}
-                          {/* Expand toggle */}
-                          <div className={`ml-1 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 ${isOpen ? "bg-Primary text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:bg-gray-200 dark:group-hover:bg-gray-700"}`}>
-                            <FiChevronDown
-                              size={14}
-                              className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                            />
+                              ? "bg-Primary/5 dark:bg-Primary/10"
+                              : idx % 2 === 0
+                                ? "bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/60"
+                                : "bg-gray-50/50 dark:bg-gray-800/20 hover:bg-gray-50 dark:hover:bg-gray-800/60"
+                            }`}
+                          onClick={() => toggleDetails(uniqueKey)}
+                        >
+                          {/* Date */}
+                          <div className="px-2">
+                            <p className="text-sm font-semibold text-gray-800 dark:text-white">{formateDate(item.appiontmant_date)}</p>
                           </div>
-                        </div>
-                      </motion.div>
 
-                      {/* Expandable details row */}
-                      <AnimatePresence>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="overflow-hidden"
-                          >
-                            <div className="px-6 py-5 bg-gradient-to-r from-gray-50 to-blue-50/30 dark:from-gray-800/40 dark:to-gray-700/20 border-t border-gray-100 dark:border-gray-700/50">
-                              <div className="flex flex-wrap gap-5">
+                          {/* Time */}
+                          <div className="px-2">
+                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                              <FiClock size={12} />
+                              {item.time}
+                            </span>
+                          </div>
 
-                                {/* Doctor card */}
-                                <motion.div
-                                  initial={{ opacity: 0, y: 12 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: 0.05 }}
-                                  className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 flex items-center gap-4 min-w-[260px]"
+                          {/* Doctor */}
+                          <div className="px-2 flex items-center gap-2.5">
+                            <img
+                              src={item.doctor.image}
+                              alt={item.doctor.name}
+                              className="w-8 h-8 rounded-full object-cover border-2 border-Primary/20 flex-shrink-0"
+                              onError={(e: any) => { e.target.src = "/images/default-doctor.jpg"; }}
+                            />
+                            <p className="text-sm font-bold text-gray-800 dark:text-white truncate">{item.doctor.name}</p>
+                          </div>
+
+                          {/* Section */}
+                          <div className="px-2">
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                              {item.doctor.section}
+                            </span>
+                          </div>
+
+                          {/* Patient */}
+                          <div className="px-2">
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.patient.name}</p>
+                            <p className="text-xs text-gray-400 mt-0.5 capitalize">{item.patient.gender}, {item.patient.age} yrs</p>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="px-2 flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                            {item.status === "waiting" ? (
+                              <>
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                                  onClick={() => handleStatusChange(idx, "accepted")}
+                                  disabled={actionLoading[item.id]}
+                                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                 >
-                                  <div className="relative">
-                                    <img
-                                      src={item.doctor.image}
-                                      alt={item.doctor.name}
-                                      className="w-16 h-16 rounded-2xl object-cover border-2 border-Primary/20 shadow-sm"
-                                      onError={(e: any) => { e.target.src = "/images/default-doctor.jpg"; }}
-                                    />
-                                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-Primary rounded-full border-2 border-white dark:border-gray-900" />
-                                  </div>
-                                  <div>
-                                    <p className="font-bold text-gray-800 dark:text-white text-sm">{item.doctor.name}</p>
-                                    <p className="text-xs text-Primary font-semibold mt-0.5">{item.doctor.section}</p>
-                                    <div className="flex items-center gap-1 mt-1.5">
-                                      {[1, 2, 3, 4, 5].map((s) => (
-                                        <span key={s} className={`text-xs ${s <= Math.round(item.doctor.rating) ? "text-amber-400" : "text-gray-200 dark:text-gray-700"}`}>★</span>
-                                      ))}
-                                      <span className="text-xs text-gray-400 ml-1">{item.doctor.rating}</span>
-                                    </div>
-                                  </div>
-                                </motion.div>
-
-                                {/* Patient card */}
-                                <motion.div
-                                  initial={{ opacity: 0, y: 12 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: 0.1 }}
-                                  className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 min-w-[220px]"
+                                  {actionLoading[item.id]
+                                    ? <FiLoader size={13} className="animate-spin" />
+                                    : <FiCheckCircle size={13} />}
+                                  Accept
+                                </motion.button>
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                                  onClick={() => handleStatusChange(idx, "rejected")}
+                                  disabled={actionLoading[item.id]}
+                                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                 >
-                                  <p className="text-xs font-bold uppercase tracking-widest text-pink-500 mb-3">Patient Info</p>
-                                  <div className="space-y-2">
-                                    {[
-                                      { label: "Name", value: item.patient.name },
-                                      { label: "Age", value: `${item.patient.age} yrs` },
-                                      { label: "Gender", value: item.patient.gender },
-                                      { label: "Status", value: item.patient.medicalStatus },
-                                    ].map(({ label, value }) => (
-                                      <div key={label} className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-400 text-xs font-medium">{label}</span>
-                                        <span className="font-semibold text-gray-800 dark:text-white">{value}</span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </motion.div>
-
-                                {/* Appointment card */}
-                                <motion.div
-                                  initial={{ opacity: 0, y: 12 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: 0.15 }}
-                                  className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 min-w-[200px]"
+                                  {actionLoading[item.id]
+                                    ? <FiLoader size={13} className="animate-spin" />
+                                    : <FiXCircle size={13} />}
+                                  Reject
+                                </motion.button>
+                              </>
+                            ) : (
+                              item.enter === 0 ? (
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                                  onClick={() => enterPatient(item.id)}
+                                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-Primary hover:bg-Primary/90 text-white text-xs font-bold shadow-sm transition-all"
                                 >
-                                  <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-3">Appointment</p>
-                                  <div className="space-y-2">
-                                    <div className="flex items-center justify-between text-sm">
-                                      <span className="text-gray-400 text-xs">Date</span>
-                                      <span className="font-semibold text-gray-800 dark:text-white">{formateDate(item.appiontmant_date)}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between text-sm">
-                                      <span className="text-gray-400 text-xs">Time</span>
-                                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">{item.time}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between text-sm">
-                                      <span className="text-gray-400 text-xs">Status</span>
-                                      <StatusPill status={item.status} />
-                                    </div>
-                                  </div>
-                                </motion.div>
-
-                              </div>
+                                  <FiLogIn size={13} />
+                                  Enter Patient
+                                </motion.button>
+                              ) : (
+                                <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                                  <FiCheckCircle size={13} />
+                                  Entered
+                                </span>
+                              )
+                            )}
+                            {/* Expand toggle */}
+                            <div className={`ml-1 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 ${isOpen ? "bg-Primary text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:bg-gray-200 dark:group-hover:bg-gray-700"}`}>
+                              <FiChevronDown
+                                size={14}
+                                className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                              />
                             </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </React.Fragment>
-                  );
-                })}
+                          </div>
+                        </motion.div>
+
+                        {/* Expandable details row */}
+                        <AnimatePresence>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="px-6 py-5 bg-gradient-to-r from-gray-50 to-blue-50/30 dark:from-gray-800/40 dark:to-gray-700/20 border-t border-gray-100 dark:border-gray-700/50">
+                                <div className="flex flex-wrap gap-5">
+
+                                  {/* Doctor card */}
+                                  <motion.div
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.05 }}
+                                    className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 flex items-center gap-4 min-w-[260px]"
+                                  >
+                                    <div className="relative">
+                                      <img
+                                        src={item.doctor.image}
+                                        alt={item.doctor.name}
+                                        className="w-16 h-16 rounded-2xl object-cover border-2 border-Primary/20 shadow-sm"
+                                        onError={(e: any) => { e.target.src = "/images/default-doctor.jpg"; }}
+                                      />
+                                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-Primary rounded-full border-2 border-white dark:border-gray-900" />
+                                    </div>
+                                    <div>
+                                      <p className="font-bold text-gray-800 dark:text-white text-sm">{item.doctor.name}</p>
+                                      <p className="text-xs text-Primary font-semibold mt-0.5">{item.doctor.section}</p>
+                                      <div className="flex items-center gap-1 mt-1.5">
+                                        {[1, 2, 3, 4, 5].map((s) => (
+                                          <span key={s} className={`text-xs ${s <= Math.round(item.doctor.rating) ? "text-amber-400" : "text-gray-200 dark:text-gray-700"}`}>★</span>
+                                        ))}
+                                        <span className="text-xs text-gray-400 ml-1">{item.doctor.rating}</span>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+
+                                  {/* Patient card */}
+                                  <motion.div
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 }}
+                                    className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 min-w-[220px]"
+                                  >
+                                    <p className="text-xs font-bold uppercase tracking-widest text-pink-500 mb-3">Patient Info</p>
+                                    <div className="space-y-2">
+                                      {[
+                                        { label: "Name", value: item.patient.name },
+                                        { label: "Age", value: `${item.patient.age} yrs` },
+                                        { label: "Gender", value: item.patient.gender },
+                                        { label: "Status", value: item.patient.medicalStatus },
+                                      ].map(({ label, value }) => (
+                                        <div key={label} className="flex items-center justify-between text-sm">
+                                          <span className="text-gray-400 text-xs font-medium">{label}</span>
+                                          <span className="font-semibold text-gray-800 dark:text-white">{value}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </motion.div>
+
+                                  {/* Appointment card */}
+                                  <motion.div
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.15 }}
+                                    className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 min-w-[200px]"
+                                  >
+                                    <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-3">Appointment</p>
+                                    <div className="space-y-2">
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-400 text-xs">Date</span>
+                                        <span className="font-semibold text-gray-800 dark:text-white">{formateDate(item.appiontmant_date)}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-400 text-xs">Time</span>
+                                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{item.time}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-400 text-xs">Status</span>
+                                        <StatusPill status={item.status} />
+                                      </div>
+                                    </div>
+                                  </motion.div>
+
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </React.Fragment>
+                    );
+                  }))}
               </div>
             </div>
           </motion.div>
@@ -455,7 +462,7 @@ function Page() {
         </Link>
       }
       title="Doctor Appointments"
-      loading={false}
+      loading={loading}
     >
       {/* ── Sticky toolbar ── */}
       <div className="sticky -top-6 bg-white dark:bg-black py-4 z-10 mb-6">
@@ -493,10 +500,14 @@ function Page() {
       </div>
 
       {/* ── Tables ── */}
-      {acceptedSchedules.length > 0 &&
-        renderTable("Accepted Appointments", acceptedSchedules, "accepted", "bg-emerald-500", FiCheckCircle)}
+      {scheduleList.length > 0 &&
+        renderTable("Today's Appointments", todaysSchedules, "today", "bg-blue-500", FiCalendar)}
       {waitingSchedules.length > 0 &&
         renderTable("Pending Approval", waitingSchedules, "waiting", "bg-amber-500", FiAlertCircle)}
+
+
+      {acceptedSchedules.length > 0 &&
+        renderTable("Accepted Appointments", acceptedSchedules, "accepted", "bg-emerald-500", FiCheckCircle)}
 
       {/* ── Empty state ── */}
       {scheduleList.length === 0 && !loading && (

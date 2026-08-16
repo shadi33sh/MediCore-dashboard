@@ -58,14 +58,13 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
               scale: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }, // **Natural scaling curve**
               translateY: { duration: 2.5, ease: [0.4, 0, 0.2, 1] }, // **Better vertical transition**
             }}
-            className="fixed top-4 center w-full z-50"
+            className="fixed top-4 center w-full z-[2000]"
           >
             <div
-              className={`transform max-w-[500px] w-fit p-2 px-5 text-white rounded-lg shadow-xl flex flex-row items-center justify-center gap-4  ${
-                alert.type === "success"
-                  ? "bg-green-600 shadow-lg shadow-green-600/50"
-                  : "bg-[#b32424]  drop-shadow-xl shadow-#893d3d"
-              }`}
+              className={`transform max-w-[500px] w-fit p-2 px-5 text-white rounded-lg shadow-xl flex flex-row items-center justify-center gap-4  ${alert.type === "success"
+                ? "bg-green-600 shadow-lg shadow-green-600/50"
+                : "bg-[#b32424]  drop-shadow-xl shadow-#893d3d"
+                }`}
             >
               <div className="flex items-center gap-2">
                 {alert.type === "success" ? (

@@ -123,7 +123,7 @@ function AppointmentDetail({ appt }: { appt: Appointment }) {
       {/* Action panel */}
       <div className="col-span-1 md:col-span-2 flex justify-end gap-3 pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
         <Link
-          href={`/doctor/preview/${appt.patient_id}`}
+          href={`/doctor/preview/${appt.patient_id}/${appt.id}`}
           className="flex items-center gap-2 bg-gradient-to-r from-Primary to-teal-500 hover:from-Primary/95 hover:to-teal-500/95 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md shadow-Primary/10 hover:shadow-lg transition-all"
         >
           <FiFilePlus size={14} />
