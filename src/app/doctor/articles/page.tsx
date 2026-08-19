@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import DashboardLayout from '../doctorComponents/DocDashboardLayout'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiPlus, FiX, FiCalendar, FiUser, FiFileText } from 'react-icons/fi'
+import { useTranslation } from 'react-i18next'
 import axiosInstance from '../../AuthAxios'
 import AddArticleForm from '../doctorComponents/AddArticleForm'
 import Loading from '../../../Components/loading'
@@ -32,7 +33,8 @@ export default function Page() {
   const [mounted, setMounted] = useState(false)
   const [deletingArticleId, setDeletingArticleId] = useState<number | null>(null)
   const [reviewArticle, setReviewArticle] = useState<Article | null>(null)
-  const {showAlert} = useAlert()
+  const { showAlert } = useAlert()
+  const { t } = useTranslation()
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -40,7 +42,7 @@ export default function Page() {
   const fetchArticles = async () => {
     try {
       const response = await axiosInstance.get('api/getAtricles')
-      setArticles(response.data.data.data || [])
+      setArticles(response.data.data.articles.data || [])
     } catch (err: any) {
       console.error('Error fetching articles:', err)
     } finally {
@@ -70,7 +72,7 @@ export default function Page() {
   if (!mounted) return null
 
   return (
-    <DashboardLayout title="Doctor Articles">
+    <DashboardLayout title={t('Doctor.Articles.title', 'Doctor Articles')}>
       <div className="space-y-6">
 
         {/* Header Section */}
@@ -204,33 +206,32 @@ export default function Page() {
                         {authorName}
                       </span>
                       <button
-                      type="button"
-                      onClick={() => setReviewArticle(article)}
-                      className="px-3 py-2 rounded-2xl text-[11px] font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition"
-                    >
-                      Review
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteArticle(article.id)}
-                      disabled={deletingArticleId === article.id}
-                      className={`px-3 py-2 rounded-2xl text-[11px] font-semibold transition ${
-                        deletingArticleId === article.id
+                        type="button"
+                        onClick={() => setReviewArticle(article)}
+                        className="px-3 py-2 rounded-2xl text-[11px] font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition"
+                      >
+                        Review
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteArticle(article.id)}
+                        disabled={deletingArticleId === article.id}
+                        className={`px-3 py-2 rounded-2xl text-[11px] font-semibold transition ${deletingArticleId === article.id
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400'
                           : 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/60'
-                      }`}
-                    >
-                      {deletingArticleId === article.id ? 'Deleting...' : 'Delete'}
-                    </button>
+                          }`}
+                      >
+                        {deletingArticleId === article.id ? 'Deleting...' : 'Delete'}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </motion.a>
-            )
-          })}
-        </div>
-      )}
-      <ArticleReviewModal article={reviewArticle} isOpen={Boolean(reviewArticle)} onClose={() => setReviewArticle(null)} />
-    </div>
-  </DashboardLayout>
+                </motion.a>
+              )
+            })}
+          </div>
+        )}
+        <ArticleReviewModal article={reviewArticle} isOpen={Boolean(reviewArticle)} onClose={() => setReviewArticle(null)} />
+      </div>
+    </DashboardLayout>
   )
 }

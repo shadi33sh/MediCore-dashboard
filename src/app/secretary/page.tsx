@@ -8,63 +8,64 @@ import DashboardLayout from "./secretaryComponents/DashboardLayout";
 
 
 
+import { useTranslation } from "react-i18next";
+
 export default function Page() {
-
+  const { t } = useTranslation();
   
-const statistics = [
-  {
-    title: "Total Patients",
-    value: "824",
-    icon: <FaUsers size={30} />,
-    color: "from-indigo-500 to-purple-500"
-  },
-  {
-    title: "Total Doctors",
-    value: "26",
-    icon: <FaUserMd size={30} />,
-    color: "from-green-500 to-emerald-800"
-  },
-  {
-    title: "Appointments Today",
-    value: "41",
-    icon: <FaCalendarAlt size={30} />,
-    color: "from-blue-500 to-cyan-800"
-  },
-  {
-    title: "Medical Sections",
-    value: "11",
-    icon: <FaStethoscope size={30} />,
-    color: "from-pink-500 to-rose-800"
-  },
-  {
-    title: "Canceled Appointments",
-    value: "3",
-    icon: <FaTimesCircle size={30} />,
-    color: "from-red-500 to-red-700"
-  },
-  {
-    title: "Monthly Income",
-    value: "$4,200",
-    icon: <FaMoneyBill size={30} />,
-    color: "from-yellow-500 to-yellow-400"
-  },
-  {
-    title: "Upcoming Appointments",
-    value: "18",
-    icon: <FaCalendarCheck size={30} />,
-    color: "from-teal-500 to-teal-700"
-  },
-  {
-    title: "Visits This Week",
-    value: "113",
-    icon: <FaUserClock size={30} />,
-    color: "from-fuchsia-500 to-violet-700"
-  },
-];
-
+  const statistics = [
+    {
+      title: t("Admin.Dashboard.stats.totalPatients", "Total Patients"),
+      value: "824",
+      icon: <FaUsers size={30} />,
+      color: "from-indigo-500 to-purple-500"
+    },
+    {
+      title: t("Admin.Dashboard.stats.totalDoctors", "Total Doctors"),
+      value: "26",
+      icon: <FaUserMd size={30} />,
+      color: "from-green-500 to-emerald-800"
+    },
+    {
+      title: t("Admin.Dashboard.stats.appointmentsToday", "Appointments Today"),
+      value: "41",
+      icon: <FaCalendarAlt size={30} />,
+      color: "from-blue-500 to-cyan-800"
+    },
+    {
+      title: t("Admin.Dashboard.stats.medicalSections", "Medical Sections"),
+      value: "11",
+      icon: <FaStethoscope size={30} />,
+      color: "from-pink-500 to-rose-800"
+    },
+    {
+      title: t("Admin.Dashboard.stats.canceledAppointments", "Canceled Appointments"),
+      value: "3",
+      icon: <FaTimesCircle size={30} />,
+      color: "from-red-500 to-red-700"
+    },
+    {
+      title: t("Admin.Dashboard.stats.monthlyIncome", "Monthly Income"),
+      value: "$4,200",
+      icon: <FaMoneyBill size={30} />,
+      color: "from-yellow-500 to-yellow-400"
+    },
+    {
+      title: t("Admin.Dashboard.stats.upcomingAppointments", "Upcoming Appointments"),
+      value: "18",
+      icon: <FaCalendarCheck size={30} />,
+      color: "from-teal-500 to-teal-700"
+    },
+    {
+      title: t("Admin.Dashboard.stats.visitsThisWeek", "Visits This Week"),
+      value: "113",
+      icon: <FaUserClock size={30} />,
+      color: "from-fuchsia-500 to-violet-700"
+    },
+  ];
 
   return (
-    <DashboardLayout loading={false} title="Clinic Statistics Overview">
+    <DashboardLayout loading={false} title={t("Admin.Dashboard.title", "Clinic Statistics Overview")}>
        
        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {statistics.map((stat, index) => (

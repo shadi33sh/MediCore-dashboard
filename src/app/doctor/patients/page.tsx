@@ -3,17 +3,19 @@ import React, { useState, useEffect } from 'react'
 import DashboardLayout from '../doctorComponents/DocDashboardLayout'
 import axiosInstance from '../../AuthAxios'
 import { useAlert } from '../../../Components/Alert'
+import { useTranslation } from 'react-i18next'
 import Loading from '../../../Components/loading'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
   FiUser, FiPhone, FiCalendar, FiClock, FiSearch,
   FiActivity, FiHeart, FiFileText, FiPlusCircle,
-  FiChevronDown, FiChevronUp, FiPlus, FiGrid, FiList
+  FiChevronDown, FiChevronUp, FiPlus, FiGrid, FiList, FiX
 } from 'react-icons/fi'
 import dayjs from 'dayjs'
+import HistoryModal from './HistoryModal'
 
-interface PreviewInfo {
+export interface PreviewInfo {
   id: number
   diagnoseis: string
   diagnoseis_type: number | string
@@ -23,7 +25,7 @@ interface PreviewInfo {
   status: string
 }
 
-interface Patient {
+export interface Patient {
   id: number
   first_name: string
   last_name: string
@@ -42,7 +44,7 @@ interface Patient {
     result: string
     file_url?: string
   }
-  preview_info?: PreviewInfo
+  preview_info?: PreviewInfo[]
 }
 
 export default function PatientsPage() {
@@ -50,14 +52,33 @@ export default function PatientsPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [expandedPatientId, setExpandedPatientId] = useState<number | null>(null)
+  const [historyModalPatient, setHistoryModalPatient] = useState<Patient | null>(null)
   const { showAlert } = useAlert()
+  const { t } = useTranslation()
 
   useEffect(() => {
     async function fetchPatients() {
       try {
         const response = await axiosInstance.get('/api/getPreviedPatients')
         if (response.data.status || response.data.patients) {
-          setPatients(response.data.data || [])
+          const rawData = response.data.data || []
+          const mergedPatients: Record<number, Patient> = {}
+
+          rawData.forEach((item: any) => {
+            if (!mergedPatients[item.id]) {
+              mergedPatients[item.id] = {
+                ...item,
+                preview_info: item.preview_info ? [item.preview_info] : []
+              }
+            } else if (item.preview_info) {
+              const existingPreview = mergedPatients[item.id].preview_info?.find(p => p.id === item.preview_info.id)
+              if (!existingPreview) {
+                mergedPatients[item.id].preview_info?.push(item.preview_info)
+              }
+            }
+          })
+
+          setPatients(Object.values(mergedPatients))
         }
       } catch (err: any) {
         console.error('Error fetching patients:', err)
@@ -80,7 +101,7 @@ export default function PatientsPage() {
   })
 
   return (
-    <DashboardLayout title="My Patients">
+    <DashboardLayout title={t('Doctor.Patients.title', 'My Patients')}>
       <div className="space-y-6">
 
         {/* Controls row */}
@@ -89,14 +110,14 @@ export default function PatientsPage() {
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="text"
-              placeholder="Search by name or phone..."
+              placeholder={t('Doctor.Patients.searchPlaceholder', 'Search by name or phone...')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-Primary transition"
             />
           </div>
           <span className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-3 py-1.5 rounded-full font-medium self-end sm:self-auto">
-            {filteredPatients.length} patients found
+            {filteredPatients.length} {t('Doctor.Patients.patientsFound', 'patients found')}
           </span>
         </div>
 
@@ -111,7 +132,7 @@ export default function PatientsPage() {
         {!loading && filteredPatients.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-gray-400">
             <FiUser size={48} className="mb-3 opacity-40" />
-            <p className="text-sm font-medium">No patient records found</p>
+            <p className="text-sm font-medium">{t('Doctor.Patients.noRecords', 'No patient records found')}</p>
           </div>
         )}
 
@@ -141,45 +162,47 @@ export default function PatientsPage() {
                     {/* Patient Core Info */}
                     <div className="flex-1 min-w-0 grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
-                        <p className="text-xs text-gray-400">Patient</p>
+                        <p className="text-xs text-gray-400">{t('Doctor.Patients.patient', 'Patient')}</p>
                         <p className="text-sm font-bold text-gray-800 dark:text-white truncate">
                           {fullName}
                         </p>
-                        <p className="text-xs text-gray-400">ID #{patient.id}</p>
+                        <p className="text-xs text-gray-400">{t('Doctor.Patients.id', 'ID #')}{patient.id}</p>
                       </div>
 
                       <div>
-                        <p className="text-xs text-gray-400">Contact</p>
+                        <p className="text-xs text-gray-400">{t('Doctor.Patients.contact', 'Contact')}</p>
                         <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                          {patient.phone || 'N/A'}
+                          {patient.phone || t('Doctor.Patients.na', 'N/A')}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-xs text-gray-400">Age & Gender</p>
+                        <p className="text-xs text-gray-400">{t('Doctor.Patients.ageGender', 'Age & Gender')}</p>
                         <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize">
-                          {patient.age ? `${patient.age} yrs` : 'N/A'} • {patient.gender || 'N/A'}
+                          {patient.age ? `${patient.age} ${t('Doctor.Patients.years', 'yrs')}` : t('Doctor.Patients.na', 'N/A')} • {patient.gender || t('Doctor.Patients.na', 'N/A')}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-xs text-gray-400">Blood Type</p>
+                        <p className="text-xs text-gray-400">{t('Doctor.Patients.bloodType', 'Blood Type')}</p>
                         <p className="text-sm font-semibold text-rose-500 font-bold">
-                          {patient.blood_type || 'N/A'}
+                          {patient.blood_type || t('Doctor.Patients.na', 'N/A')}
                         </p>
                       </div>
                     </div>
 
                     {/* Actions Area */}
                     <div className="flex items-center gap-2 self-end md:self-auto ml-auto">
-                      <Link
-                        href={`/doctor/preview/${patient.id}`}
-                        onClick={(e) => e.stopPropagation()}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setHistoryModalPatient(patient)
+                        }}
                         className="flex items-center gap-1 bg-Primary/10 text-Primary border border-Primary/20 hover:bg-Primary hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold transition"
                       >
-                        <FiPlus size={14} />
-                        New Checkup
-                      </Link>
+                        <FiFileText size={14} />
+                        {t('Doctor.Patients.viewHistory', 'View History')}
+                      </button>
 
                       <button className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400">
                         {isExpanded ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
@@ -197,93 +220,41 @@ export default function PatientsPage() {
                         transition={{ duration: 0.25, ease: 'easeInOut' }}
                         className="overflow-hidden bg-gray-50 dark:bg-gray-900/60 border-t border-gray-100 dark:border-gray-800"
                       >
-                        <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                          {/* Last Checkup Info */}
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
-                              <FiFileText className="text-Primary" size={16} />
-                              <h4 className="text-sm font-bold text-gray-800 dark:text-white">Last Checkup Report</h4>
-                            </div>
-
-                            {patient.preview_info ? (
-                              <div className="space-y-3">
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase">Checkup Date</p>
-                                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                      {patient.preview_info.date ? dayjs(patient.preview_info.date).format('MMM DD, YYYY') : 'N/A'}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase">Status</p>
-                                    <span className="inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                      {patient.preview_info.status || 'Stable'}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <div>
-                                  <p className="text-[10px] text-gray-400 font-bold uppercase">Diagnosis</p>
-                                  <p className="text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 p-2.5 rounded-xl border border-gray-100 dark:border-gray-700 mt-1">
-                                    {patient.preview_info.diagnoseis}
-                                  </p>
-                                </div>
-
-                                <div>
-                                  <p className="text-[10px] text-gray-400 font-bold uppercase">Prescribed Medicine</p>
-                                  <p className="text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 p-2.5 rounded-xl border border-gray-100 dark:border-gray-700 mt-1">
-                                    {patient.preview_info.medicine}
-                                  </p>
-                                </div>
-
-                                {patient.preview_info.notes && (
-                                  <div>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase">Doctor Notes</p>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 italic">
-                                      "{patient.preview_info.notes}"
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <p className="text-xs text-gray-400 italic">No checkup reports recorded yet by you.</p>
-                            )}
-                          </div>
+                        <div className="p-5">
 
                           {/* Medical Analysis & Clinical Background */}
                           <div className="space-y-4">
                             <div className="flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
                               <FiActivity className="text-Primary" size={16} />
-                              <h4 className="text-sm font-bold text-gray-800 dark:text-white">Medical Background</h4>
+                              <h4 className="text-sm font-bold text-gray-800 dark:text-white">{t('Doctor.Patients.medicalBackground', 'Medical Background')}</h4>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                                <p className="text-[10px] text-gray-400 font-bold uppercase">Chronic Diseases</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase">{t('Doctor.Patients.chronicDiseases', 'Chronic Diseases')}</p>
                                 <p className="text-xs text-gray-700 dark:text-gray-300 font-medium mt-0.5">
-                                  {patient.chronic_diseases || 'None'}
+                                  {patient.chronic_diseases || t('Doctor.Patients.none', 'None')}
                                 </p>
                               </div>
 
                               <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                                <p className="text-[10px] text-gray-400 font-bold uppercase">Medication Allergies</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase">{t('Doctor.Patients.medicationAllergies', 'Medication Allergies')}</p>
                                 <p className="text-xs text-gray-700 dark:text-gray-300 font-medium mt-0.5">
-                                  {patient.medication_allergies || 'None'}
+                                  {patient.medication_allergies || t('Doctor.Patients.none', 'None')}
                                 </p>
                               </div>
 
                               <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                                <p className="text-[10px] text-gray-400 font-bold uppercase">Permanent Meds</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase">{t('Doctor.Patients.permanentMeds', 'Permanent Meds')}</p>
                                 <p className="text-xs text-gray-700 dark:text-gray-300 font-medium mt-0.5">
-                                  {patient.permanent_medications || 'None'}
+                                  {patient.permanent_medications || t('Doctor.Patients.none', 'None')}
                                 </p>
                               </div>
 
                               <div className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                                <p className="text-[10px] text-gray-400 font-bold uppercase">Surgeries / Illnesses</p>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase">{t('Doctor.Patients.surgeriesIllnesses', 'Surgeries / Illnesses')}</p>
                                 <p className="text-xs text-gray-700 dark:text-gray-300 font-medium mt-0.5">
-                                  {patient.previous_surgeries || patient.previous_illnesses || 'None'}
+                                  {patient.previous_surgeries || patient.previous_illnesses || t('Doctor.Patients.none', 'None')}
                                 </p>
                               </div>
                             </div>
@@ -292,12 +263,12 @@ export default function PatientsPage() {
                             {patient.medical_analysis && (
                               <div className="p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100/30 dark:border-blue-900/30 flex items-center justify-between">
                                 <div>
-                                  <p className="text-[10px] text-blue-500 dark:text-blue-400 font-bold uppercase">Medical Analysis</p>
+                                  <p className="text-[10px] text-blue-500 dark:text-blue-400 font-bold uppercase">{t('Doctor.Patients.medicalAnalysis', 'Medical Analysis')}</p>
                                   <p className="text-xs font-bold text-gray-800 dark:text-white mt-0.5">
                                     {patient.medical_analysis.name}
                                   </p>
                                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    Result: {patient.medical_analysis.result}
+                                    {t('Doctor.Patients.result', 'Result:')} {patient.medical_analysis.result}
                                   </p>
                                 </div>
                                 {patient.medical_analysis.file_url && (
@@ -307,7 +278,7 @@ export default function PatientsPage() {
                                     rel="noopener noreferrer"
                                     className="text-xs font-bold text-Primary hover:underline"
                                   >
-                                    View File
+                                    {t('Doctor.Patients.viewFile', 'View File')}
                                   </a>
                                 )}
                               </div>
@@ -326,6 +297,12 @@ export default function PatientsPage() {
         )}
 
       </div>
+
+      <HistoryModal
+        patient={historyModalPatient}
+        onClose={() => setHistoryModalPatient(null)}
+      />
+
     </DashboardLayout>
   )
 }

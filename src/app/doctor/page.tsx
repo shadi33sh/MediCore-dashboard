@@ -121,24 +121,29 @@ function AppointmentDetail({ appt }: { appt: Appointment }) {
       </div>
 
       {/* Action panel */}
-      <div className="col-span-1 md:col-span-2 flex justify-end gap-3 pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
-        <Link
-          href={`/doctor/preview/${appt.patient_id}/${appt.id}`}
-          className="flex items-center gap-2 bg-gradient-to-r from-Primary to-teal-500 hover:from-Primary/95 hover:to-teal-500/95 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md shadow-Primary/10 hover:shadow-lg transition-all"
-        >
-          <FiFilePlus size={14} />
-          Start Check-up Report
-        </Link>
-      </div>
+      {Boolean(appt.enter) &&
+        <div className="col-span-1 md:col-span-2 flex justify-end gap-3 pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
+          <Link
+            href={`/doctor/preview/${appt.patient_id}/${appt.id}`}
+            className="flex items-center gap-2 bg-gradient-to-r from-Primary to-teal-500 hover:from-Primary/95 hover:to-teal-500/95 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md shadow-Primary/10 hover:shadow-lg transition-all"
+          >
+            <FiFilePlus size={14} />
+            Start Check-up Report
+          </Link>
+        </div>
+      }
     </motion.div>
   )
 }
 
 // ─── Main page ───────────────────────────────────────────────────────────────
+import { useTranslation } from "react-i18next"
+
 export default function page() {
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(true)
   const [openRows, setOpenRows] = useState<Record<number, boolean>>({})
+  const { t } = useTranslation()
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -164,7 +169,7 @@ export default function page() {
   const doctorName = `${storedUser.first_name ?? ''} ${storedUser.last_name ?? ''}`.trim() || 'Doctor'
 
   return (
-    <DashboardLayout title={`Dr. ${doctorName} · Appointments`}>
+    <DashboardLayout title={`Dr. ${doctorName} · ${t('Doctor.Sidebar.Appointments', 'Appointments')}`}>
       <div className="space-y-6">
 
         {/* ── Summary cards ── */}

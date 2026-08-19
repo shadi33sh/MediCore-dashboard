@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const GoogleTranslate = () => {
   const [loading, setLoading] = useState(true); // ✅ Loading state
   const [direction, setDirection] = useState("ltr"); // ✅ Default text direction
+  const { t } = useTranslation();
 
   useEffect(() => { updateDirection();}, []);
 
@@ -33,7 +35,7 @@ const GoogleTranslate = () => {
         }}
         className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
       >
-        Arabic
+        {t('SettingsTranslate.arabic', 'Arabic')}
       </button>
 
       <button
@@ -43,7 +45,7 @@ const GoogleTranslate = () => {
         }}
         className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
       >
-        English
+        {t('SettingsTranslate.english', 'English')}
       </button>
     </div>
   );

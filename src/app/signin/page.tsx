@@ -5,11 +5,13 @@ import React, { useState } from 'react';
 import Loading from '../../Components/loading';
 import { useAlert } from '../../Components/Alert';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { showAlert } = useAlert();
   const { login, loading } = useAuth();
+  const { t } = useTranslation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -23,9 +25,9 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      showAlert('success', 'Logged in successfully');
+      showAlert('success', t('Auth.SignIn.success', 'Logged in successfully'));
     } catch {
-      showAlert('error', 'Invalid email or password');
+      showAlert('error', t('Auth.SignIn.error', 'Invalid email or password'));
     }
   };
 
@@ -47,10 +49,10 @@ export default function LoginPage() {
           {/* Title */}
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Sign in to your account
+              {t('Auth.SignIn.title', 'Sign in to your account')}
             </h2>
             <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-              Enter your credentials to continue to your dashboard.
+              {t('Auth.SignIn.subtitle', 'Enter your credentials to continue to your dashboard.')}
             </p>
           </div>
 
@@ -58,14 +60,14 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email
+                {t('Auth.SignIn.email', 'Email')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder={t('Auth.SignIn.emailPlaceholder', 'you@example.com')}
                 required
                 className="w-full rounded-xl bg-gray-50 px-4 py-3.5 text-gray-900 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-Primary/10 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 dark:focus:bg-gray-900"
               />
@@ -73,23 +75,23 @@ export default function LoginPage() {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
+                {t('Auth.SignIn.password', 'Password')}
               </label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="••••••••"
+                placeholder={t('Auth.SignIn.passwordPlaceholder', '••••••••')}
                 required
                 className="w-full rounded-xl bg-gray-50 px-4 py-3.5 text-gray-900 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-Primary/10 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 dark:focus:bg-gray-900"
               />
             </div>
 
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500 dark:text-gray-400">Welcome back</span>
+              <span className="text-gray-500 dark:text-gray-400">{t('Auth.SignIn.welcomeBack', 'Welcome back')}</span>
               <Link href="/forgot-password" className="font-medium text-Primary hover:underline">
-                Forgot password?
+                {t('Auth.SignIn.forgotPassword', 'Forgot password?')}
               </Link>
             </div>
 
@@ -98,7 +100,7 @@ export default function LoginPage() {
               disabled={loading}
               className="flex w-full max-h-12 items-center justify-center rounded-xl bg-Primary px-4 py-3.5 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {loading ? <Loading color='#fff' /> : 'Sign In'}
+              {loading ? <Loading color='#fff' /> : t('Auth.SignIn.signInButton', 'Sign In')}
             </button>
           </form>
         </div>
@@ -118,10 +120,10 @@ export default function LoginPage() {
         <div className="relative z-10 flex items-center justify-center w-full h-full">
           <div className="text-center px-10 max-w-lg">
             <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Welcome to Medi<span className="text-Primary">Core</span>
+              {t('Auth.SignIn.welcomeTitle1', 'Welcome to Medi')}<span className="text-Primary">{t('Auth.SignIn.welcomeTitle2', 'Core')}</span>
             </h3>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              The ultimate platform for doctors to manage patients, appointments, and medical records with ease.
+              {t('Auth.SignIn.welcomeDesc', 'The ultimate platform for doctors to manage patients, appointments, and medical records with ease.')}
             </p>
           </div>
         </div>

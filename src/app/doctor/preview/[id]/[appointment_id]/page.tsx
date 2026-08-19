@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import DashboardLayout from "../../../doctorComponents/DocDashboardLayout";
 import axiosInstance from "../../../../AuthAxios";
 import { useAlert } from "../../../../../Components/Alert";
+import { useTranslation } from "react-i18next";
 import Loading from "../../../../../Components/loading";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -48,6 +49,7 @@ interface Preview {
   id: number;
   patient_id: number;
   doctor_id: number;
+  apointment_id: number
   department_id: number;
   diagnoseis: string;
   diagnoseis_type: number; // 0 = Not Completed (editable), 1 = Completed (locked)
@@ -75,16 +77,9 @@ export default function PatientPreviewPage() {
   const router = useRouter();
   const { showAlert } = useAlert();
   const { activeData, clearActiveData } = useActivePatient();
+  const { t } = useTranslation();
   const scheduleId = params.appointment_id as string; // appointment ID
 
-  const EMPTY_FORM: FormData = {
-    diagnoseis: "",
-    diagnoseis_type: "0",
-    medicine: "",
-    notes: "",
-    status: "Stable",
-    appointment_id: scheduleId,
-  };
 
   /* ── Data state ─────────────────────── */
   const [loadingPatient, setLoadingPatient] = useState(true);
@@ -97,7 +92,14 @@ export default function PatientPreviewPage() {
   const [showForm, setShowForm] = useState(false);
 
   /* ── Form state ─────────────────────── */
-  const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
+  const [formData, setFormData] = useState<FormData>({
+    diagnoseis: "",
+    diagnoseis_type: "0",
+    medicine: "",
+    notes: "",
+    status: "Stable",
+    appointment_id: scheduleId,
+  });
   const [submitting, setSubmitting] = useState(false);
   const [previewModalId, setPreviewModalId] = useState<number | null>(null);
   const [isPreviewModalOpen, setPreviewModalOpen] = useState(false);
@@ -147,11 +149,11 @@ export default function PatientPreviewPage() {
             if (previewToUse && previewToUse.diagnoseis_type === 0) {
               setSelectedPreview(previewToUse);
               setFormData({
-                diagnoseis: previewToUse.diagnoseis,
+                diagnoseis: previewToUse.diagnoseis || "",
                 diagnoseis_type: String(previewToUse.diagnoseis_type),
-                medicine: previewToUse.medicine,
-                notes: previewToUse.notes,
-                status: previewToUse.status,
+                medicine: previewToUse.medicine || "",
+                notes: previewToUse.notes || "",
+                status: previewToUse.status || "Stable",
                 appointment_id: scheduleId,
               });
               setShowForm(true);
@@ -236,7 +238,7 @@ export default function PatientPreviewPage() {
 
   /* ─────────────────────────── Render ─────────────────────────── */
   return (
-    <DashboardLayout title="Patient Checkup">
+    <DashboardLayout title={t('Doctor.Preview.title', 'Patient Checkup')}>
       <div className="space-y-6 pb-12">
         {/* ── Back button ── */}
         <button
@@ -595,11 +597,18 @@ export default function PatientPreviewPage() {
                       return (
                         <motion.div
                           key={prev.id}
-                          whileHover={isLocked ? {} : { scale: 1.005 }}
-                          onClick={() => !isLocked && handleSelectPreview(prev)}
-                          className={`p-4 rounded-xl border text-sm transition-all ${isLocked
-                            ? "bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 opacity-60 cursor-not-allowed"
-                            : "bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-Primary/30 hover:bg-Primary/5 cursor-pointer"
+                          whileHover={{ scale: 1.005 }}
+                          onClick={() => {
+                            if (isLocked) {
+                              setPreviewModalId(prev.id);
+                              setPreviewModalOpen(true);
+                            } else {
+                              handleSelectPreview(prev);
+                            }
+                          }}
+                          className={`p-4 rounded-xl border text-sm transition-all cursor-pointer ${isLocked
+                            ? "bg-white dark:bg-gray-800/80 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 shadow-sm"
+                            : "bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-Primary/30 hover:bg-Primary/5"
                             }`}
                         >
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -634,13 +643,13 @@ export default function PatientPreviewPage() {
                                 </span>
                               </div>
                               {isLocked ? (
-                                <span className="inline-flex items-center gap-1 text-xs text-gray-400 font-semibold">
-                                  <FiLock size={11} /> Completed
+                                <span className="inline-flex items-center gap-1 text-xs text-blue-500 dark:text-blue-400 font-semibold">
+                                  <FiInfo size={11} /> View details
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1 text-xs text-Primary font-semibold">
                                   <FiEdit2 size={11} />
-                                  View details
+                                  Edit details
                                 </span>
                               )}
                             </div>

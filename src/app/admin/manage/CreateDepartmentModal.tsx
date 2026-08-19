@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAlert } from '../../../Components/Alert';
 import Loading from '../../../Components/loading';
 import axiosInstance from '../../AuthAxios';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   isOpen: boolean;
@@ -18,14 +19,17 @@ export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Pr
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
+  const { t } = useTranslation();
 
   const handleSubmit: FormEventHandler = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('description', formData.description);
+      formDataToSend.append('name_en', formData.name);
+      formDataToSend.append('name_ar', formData.name);
+      formDataToSend.append('description_en', formData.description);
+      formDataToSend.append('description_ar', formData.description);
       if (formData.image) formDataToSend.append('image', formData.image);
 
       await axiosInstance.post('api/admin/department', formDataToSend, {
@@ -34,11 +38,11 @@ export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Pr
 
       setFormData({ name: '', description: '', image: null });
       setPreviewImage(null);
-      showAlert('success', 'Department added successfully');
+      showAlert('success', t('Admin.Modals.departmentSuccess', 'Department added successfully'));
       if (onSuccess) onSuccess();
       onClose();
     } catch (err: any) {
-      showAlert('error', err?.response?.data?.msg || 'Something went wrong');
+      showAlert('error', err?.response?.data?.msg || t('Admin.Modals.error', 'Something went wrong'));
     } finally {
       setLoading(false);
     }
@@ -78,35 +82,35 @@ export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Pr
             </button>
 
             <FormShell
-              title="Add New Department"
-              subtitle="Create a new medical department in MediCore"
+              title={t('Admin.Modals.Department.title', 'Add New Department')}
+              subtitle={t('Admin.Modals.Department.subtitle', 'Create a new medical department in MediCore')}
               icon={<MdOutlineLocalHospital size={24} />}
               accentColor="from-cyan-500 to-teal-600"
             >
               <form onSubmit={handleSubmit} className="space-y-5">
                 <Field
-                  label="Department Name"
+                  label={t('Admin.Modals.Department.name', 'Department Name')}
                   icon={<FiTag size={15} />}
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="e.g. Cardiology"
+                  placeholder={t('Admin.Modals.Department.namePlaceholder', 'e.g. Cardiology')}
                 />
 
                 <TextareaField
-                  label="Description"
+                  label={t('Admin.Modals.Department.description', 'Description')}
                   icon={<FiFileText size={15} />}
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Brief description of the department…"
+                  placeholder={t('Admin.Modals.Department.descriptionPlaceholder', 'Brief description of the department…')}
                 />
 
                 {/* Image upload */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                    Department Image
+                    {t('Admin.Modals.Department.imageLabel', 'Department Image')}
                   </label>
                   <label
                     className="w-full h-40 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 cursor-pointer overflow-hidden transition hover:border-Primary group bg-gray-50 dark:bg-gray-800 bg-cover bg-center"
@@ -116,13 +120,13 @@ export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Pr
                     {!previewImage && (
                       <>
                         <FiImage size={28} className="text-gray-300 dark:text-gray-600 group-hover:text-Primary transition mb-2" />
-                        <p className="text-sm text-gray-400 group-hover:text-Primary transition">Click to upload image</p>
+                        <p className="text-sm text-gray-400 group-hover:text-Primary transition">{t('Admin.Modals.Department.uploadText', 'Click to upload image')}</p>
                       </>
                     )}
                   </label>
                 </div>
 
-                <SubmitBtn label="Add Department" loading={loading} loadingComponent={<Loading />} />
+                <SubmitBtn label={t('Admin.Modals.Department.submitBtn', 'Add Department')} loading={loading} loadingComponent={<Loading />} />
               </form>
             </FormShell>
           </motion.div>

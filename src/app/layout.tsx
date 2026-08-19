@@ -6,6 +6,7 @@ import NProgressHandler from "../Components/NProgressHandler";
 import GoogleTranslate from "../Components/GoogleTranslate"; // ✅ import the component
 import { AlertProvider } from "../Components/Alert";
 import { AuthProvider } from "../context/AuthContext";
+import I18nProvider from "../Components/I18nProvider";
 
 export const metadata: Metadata = {
   title: "SpaceFlightNews",
@@ -34,13 +35,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         /> */}
       </head>
       <body className="antialiased dark:bg-black">
-        <AlertProvider>
-          <AuthProvider>
-            <NProgressHandler />
-            <DarkModeToggle />
-            {children}
-          </AuthProvider>
-        </AlertProvider>
+        <I18nProvider>
+          <AlertProvider>
+            <AuthProvider>
+              <NProgressHandler />
+              <DarkModeToggle />
+              {children}
+            </AuthProvider>
+          </AlertProvider>
+        </I18nProvider>
       </body>
     </html>
   );

@@ -12,6 +12,9 @@ export interface OutPatientData {
   scretary_id: number
   message: string
   timestamp: string
+  appointment_id?: number
+  patientName?: string
+  doctorName?: string
 }
 
 interface OutPatientContextValue {
@@ -86,10 +89,28 @@ function PatientOutedModal({
             </p>
           </div>
 
+          {/* Details */}
+          {(data.patientName || data.doctorName) && (
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 mb-4 space-y-3 border border-gray-100 dark:border-gray-700/50">
+              {data.patientName && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">Patient</span>
+                  <span className="font-bold text-gray-800 dark:text-white">{data.patientName}</span>
+                </div>
+              )}
+              {data.doctorName && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">Doctor</span>
+                  <span className="font-bold text-gray-800 dark:text-white">{data.doctorName}</span>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Timestamp */}
           <div className="flex items-center gap-2 mb-5">
             <FiClock size={13} className="text-gray-400" />
-            <p className="text-xs text-gray-400">{data.timestamp}</p>
+            <p className="text-xs text-gray-400 font-medium">{data.timestamp}</p>
           </div>
 
           {/* Dismiss button */}
@@ -115,7 +136,9 @@ export function OutPatientProvider({ children }: { children: ReactNode }) {
   const [showModal, setShowModal] = useState(false)
 
   const clearOutData = useCallback(() => {
-    setOutData(null)
+    setTimeout(() => {
+      setOutData(null)
+    }, 200)
     setShowModal(false)
   }, [])
 

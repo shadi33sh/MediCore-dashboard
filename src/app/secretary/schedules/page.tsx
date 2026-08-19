@@ -11,12 +11,14 @@ import axiosInstance from "../../AuthAxios";
 import { useAlert } from "../../../Components/Alert";
 import { Plus } from "lucide-react";
 import NewAppointmentModal from "../secretaryComponents/NewAppointmentModal";
+import { useTranslation } from "react-i18next";
 import {
   FiCalendar, FiClock, FiUser, FiActivity,
   FiCheckCircle, FiXCircle, FiLogIn, FiChevronDown,
   FiLoader, FiAlertCircle, FiLayers,
 } from "react-icons/fi";
 import dayjs from "dayjs";
+import { useOutPatient } from "../secretaryComponents/OutPatientContext";
 
 /* ─────────────────────── helpers ─────────────────────── */
 
@@ -36,6 +38,16 @@ function StatusPill({ status }: { status: string }) {
 
 /* ───────────────────────── Page ──────────────────────── */
 
+function OutPatientListener({ onOutPatientEvent }: { onOutPatientEvent: (id: number) => void }) {
+  const { outData } = useOutPatient();
+  React.useEffect(() => {
+    if (outData?.appointment_id) {
+      onOutPatientEvent(outData.appointment_id);
+    }
+  }, [outData, onOutPatientEvent]);
+  return null;
+}
+
 function Page() {
   const [scheduleList, setScheduleList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,9 +58,39 @@ function Page() {
   const [openTables, setOpenTables] = useState<Record<string, boolean>>({ accepted: true, waiting: true, today: true });
   const [showNewAppt, setShowNewAppt] = useState(false);
   const { showAlert } = useAlert();
+  const { t, i18n } = useTranslation();
+
+  const handleOutPatientEvent = React.useCallback((appointment_id: number) => {
+    console.log("outData============>", appointment_id);
+    setScheduleList((prev) =>
+      prev.map((item) =>
+        Number(item.id) === Number(appointment_id) ? { ...item, enter: 0 } : item
+      )
+    );
+  }, []);
 
   const formateDate = (date: string) => {
-    return dayjs(date).format("MMM DD, YYYY");
+    try {
+      return new Date(date).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    } catch {
+      return dayjs(date).format("MMM DD, YYYY");
+    }
+  };
+
+  const formatTime = (dateStr: string) => {
+    try {
+      return new Date(dateStr).toLocaleTimeString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } catch {
+      return dateStr;
+    }
   };
   /* ── API actions ── */
   const enterPatient = async (id: number) => {
@@ -69,7 +111,7 @@ function Page() {
       enter: item.enter,
       doctor: {
         name: `Dr. ${item.doctor.user.first_name} ${item.doctor.user.last_name}`,
-        section: item.department.name.en,
+        section: i18n.language === 'ar' ? item.department.name.ar : item.department.name.en,
         rating: 4.5,
         image: item.doctor.user.img_url || "/images/default-doctor.jpg",
       },
@@ -82,7 +124,8 @@ function Page() {
             ? item.patient.chronic_diseases
             : "Stable",
       },
-      appiontmant_date: item.apointment_date.split(" ")[0],
+      appiontmant_date: dayjs(item.apointment_date).format("YYYY-MM-DD"),
+      raw_date: item.apointment_date,
       time: new Date(item.apointment_date).toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "2-digit",
@@ -181,7 +224,7 @@ function Page() {
           </div>
           <div className="text-left">
             <p className="text-base font-bold text-gray-800 dark:text-white">{title}</p>
-            <p className="text-xs text-gray-400">{data.length} appointment{data.length !== 1 ? "s" : ""}</p>
+            <p className="text-xs text-gray-400">{data.length} {data.length !== 1 ? t('Secretary.Schedules.appointments', 'appointments') : t('Secretary.Schedules.appointment', 'appointment')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -211,22 +254,22 @@ function Page() {
               {/* Thead */}
               <div className="grid grid-cols-[1fr_1fr_1.6fr_1.2fr_1.2fr_1.4fr] text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-4 py-3 bg-gray-50 dark:bg-gray-800/60 border-b border-gray-100 dark:border-gray-700/50">
                 <div className="flex items-center gap-2 px-2">
-                  <FiCalendar size={13} className="text-blue-400" /> Date
+                  <FiCalendar size={13} className="text-blue-400" /> {t('Secretary.Schedules.date', 'Date')}
                 </div>
                 <div className="flex items-center gap-2 px-2">
-                  <FiClock size={13} className="text-emerald-400" /> Time
+                  <FiClock size={13} className="text-emerald-400" /> {t('Secretary.Schedules.time', 'Time')}
                 </div>
                 <div className="flex items-center gap-2 px-2">
-                  <FiUser size={13} className="text-Primary" /> Doctor
+                  <FiUser size={13} className="text-Primary" /> {t('Secretary.Schedules.doctor', 'Doctor')}
                 </div>
                 <div className="flex items-center gap-2 px-2">
-                  <FiLayers size={13} className="text-purple-400" /> Section
+                  <FiLayers size={13} className="text-purple-400" /> {t('Secretary.Schedules.section', 'Section')}
                 </div>
                 <div className="flex items-center gap-2 px-2">
-                  <FiUser size={13} className="text-pink-400" /> Patient
+                  <FiUser size={13} className="text-pink-400" /> {t('Secretary.Schedules.patient', 'Patient')}
                 </div>
                 <div className="flex items-center gap-2 px-2 justify-end">
-                  <FiActivity size={13} className="text-rose-400" /> Actions
+                  <FiActivity size={13} className="text-rose-400" /> {t('Secretary.Schedules.actions', 'Actions')}
                 </div>
               </div>
 
@@ -234,7 +277,7 @@ function Page() {
               <div className="divide-y divide-gray-50 dark:divide-gray-800">
                 {data.length === 0 ? (
                   <div className="py-8 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
-                    {type === "today" ? "No schedules today" : "No schedules found"}
+                    {type === "today" ? t('Secretary.Schedules.noSchedulesToday', 'No schedules today') : t('Secretary.Schedules.noSchedulesFound', 'No schedules found')}
                   </div>
                 ) : (
                   data.map((item, idx) => {
@@ -264,7 +307,7 @@ function Page() {
                           <div className="px-2">
                             <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">
                               <FiClock size={12} />
-                              {item.time}
+                              {formatTime(item.raw_date || item.appiontmant_date)}
                             </span>
                           </div>
 
@@ -305,7 +348,7 @@ function Page() {
                                   {actionLoading[item.id]
                                     ? <FiLoader size={13} className="animate-spin" />
                                     : <FiCheckCircle size={13} />}
-                                  Accept
+                                  {t('Secretary.Schedules.accept', 'Accept')}
                                 </motion.button>
                                 <motion.button
                                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
@@ -316,7 +359,7 @@ function Page() {
                                   {actionLoading[item.id]
                                     ? <FiLoader size={13} className="animate-spin" />
                                     : <FiXCircle size={13} />}
-                                  Reject
+                                  {t('Secretary.Schedules.reject', 'Reject')}
                                 </motion.button>
                               </>
                             ) : (
@@ -327,12 +370,12 @@ function Page() {
                                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-Primary hover:bg-Primary/90 text-white text-xs font-bold shadow-sm transition-all"
                                 >
                                   <FiLogIn size={13} />
-                                  Enter Patient
+                                  {t('Secretary.Schedules.enterPatient', 'Enter Patient')}
                                 </motion.button>
                               ) : (
                                 <span className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                                   <FiCheckCircle size={13} />
-                                  Entered
+                                  {t('Secretary.Schedules.entered', 'Entered')}
                                 </span>
                               )
                             )}
@@ -394,13 +437,13 @@ function Page() {
                                     transition={{ delay: 0.1 }}
                                     className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 min-w-[220px]"
                                   >
-                                    <p className="text-xs font-bold uppercase tracking-widest text-pink-500 mb-3">Patient Info</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-pink-500 mb-3">{t('Secretary.Schedules.patientInfo', 'Patient Info')}</p>
                                     <div className="space-y-2">
                                       {[
-                                        { label: "Name", value: item.patient.name },
-                                        { label: "Age", value: `${item.patient.age} yrs` },
-                                        { label: "Gender", value: item.patient.gender },
-                                        { label: "Status", value: item.patient.medicalStatus },
+                                        { label: t('Secretary.Schedules.patient', 'Patient'), value: item.patient.name },
+                                        { label: t('Secretary.Schedules.age', 'Age'), value: `${item.patient.age} yrs` },
+                                        { label: t('Secretary.Schedules.gender', 'Gender'), value: item.patient.gender },
+                                        { label: t('Secretary.Schedules.status', 'Status'), value: item.patient.medicalStatus },
                                       ].map(({ label, value }) => (
                                         <div key={label} className="flex items-center justify-between text-sm">
                                           <span className="text-gray-400 text-xs font-medium">{label}</span>
@@ -417,18 +460,18 @@ function Page() {
                                     transition={{ delay: 0.15 }}
                                     className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 min-w-[200px]"
                                   >
-                                    <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-3">Appointment</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-3">{t('Secretary.Schedules.appointment', 'Appointment')}</p>
                                     <div className="space-y-2">
                                       <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-400 text-xs">Date</span>
+                                        <span className="text-gray-400 text-xs">{t('Secretary.Schedules.date', 'Date')}</span>
                                         <span className="font-semibold text-gray-800 dark:text-white">{formateDate(item.appiontmant_date)}</span>
                                       </div>
                                       <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-400 text-xs">Time</span>
-                                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{item.time}</span>
+                                        <span className="text-gray-400 text-xs">{t('Secretary.Schedules.time', 'Time')}</span>
+                                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatTime(item.raw_date || item.appiontmant_date)}</span>
                                       </div>
                                       <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-400 text-xs">Status</span>
+                                        <span className="text-gray-400 text-xs">{t('Secretary.Schedules.status', 'Status')}</span>
                                         <StatusPill status={item.status} />
                                       </div>
                                     </div>
@@ -459,12 +502,13 @@ function Page() {
           className="bg-Primary flex items-center gap-1.5 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-Primary/90 shadow-md shadow-Primary/20"
         >
           <Plus className="w-4" />
-          New Appointment
+          {t('Secretary.Schedules.newAppointment', 'New Appointment')}
         </button>
       }
-      title="Doctor Appointments"
+      title={t('Secretary.Schedules.title', 'Doctor Appointments')}
       loading={loading}
     >
+      <OutPatientListener onOutPatientEvent={handleOutPatientEvent} />
       {/* ── Sticky toolbar ── */}
       <div className="sticky -top-6 bg-white dark:bg-black py-4 z-10 mb-6">
         <div className="flex items-center flex-wrap gap-3">
@@ -473,7 +517,7 @@ function Page() {
             <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search patient or doctor…"
+              placeholder={t('Secretary.Schedules.searchPlaceholder', 'Search patient or doctor…')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white placeholder-gray-400 border border-transparent focus:border-Primary/40 focus:outline-none focus:ring-2 focus:ring-Primary/20 transition-all"
@@ -493,22 +537,22 @@ function Page() {
                   : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
                   }`}
               >
-                {section}
+                {section === "All" ? t('Secretary.Schedules.all', 'All') : section}
               </motion.button>
             ))}
           </div>
         </div>
       </div>
 
+
       {/* ── Tables ── */}
       {scheduleList.length > 0 &&
-        renderTable("Today's Appointments", todaysSchedules, "today", "bg-blue-500", FiCalendar)}
+        renderTable(t('Secretary.Schedules.todaysAppointments', "Today's Appointments"), todaysSchedules, "today", "bg-blue-500", FiCalendar)}
       {waitingSchedules.length > 0 &&
-        renderTable("Pending Approval", waitingSchedules, "waiting", "bg-amber-500", FiAlertCircle)}
-
+        renderTable(t('Secretary.Schedules.pendingApproval', "Pending Approval"), waitingSchedules, "waiting", "bg-amber-500", FiAlertCircle)}
 
       {acceptedSchedules.length > 0 &&
-        renderTable("Accepted Appointments", acceptedSchedules, "accepted", "bg-emerald-500", FiCheckCircle)}
+        renderTable(t('Secretary.Schedules.acceptedAppointments', "Accepted Appointments"), acceptedSchedules, "accepted", "bg-emerald-500", FiCheckCircle)}
 
       {/* ── Empty state ── */}
       {scheduleList.length === 0 && !loading && (
@@ -517,8 +561,8 @@ function Page() {
             <FiCalendar size={28} className="text-gray-400" />
           </div>
           <div>
-            <p className="text-base font-bold text-gray-700 dark:text-gray-300">No appointments found</p>
-            <p className="text-sm text-gray-400 mt-1">Try adjusting your search or filters</p>
+            <p className="text-base font-bold text-gray-700 dark:text-gray-300">{t('Secretary.Schedules.noAppointments', 'No appointments found')}</p>
+            <p className="text-sm text-gray-400 mt-1">{t('Secretary.Schedules.adjustSearch', 'Try adjusting your search or filters')}</p>
           </div>
         </div>
       )}

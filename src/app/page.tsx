@@ -16,10 +16,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import ToggleModeButton from '../Components/ToggleModeButton';
+import { useTranslation } from 'react-i18next';
 
 export default function MediCoreLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -30,71 +32,62 @@ export default function MediCoreLanding() {
   const features = [
     {
       icon: <Users className="w-7 h-7" />,
-      title: 'Multi-Role Management',
-      description:
-        'Seamlessly manage patients, doctors, and administrators with role-based access control.',
+      title: t('Landing.featuresList.multiRole.title', 'Multi-Role Management'),
+      description: t('Landing.featuresList.multiRole.desc', 'Seamlessly manage patients, doctors, and administrators with role-based access control.'),
       tone: 'primary',
     },
     {
       icon: <Calendar className="w-7 h-7" />,
-      title: 'Smart Scheduling',
-      description:
-        'Advanced appointment scheduling with automated reminders and conflict resolution.',
+      title: t('Landing.featuresList.scheduling.title', 'Smart Scheduling'),
+      description: t('Landing.featuresList.scheduling.desc', 'Advanced appointment scheduling with automated reminders and conflict resolution.'),
       tone: 'amber',
     },
     {
       icon: <Shield className="w-7 h-7" />,
-      title: 'HIPAA Compliant',
-      description:
-        'Enterprise-grade security ensuring complete patient data protection and privacy.',
+      title: t('Landing.featuresList.hipaa.title', 'HIPAA Compliant'),
+      description: t('Landing.featuresList.hipaa.desc', 'Enterprise-grade security ensuring complete patient data protection and privacy.'),
       tone: 'slate',
     },
     {
       icon: <Globe className="w-7 h-7" />,
-      title: 'Arabic Support',
-      description:
-        'Full RTL support and localization designed specifically for Arabic-speaking regions.',
+      title: t('Landing.featuresList.arabic.title', 'Arabic Support'),
+      description: t('Landing.featuresList.arabic.desc', 'Full RTL support and localization designed specifically for Arabic-speaking regions.'),
       tone: 'primary',
     },
     {
       icon: <Zap className="w-7 h-7" />,
-      title: 'Real-time Updates',
-      description:
-        'Instant synchronization across all devices with real-time notifications.',
+      title: t('Landing.featuresList.realTime.title', 'Real-time Updates'),
+      description: t('Landing.featuresList.realTime.desc', 'Instant synchronization across all devices with real-time notifications.'),
       tone: 'amber',
     },
     {
       icon: <Heart className="w-7 h-7" />,
-      title: 'Patient Care Focus',
-      description:
-        'Tools designed to enhance patient experience and improve healthcare outcomes.',
+      title: t('Landing.featuresList.patientCare.title', 'Patient Care Focus'),
+      description: t('Landing.featuresList.patientCare.desc', 'Tools designed to enhance patient experience and improve healthcare outcomes.'),
       tone: 'slate',
     },
   ];
 
   const testimonials = [
     {
-      name: 'Dr. Sarah Ahmed',
-      role: 'Chief Medical Officer',
-      clinic: 'Cairo Medical Center',
-      content:
-        'MediCore transformed our clinic operations. The Arabic interface and intuitive design made adoption seamless across our entire team.',
+      name: t('Landing.testimonialsList.sarah.name', 'Dr. Sarah Ahmed'),
+      role: t('Landing.testimonialsList.sarah.role', 'Chief Medical Officer'),
+      clinic: t('Landing.testimonialsList.sarah.clinic', 'Cairo Medical Center'),
+      content: t('Landing.testimonialsList.sarah.content', 'MediCore transformed our clinic operations. The Arabic interface and intuitive design made adoption seamless across our entire team.'),
       rating: 5,
     },
     {
-      name: 'Ahmad Al-Rashid',
-      role: 'Clinic Administrator',
-      clinic: 'Riyadh Healthcare',
-      content:
-        "The multi-role management system is exceptional. We've reduced administrative overhead by 60% since implementing MediCore.",
+      name: t('Landing.testimonialsList.ahmad.name', 'Ahmad Al-Rashid'),
+      role: t('Landing.testimonialsList.ahmad.role', 'Clinic Administrator'),
+      clinic: t('Landing.testimonialsList.ahmad.clinic', 'Riyadh Healthcare'),
+      content: t('Landing.testimonialsList.ahmad.content', "The multi-role management system is exceptional. We've reduced administrative overhead by 60% since implementing MediCore."),
       rating: 5,
     },
     {
-      name: 'Dr. Layla Hassan',
-      role: 'Pediatrician',
-      clinic: "Dubai Children's Hospital",
-      content:
-        'Patient scheduling has never been easier. The smart conflict resolution saves us hours every week.',
+      name: t('Landing.testimonialsList.layla.name', 'Dr. Layla Hassan'),
+      role: t('Landing.testimonialsList.layla.role', 'Pediatrician'),
+      clinic: t('Landing.testimonialsList.layla.clinic', "Dubai Children's Hospital"),
+      content: t('Landing.testimonialsList.layla.content', 'Patient scheduling has never been easier. The smart conflict resolution saves us hours every week.'),
       rating: 5,
     },
   ];
@@ -127,13 +120,17 @@ export default function MediCoreLanding() {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-9">
-              {['Features', 'Benefits', 'Testimonials'].map((label) => (
+              {[
+                { label: t('Landing.nav.features', 'Features'), id: 'features' },
+                { label: t('Landing.nav.benefits', 'Benefits'), id: 'benefits' },
+                { label: t('Landing.nav.testimonials', 'Testimonials'), id: 'testimonials' }
+              ].map((item) => (
                 <a
-                  key={label}
-                  href={`#${label.toLowerCase()}`}
+                  key={item.id}
+                  href={`#${item.id}`}
                   className="relative text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-Primary transition-colors group"
                 >
-                  {label}
+                  {item.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-amber-400 transition-all duration-300 group-hover:w-full" />
                 </a>
               ))}
@@ -153,20 +150,24 @@ export default function MediCoreLanding() {
         {isMenuOpen && (
           <div className="md:hidden bg-white/98 dark:bg-slate-950/98 backdrop-blur-md border-t border-slate-200 dark:border-slate-800">
             <div className="px-4 py-4 space-y-4">
-              {['Features', 'Benefits', 'Testimonials'].map((label) => (
+              {[
+                { label: t('Landing.nav.features', 'Features'), id: 'features' },
+                { label: t('Landing.nav.benefits', 'Benefits'), id: 'benefits' },
+                { label: t('Landing.nav.testimonials', 'Testimonials'), id: 'testimonials' }
+              ].map((item) => (
                 <a
-                  key={label}
-                  href={`#${label.toLowerCase()}`}
+                  key={item.id}
+                  href={`#${item.id}`}
                   className="block text-slate-700 dark:text-slate-300 hover:text-Primary font-medium"
                 >
-                  {label}
+                  {item.label}
                 </a>
               ))}
               <Link
                 href="/signin"
                 className="block text-center w-full bg-Primary text-white px-6 py-2.5 rounded-full font-medium"
               >
-                Sign in
+                {t('Landing.nav.signIn', 'Sign in')}
               </Link>
             </div>
           </div>
@@ -187,17 +188,16 @@ export default function MediCoreLanding() {
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-Primary/30 bg-Primary/5 text-Primary text-xs font-semibold uppercase tracking-wide mb-8">
                 <Zap className="w-3.5 h-3.5" />
-                Next-Generation Healthcare Management
+                {t('Landing.hero.tagline', 'Next-Generation Healthcare Management')}
               </div>
 
               <h1 className=" text-5xl md:text-6xl lg:text-[4.2rem] font-semibold leading-[1.05] mb-7 text-slate-900 dark:text-white">
-                Revolutionize your
-                <span className="block italic text-Primary">medical center</span>
+                {t('Landing.hero.title1', 'Revolutionize your')}
+                <span className="block italic text-Primary">{t('Landing.hero.title2', 'medical center')}</span>
               </h1>
 
               <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-xl leading-relaxed">
-                Streamline operations, enhance patient care, and boost efficiency with a
-                comprehensive management system built for Arabic-speaking healthcare facilities.
+                {t('Landing.hero.subtitle', 'Streamline operations, enhance patient care, and boost efficiency with a comprehensive management system built for Arabic-speaking healthcare facilities.')}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -205,14 +205,14 @@ export default function MediCoreLanding() {
                   href="/signin"
                   className="group bg-Primary hover:bg-Primary/90 text-white px-8 py-4 rounded-full text-base font-semibold shadow-lg shadow-Primary/20 transition-all duration-300 flex items-center"
                 >
-                  Sign in
+                  {t('Landing.hero.signIn', 'Sign in')}
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <button className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-Primary font-medium transition-colors">
                   <span className="w-11 h-11 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center group-hover:border-Primary transition-colors">
                     <Play className="w-4 h-4 ml-0.5" />
                   </span>
-                  Watch overview
+                  {t('Landing.hero.watchOverview', 'Watch overview')}
                 </button>
               </div>
             </div>
@@ -222,11 +222,11 @@ export default function MediCoreLanding() {
               <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-900/10 border border-slate-200 dark:border-slate-800 p-7 relative overflow-hidden">
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    Today's overview
+                    {t('Landing.hero.todaysOverview', "Today's overview")}
                   </span>
                   <span className="flex items-center gap-1.5 text-xs font-medium text-Primary">
                     <span className="w-1.5 h-1.5 rounded-full bg-Primary animate-pulse" />
-                    Live
+                    {t('Landing.hero.live', 'Live')}
                   </span>
                 </div>
 
@@ -245,21 +245,21 @@ export default function MediCoreLanding() {
                   <div className="rounded-2xl bg-Primary/8 p-4">
                     <div className="text-2xl  font-semibold text-Primary">128</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Patients today
+                      {t('Landing.hero.patientsToday', 'Patients today')}
                     </div>
                   </div>
                   <div className="rounded-2xl bg-amber-400/10 p-4">
                     <div className="text-2xl  font-semibold text-amber-500">94%</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      On-time visits
+                      {t('Landing.hero.onTimeVisits', 'On-time visits')}
                     </div>
                   </div>
                   <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4 col-span-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-semibold">Dr. Layla Hassan</div>
+                        <div className="text-sm font-semibold">{t('Landing.hero.drName', 'Dr. Layla Hassan')}</div>
                         <div className="text-xs text-slate-500 dark:text-slate-400">
-                          Next: 2:30 PM · Room 4
+                          {t('Landing.hero.nextAppointment', 'Next: 2:30 PM · Room 4')}
                         </div>
                       </div>
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-Primary to-amber-400" />
@@ -271,7 +271,7 @@ export default function MediCoreLanding() {
               {/* floating chip */}
               <div className="absolute -bottom-5 -left-5 bg-white dark:bg-slate-900 rounded-2xl shadow-xl px-4 py-3 flex items-center gap-2.5 border border-slate-200 dark:border-slate-800">
                 <Shield className="w-5 h-5 text-Primary" />
-                <span className="text-xs font-semibold">HIPAA compliant</span>
+                <span className="text-xs font-semibold">{t('Landing.hero.hipaa', 'HIPAA compliant')}</span>
               </div>
             </div>
           </div>
@@ -283,15 +283,14 @@ export default function MediCoreLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-xs font-semibold uppercase tracking-widest text-amber-500">
-              Capabilities
+              {t('Landing.features.subtitle', 'Capabilities')}
             </span>
             <h2 className=" text-4xl md:text-5xl font-semibold mt-3 mb-6">
-              Powerful features for
-              <span className="block italic text-Primary">modern healthcare</span>
+              {t('Landing.features.title1', 'Powerful features for')}
+              <span className="block italic text-Primary">{t('Landing.features.title2', 'modern healthcare')}</span>
             </h2>
             <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-              Everything you need to manage your medical center efficiently, from patient records
-              to staff scheduling.
+              {t('Landing.features.desc', 'Everything you need to manage your medical center efficiently, from patient records to staff scheduling.')}
             </p>
           </div>
 
@@ -332,20 +331,20 @@ export default function MediCoreLanding() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <span className="text-xs font-semibold uppercase tracking-widest text-amber-400">
-                Why MediCore
+                {t('Landing.benefits.subtitle', 'Why MediCore')}
               </span>
               <h2 className=" text-4xl md:text-5xl font-semibold mt-3 mb-8">
-                Built for how clinics
-                <span className="block italic">actually run</span>
+                {t('Landing.benefits.title1', 'Built for how clinics')}
+                <span className="block italic">{t('Landing.benefits.title2', 'actually run')}</span>
               </h2>
               <div className="space-y-5">
                 {[
-                  'Reduce administrative costs by up to 60%',
-                  'Improve patient satisfaction scores',
-                  'Streamline appointment scheduling',
-                  'Ensure HIPAA compliance',
-                  'Support multiple languages including Arabic',
-                  'Real-time analytics and reporting',
+                  t('Landing.benefits.point1', 'Reduce administrative costs by up to 60%'),
+                  t('Landing.benefits.point2', 'Improve patient satisfaction scores'),
+                  t('Landing.benefits.point3', 'Streamline appointment scheduling'),
+                  t('Landing.benefits.point4', 'Ensure HIPAA compliance'),
+                  t('Landing.benefits.point5', 'Support multiple languages including Arabic'),
+                  t('Landing.benefits.point6', 'Real-time analytics and reporting'),
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-center gap-4">
                     <div className="w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center flex-shrink-0">
@@ -360,16 +359,16 @@ export default function MediCoreLanding() {
             <div className="space-y-4">
               {[
                 {
-                  title: 'Patient Management',
-                  desc: 'Complete patient profiles with medical history, appointments, and billing.',
+                  title: t('Landing.benefits.card1.title', 'Patient Management'),
+                  desc: t('Landing.benefits.card1.desc', 'Complete patient profiles with medical history, appointments, and billing.'),
                 },
                 {
-                  title: 'Staff Coordination',
-                  desc: 'Efficient staff scheduling and role-based access management.',
+                  title: t('Landing.benefits.card2.title', 'Staff Coordination'),
+                  desc: t('Landing.benefits.card2.desc', 'Efficient staff scheduling and role-based access management.'),
                 },
                 {
-                  title: 'Analytics Dashboard',
-                  desc: 'Real-time insights into clinic performance and patient flow.',
+                  title: t('Landing.benefits.card3.title', 'Analytics Dashboard'),
+                  desc: t('Landing.benefits.card3.desc', 'Real-time insights into clinic performance and patient flow.'),
                 },
               ].map((card, i) => (
                 <div
@@ -390,13 +389,13 @@ export default function MediCoreLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-xs font-semibold uppercase tracking-widest text-Primary">
-              Trusted region-wide
+              {t('Landing.testimonials.subtitle', 'Trusted region-wide')}
             </span>
             <h2 className=" text-4xl md:text-5xl font-semibold mt-3 mb-4">
-              Healthcare professionals agree
+              {t('Landing.testimonials.title', 'Healthcare professionals agree')}
             </h2>
             <p className="text-lg text-slate-500 dark:text-slate-400">
-              See what medical centers across the region are saying about MediCore.
+              {t('Landing.testimonials.desc', 'See what medical centers across the region are saying about MediCore.')}
             </p>
           </div>
 
@@ -431,14 +430,17 @@ export default function MediCoreLanding() {
       <section className="py-24 bg-gradient-to-br from-amber-400 to-amber-500 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <h2 className=" text-4xl md:text-5xl font-semibold text-slate-900 mb-6">
-            Ready to transform your medical center?
+            {t('Landing.cta.title', 'Ready to transform your medical center?')}
           </h2>
           <p className="text-lg text-slate-800/70 mb-11 max-w-xl mx-auto">
-            Join hundreds of healthcare facilities that have revolutionized their operations with
-            MediCore.
+            {t('Landing.cta.desc', 'Join hundreds of healthcare facilities that have revolutionized their operations with MediCore.')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {['Doctor', 'Secretary', 'Manager'].map((role) => (
+            {[
+              t('Landing.cta.roles.doctor', 'Doctor'), 
+              t('Landing.cta.roles.secretary', 'Secretary'), 
+              t('Landing.cta.roles.manager', 'Manager')
+            ].map((role) => (
               <button
                 key={role}
                 className="bg-slate-900 text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-Primary transition-colors duration-300"
@@ -465,23 +467,22 @@ export default function MediCoreLanding() {
                 <span className=" text-xl font-semibold text-white">MediCore</span>
               </div>
               <p className="text-sm leading-relaxed">
-                Revolutionizing healthcare management for Arabic-speaking regions with
-                cutting-edge technology.
+                {t('Landing.footer.desc', 'Revolutionizing healthcare management for Arabic-speaking regions with cutting-edge technology.')}
               </p>
             </div>
 
             {[
-              { title: 'Product', links: ['Features', 'Pricing', 'Security', 'API'] },
-              { title: 'Company', links: ['About', 'Careers', 'Contact', 'Blog'] },
-              { title: 'Support', links: ['Help Center', 'Documentation', 'Training', 'Status'] },
-            ].map((col) => (
-              <div key={col.title}>
+              { title: t('Landing.footer.col1.title', 'Product'), links: [t('Landing.footer.col1.l1', 'Features'), t('Landing.footer.col1.l2', 'Pricing'), t('Landing.footer.col1.l3', 'Security'), t('Landing.footer.col1.l4', 'API')] },
+              { title: t('Landing.footer.col2.title', 'Company'), links: [t('Landing.footer.col2.l1', 'About'), t('Landing.footer.col2.l2', 'Careers'), t('Landing.footer.col2.l3', 'Contact'), t('Landing.footer.col2.l4', 'Blog')] },
+              { title: t('Landing.footer.col3.title', 'Support'), links: [t('Landing.footer.col3.l1', 'Help Center'), t('Landing.footer.col3.l2', 'Documentation'), t('Landing.footer.col3.l3', 'Training'), t('Landing.footer.col3.l4', 'Status')] },
+            ].map((col, index) => (
+              <div key={index}>
                 <h3 className="text-sm font-semibold text-white mb-6 uppercase tracking-wide">
                   {col.title}
                 </h3>
                 <ul className="space-y-3 text-sm">
-                  {col.links.map((link) => (
-                    <li key={link}>
+                  {col.links.map((link, idx) => (
+                    <li key={idx}>
                       <a href="#" className="hover:text-amber-400 transition-colors">
                         {link}
                       </a>
@@ -493,7 +494,7 @@ export default function MediCoreLanding() {
           </div>
 
           <div className="border-t border-slate-800 mt-12 pt-8 text-center text-sm">
-            <p>&copy; 2025 MediCore. All rights reserved.</p>
+            <p>{t('Landing.footer.copyright', '© 2025 MediCore. All rights reserved.')}</p>
           </div>
         </div>
       </footer>

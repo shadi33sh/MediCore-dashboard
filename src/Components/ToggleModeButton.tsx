@@ -1,8 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function ToggleModeButton() {
   const [isDark, setIsDark] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     // Check if user previously selected a theme
@@ -30,7 +32,7 @@ export default function ToggleModeButton() {
       onClick={toggleDarkMode}
       className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded"
     >
-      {isDark ? 'Light Mode' : 'Dark Mode'}
+      {isDark ? t('ToggleModeButton.lightMode', 'Light Mode') : t('ToggleModeButton.darkMode', 'Dark Mode')}
     </button>
   )
 }

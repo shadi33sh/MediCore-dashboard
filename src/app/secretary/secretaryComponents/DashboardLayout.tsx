@@ -23,7 +23,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, load
                 :
                 <>
                   <div className="flex justify-between items-center">
-                    {title && (<h2 className="text-3xl max-md:text-lg max-md:pl-6  font-extrabold text-gray-800 dark:text-white">{title}</h2>)}
+                    {title && (<h2 className="text-3xl  max-md:text-lg max-md:pl-6 font-bold text-gray-800 dark:text-white">{title}</h2>)}
                     {actions}
                   </div>
                   {children}

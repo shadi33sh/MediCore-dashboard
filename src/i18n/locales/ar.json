@@ -1,0 +1,499 @@
+{
+  "SettingsModal": {
+    "title": "الإعدادات",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "emailAddress": "البريد الإلكتروني",
+    "preferences": "التفضيلات",
+    "language": "اللغة",
+    "selectLanguage": "اختر اللغة المفضلة",
+    "english": "الإنجليزية",
+    "arabic": "العربية",
+    "darkMode": "الوضع الداكن",
+    "toggleDarkMode": "تبديل الوضع الفاتح / الداكن",
+    "compactSidebar": "شريط جانبي مصغر",
+    "collapseSidebar": "طي الشريط الجانبي الرئيسي",
+    "signOut": "تسجيل الخروج"
+  },
+  "Alert": {
+    "defaultError": "حدث خطأ.",
+    "success": "نجاح!",
+    "error": "خطأ!"
+  },
+  "DoctorModal": {
+    "patientIdRequired": "معرف المريض مطلوب",
+    "appointmentCreated": "تم إنشاء الموعد بنجاح!",
+    "instantAppointment": "موعد فوري",
+    "failedToSchedule": "فشل في الجدولة",
+    "total": "المجموع",
+    "booked": "محجوز",
+    "available": "متاح",
+    "dailySchedule": "الجدول اليومي",
+    "time": "الوقت",
+    "patient": "المريض",
+    "status": "الحالة",
+    "scheduling": "جاري الجدولة...",
+    "availableText": "متاح",
+    "bookSlot": "+ حجز موعد",
+    "patientId": "معرف المريض",
+    "enterPatientId": "أدخل معرف المريض للحجز...",
+    "confirmBooking": "تأكيد الحجز",
+    "cancel": "إلغاء"
+  },
+  "SettingsTranslate": {
+    "arabic": "العربية",
+    "english": "الإنجليزية"
+  },
+  "ToggleModeButton": {
+    "lightMode": "الوضع الفاتح",
+    "darkMode": "الوضع الداكن"
+  },
+  "Landing": {
+    "nav": {
+      "features": "المميزات",
+      "benefits": "الفوائد",
+      "testimonials": "آراء العملاء",
+      "signIn": "تسجيل الدخول"
+    },
+    "hero": {
+      "tagline": "إدارة الرعاية الصحية من الجيل القادم",
+      "title1": "أحدث ثورة في",
+      "title2": "مركزك الطبي",
+      "subtitle": "تبسيط العمليات وتحسين رعاية المرضى وزيادة الكفاءة باستخدام نظام إدارة شامل مصمم لمرافق الرعاية الصحية الناطقة باللغة العربية.",
+      "signIn": "تسجيل الدخول",
+      "watchOverview": "شاهد النظرة العامة",
+      "todaysOverview": "نظرة عامة على اليوم",
+      "live": "مباشر",
+      "patientsToday": "المرضى اليوم",
+      "onTimeVisits": "الزيارات في الوقت المحدد",
+      "drName": "د. ليلى حسن",
+      "nextAppointment": "التالي: 2:30 مساءً · غرفة 4",
+      "hipaa": "متوافق مع HIPAA"
+    },
+    "features": {
+      "subtitle": "القدرات",
+      "title1": "ميزات قوية لـ",
+      "title2": "الرعاية الصحية الحديثة",
+      "desc": "كل ما تحتاجه لإدارة مركزك الطبي بكفاءة، من سجلات المرضى إلى جدولة الموظفين."
+    },
+    "featuresList": {
+      "multiRole": {
+        "title": "إدارة أدوار متعددة",
+        "desc": "إدارة المرضى والأطباء والإداريين بسلاسة مع التحكم في الوصول القائم على الأدوار."
+      },
+      "scheduling": {
+        "title": "جدولة ذكية",
+        "desc": "جدولة مواعيد متقدمة مع تذكيرات آلية وحل النزاعات."
+      },
+      "hipaa": {
+        "title": "متوافق مع HIPAA",
+        "desc": "أمان على مستوى المؤسسات يضمن حماية بيانات المرضى والخصوصية الكاملة."
+      },
+      "arabic": {
+        "title": "دعم اللغة العربية",
+        "desc": "دعم كامل من اليمين لليسار (RTL) وتوطين مصمم خصيصًا للمناطق الناطقة باللغة العربية."
+      },
+      "realTime": {
+        "title": "تحديثات في الوقت الفعلي",
+        "desc": "مزامنة فورية عبر جميع الأجهزة مع إشعارات في الوقت الفعلي."
+      },
+      "patientCare": {
+        "title": "التركيز على رعاية المرضى",
+        "desc": "أدوات مصممة لتعزيز تجربة المرضى وتحسين نتائج الرعاية الصحية."
+      }
+    },
+    "benefits": {
+      "subtitle": "لماذا ميدي كور",
+      "title1": "مصمم للطريقة التي",
+      "title2": "تعمل بها العيادات حقًا",
+      "point1": "تقليل التكاليف الإدارية بنسبة تصل إلى 60٪",
+      "point2": "تحسين درجات رضا المرضى",
+      "point3": "تبسيط جدولة المواعيد",
+      "point4": "ضمان الامتثال لـ HIPAA",
+      "point5": "دعم لغات متعددة بما في ذلك العربية",
+      "point6": "تحليلات وتقارير في الوقت الفعلي",
+      "card1": {
+        "title": "إدارة المرضى",
+        "desc": "ملفات تعريف كاملة للمرضى مع التاريخ الطبي والمواعيد والفواتير."
+      },
+      "card2": {
+        "title": "تنسيق الموظفين",
+        "desc": "جدولة الموظفين بكفاءة وإدارة الوصول القائم على الأدوار."
+      },
+      "card3": {
+        "title": "لوحة تحكم التحليلات",
+        "desc": "رؤى في الوقت الفعلي لأداء العيادة وتدفق المرضى."
+      }
+    },
+    "testimonials": {
+      "subtitle": "موثوق في جميع أنحاء المنطقة",
+      "title": "يوافق أخصائيو الرعاية الصحية",
+      "desc": "تعرف على ما تقوله المراكز الطبية في جميع أنحاء المنطقة عن MediCore."
+    },
+    "testimonialsList": {
+      "sarah": {
+        "name": "د. سارة أحمد",
+        "role": "رئيس الأطباء",
+        "clinic": "مركز القاهرة الطبي",
+        "content": "قام MediCore بتحويل عمليات عيادتنا. واجهة اللغة العربية والتصميم البديهي جعل التبني سلسًا في جميع أنحاء فريقنا بأكمله."
+      },
+      "ahmad": {
+        "name": "أحمد الرشيد",
+        "role": "مدير العيادة",
+        "clinic": "الرياض للرعاية الصحية",
+        "content": "نظام إدارة الأدوار المتعددة استثنائي. لقد قللنا العبء الإداري بنسبة 60٪ منذ تطبيق MediCore."
+      },
+      "layla": {
+        "name": "د. ليلى حسن",
+        "role": "طبيب أطفال",
+        "clinic": "مستشفى دبي للأطفال",
+        "content": "جدولة المرضى لم تكن أبدًا أسهل. يوفر لنا حل النزاعات الذكي ساعات كل أسبوع."
+      }
+    },
+    "cta": {
+      "title": "هل أنت مستعد لتحويل مركزك الطبي؟",
+      "desc": "انضم إلى مئات من مرافق الرعاية الصحية التي أحدثت ثورة في عملياتها باستخدام MediCore.",
+      "roles": {
+        "doctor": "طبيب",
+        "secretary": "سكرتير",
+        "manager": "مدير"
+      }
+    },
+    "footer": {
+      "desc": "إحداث ثورة في إدارة الرعاية الصحية في المناطق الناطقة باللغة العربية بأحدث التقنيات.",
+      "col1": {
+        "title": "المنتج",
+        "l1": "الميزات",
+        "l2": "الأسعار",
+        "l3": "الأمان",
+        "l4": "واجهة برمجة التطبيقات (API)"
+      },
+      "col2": {
+        "title": "الشركة",
+        "l1": "حول",
+        "l2": "وظائف",
+        "l3": "اتصل بنا",
+        "l4": "المدونة"
+      },
+      "col3": {
+        "title": "الدعم",
+        "l1": "مركز المساعدة",
+        "l2": "الوثائق",
+        "l3": "التدريب",
+        "l4": "الحالة"
+      },
+      "copyright": "© 2025 MediCore. جميع الحقوق محفوظة."
+    }
+  },
+  "Auth": {
+    "SignIn": {
+      "title": "تسجيل الدخول إلى حسابك",
+      "subtitle": "أدخل بيانات الاعتماد الخاصة بك للمتابعة إلى لوحة التحكم.",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "you@example.com",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "••••••••",
+      "welcomeBack": "مرحباً بعودتك",
+      "forgotPassword": "هل نسيت كلمة المرور؟",
+      "signInButton": "تسجيل الدخول",
+      "welcomeTitle1": "مرحباً بك في Medi",
+      "welcomeTitle2": "Core",
+      "welcomeDesc": "المنصة المطلقة للأطباء لإدارة المرضى والمواعيد والسجلات الطبية بكل سهولة.",
+      "success": "تم تسجيل الدخول بنجاح",
+      "error": "البريد الإلكتروني أو كلمة المرور غير صالحة"
+    },
+    "SignUp": {
+      "title1": "إنشاء",
+      "title2": "حساب Core",
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الأخير",
+      "email": "البريد الإلكتروني",
+      "phonePlaceholder": "+963XXXXXXXXX",
+      "password": "كلمة المرور (8 أحرف كحد أدنى)",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "signUpButton": "إنشاء حساب",
+      "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+      "signInLink": "تسجيل الدخول",
+      "success": "تم التسجيل بنجاح. جاري التوجيه للتحقق...",
+      "error": "فشل التسجيل. يرجى المحاولة مرة أخرى."
+    },
+    "EmailVerification": {
+      "title": "تحقق من حسابك",
+      "codeInput": "أدخل الرمز المكون من 6 أرقام",
+      "verifyButton": "التحقق من الرمز",
+      "didntReceive": "لم تتلق الرمز؟",
+      "resendCode": "إعادة إرسال الرمز",
+      "success": "تم التحقق بنجاح",
+      "error": "رمز التحقق غير صالح"
+    }
+  },
+  "Admin": {
+    "Dashboard": {
+      "title": "نظرة عامة على إحصائيات العيادة",
+      "stats": {
+        "totalPatients": "إجمالي المرضى",
+        "totalDoctors": "إجمالي الأطباء",
+        "appointmentsToday": "مواعيد اليوم",
+        "medicalSections": "الأقسام الطبية",
+        "canceledAppointments": "المواعيد الملغاة",
+        "monthlyIncome": "الدخل الشهري",
+        "upcomingAppointments": "المواعيد القادمة",
+        "visitsThisWeek": "زيارات هذا الأسبوع"
+      },
+      "buttons": {
+        "createDoctor": "إضافة طبيب",
+        "createSecretary": "إضافة سكرتير",
+        "createDepartment": "إضافة قسم"
+      }
+    },
+    "Sidebar": {
+      "homePage": "الصفحة الرئيسية",
+      "doctors": "الأطباء",
+      "departments": "الأقسام",
+      "sections": "الأقسام",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج"
+    },
+    "Departments": {
+      "title": "الأقسام",
+      "heading": "جميع الأقسام",
+      "createBtn": "إضافة قسم",
+      "fetchError": "فشل في تحميل الأقسام",
+      "examFee": "رسوم الكشف",
+      "subscription": "الاشتراك",
+      "doctors": "أطباء",
+      "doctor": "طبيب",
+      "noDoctorsAssigned": "لم يتم تعيين أطباء",
+      "noDoctorsYet": "هذا القسم لا يحتوي على أطباء حتى الآن.",
+      "viewDoctors": "عرض الأطباء"
+    },
+    "Doctors": {
+      "title": "إدارة الأطباء",
+      "searchPlaceholder": "البحث باسم الطبيب...",
+      "addBtn": "إضافة طبيب جديد",
+      "tableTitle": "الأطباء المسجلون",
+      "tableCols": {
+        "name": "اسم الطبيب",
+        "department": "القسم",
+        "phone": "الهاتف",
+        "email": "البريد الإلكتروني",
+        "rating": "التقييم"
+      },
+      "details": {
+        "summary": "الملخص المهني",
+        "noSummary": "لم يتم تقديم ملخص مهني.",
+        "financial": "التفاصيل المالية",
+        "examination": "الكشفية",
+        "subscription": "الاشتراك"
+      },
+      "noDoctors": "لم يتم العثور على أطباء",
+      "noDoctorsDesc": "حاول تعديل الفلاتر أو كلمة البحث."
+    },
+    "Modals": {
+      "doctorSuccess": "تم تسجيل الطبيب بنجاح",
+      "secretarySuccess": "تم إنشاء حساب السكرتير بنجاح",
+      "departmentSuccess": "تمت إضافة القسم بنجاح",
+      "error": "حدث خطأ",
+      "Doctor": {
+        "title": "تسجيل طبيب جديد",
+        "subtitle": "إضافة طبيب إلى نظام MediCore",
+        "firstName": "الاسم الأول",
+        "lastName": "الاسم الأخير",
+        "department": "القسم",
+        "selectDepartment": "اختر القسم",
+        "bio": "نبذة مختصرة",
+        "bioPlaceholder": "ملخص مهني قصير",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "subscription": "رسوم الاشتراك",
+        "examPrice": "سعر الكشفية",
+        "password": "كلمة المرور",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "submitBtn": "تسجيل الطبيب"
+      },
+      "Secretary": {
+        "title": "تسجيل سكرتير جديد",
+        "subtitle": "إنشاء حساب سكرتير في نظام MediCore",
+        "firstName": "الاسم الأول",
+        "lastName": "الاسم الأخير",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "password": "كلمة المرور",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "submitBtn": "إنشاء حساب"
+      },
+      "Department": {
+        "title": "إضافة قسم جديد",
+        "subtitle": "إنشاء قسم طبي جديد في MediCore",
+        "name": "اسم القسم",
+        "namePlaceholder": "مثال: أمراض القلب",
+        "description": "الوصف",
+        "descriptionPlaceholder": "وصف مختصر للقسم…",
+        "imageLabel": "صورة القسم",
+        "uploadText": "اضغط لرفع صورة",
+        "submitBtn": "إضافة القسم"
+      },
+      "UpdateDoctor": {
+        "title": "تحديث الطبيب",
+        "subtitle": "تعديل معلومات الطبيب في MediCore",
+        "success": "تم تحديث تفاصيل الطبيب بنجاح.",
+        "error": "فشل التحديث. يرجى المحاولة مرة أخرى.",
+        "submitBtn": "تحديث الطبيب"
+      }
+    }
+  },
+  "Doctor": {
+    "Sidebar": {
+      "Appointments": "المواعيد",
+      "Patients": "المرضى",
+      "Articles": "المقالات",
+      "ChatBotAI": "الذكاء الاصطناعي",
+      "Main": "الرئيسية",
+      "Settings": "الإعدادات"
+    },
+    "Articles": {
+      "title": "مقالات الطبيب"
+    },
+    "Patients": {
+      "title": "مرضاي",
+      "searchPlaceholder": "ابحث بالاسم أو رقم الهاتف...",
+      "patientsFound": "مرضى",
+      "noRecords": "لم يتم العثور على سجلات مرضى",
+      "patient": "المريض",
+      "id": "معرف #",
+      "contact": "التواصل",
+      "na": "غير متوفر",
+      "ageGender": "العمر والجنس",
+      "years": "سنة",
+      "bloodType": "فصيلة الدم",
+      "newCheckup": "فحص جديد",
+      "checkupHistory": "تاريخ الفحوصات",
+      "viewHistory": "عرض السجل",
+      "checkupDate": "تاريخ الفحص",
+      "status": "الحالة",
+      "stable": "مستقر",
+      "diagnosis": "التشخيص",
+      "prescribedMedicine": "الأدوية الموصوفة",
+      "doctorNotes": "ملاحظات الطبيب",
+      "noCheckups": "لم تقم بتسجيل تقارير فحص بعد.",
+      "medicalBackground": "التاريخ الطبي",
+      "chronicDiseases": "الأمراض المزمنة",
+      "none": "لا يوجد",
+      "medicationAllergies": "حساسية الأدوية",
+      "permanentMeds": "الأدوية الدائمة",
+      "surgeriesIllnesses": "العمليات / الأمراض السابقة",
+      "medicalAnalysis": "التحاليل الطبية",
+      "result": "النتيجة:",
+      "viewFile": "عرض الملف"
+    },
+    "Preview": {
+      "title": "فحص المريض"
+    },
+    "Chatbot": {
+      "title": "المساعد الطبي الذكي"
+    }
+  },
+  "Secretary": {
+    "Sidebar": {
+      "Dashboard": "لوحة التحكم",
+      "Schedules": "الجداول",
+      "Doctors": "الأطباء",
+      "Sections": "الأقسام",
+      "ScheduleAppointment": "حجز موعد",
+      "Settings": "الإعدادات"
+    },
+    "Sections": {
+      "title": "الأقسام الطبية",
+      "doctors": "أطباء"
+    },
+    "Doctors": {
+      "title": "الأطباء"
+    },
+    "Schedules": {
+      "title": "مواعيد الأطباء",
+      "all": "الكل",
+      "searchPlaceholder": "ابحث عن مريض أو طبيب...",
+      "noAppointments": "لم يتم العثور على مواعيد",
+      "adjustSearch": "حاول تعديل البحث أو الفلاتر",
+      "noSchedulesToday": "لا يوجد جداول اليوم",
+      "noSchedulesFound": "لم يتم العثور على جداول",
+      "todaysAppointments": "مواعيد اليوم",
+      "pendingApproval": "قيد الانتظار",
+      "acceptedAppointments": "المواعيد المقبولة",
+      "appointments": "مواعيد",
+      "appointment": "موعد",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "doctor": "الطبيب",
+      "section": "القسم",
+      "patient": "المريض",
+      "actions": "إجراءات",
+      "accept": "قبول",
+      "reject": "رفض",
+      "enterPatient": "إدخال المريض",
+      "entered": "تم الإدخال",
+      "patientInfo": "معلومات المريض",
+      "age": "العمر",
+      "gender": "الجنس",
+      "status": "الحالة",
+      "newAppointment": "موعد جديد"
+    },
+    "NewAppointmentModal": {
+      "scheduleNewAppointment": "جدولة موعد جديد",
+      "patientExists": "المريض موجود في النظام",
+      "enterPatientId": "أدخل معرف المريض",
+      "selectDepartment": "اختر القسم",
+      "chooseTimeSlot": "اختر وقت الموعد",
+      "booked": "محجوز",
+      "selected": "محدد",
+      "available": "متاح",
+      "confirmAppointment": "تأكيد الموعد",
+      "reviewDetails": "يرجى مراجعة التفاصيل أدناه",
+      "dateTime": "التاريخ والوقت",
+      "cancel": "إلغاء",
+      "schedule": "جدولة",
+      "patientForm": {
+        "firstName": "الاسم الأول",
+        "lastName": "الاسم الأخير",
+        "birthDate": "تاريخ الميلاد",
+        "gender": "الجنس",
+        "age": "العمر",
+        "bloodType": "زمرة الدم",
+        "chronicDiseases": "الأمراض المزمنة",
+        "medicationAllergies": "الحساسية من الأدوية",
+        "permanentMedications": "الأدوية الدائمة",
+        "previousSurgeries": "العمليات الجراحية السابقة",
+        "previousIllnesses": "الأمراض السابقة",
+        "medicalAnalysis": "التحاليل الطبية"
+      },
+      "weekdays": {
+        "sun": "الأحد",
+        "mon": "الإثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت"
+      }
+    },
+    "MonthlyWorkDays": {
+      "title": "أيام العمل الشهرية",
+      "subtitle": "تعيين الأطباء لأيام عملهم في كل قسم.",
+      "saveSchedule": "حفظ الجدول",
+      "department": "القسم",
+      "unassigned": "— غير معين —",
+      "fetchDepartmentsError": "فشل في جلب الأقسام",
+      "fetchAssignmentsError": "فشل في جلب التعيينات الحالية",
+      "submitSuccess": "تم حفظ الجدول بنجاح",
+      "submitError": "حدث خطأ أثناء إضافة أيام العمل",
+      "days": {
+        "1": "الأحد",
+        "2": "الإثنين",
+        "3": "الثلاثاء",
+        "4": "الأربعاء",
+        "5": "الخميس",
+        "6": "السبت"
+      }
+    }
+  }
+}

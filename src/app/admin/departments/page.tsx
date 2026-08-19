@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import DashboardLayout from '../secretaryComponents/DashboardLayout'
+import DashboardLayout from '../managerComponents/adminDashboardLayout'
 import axiosInstance from '../../AuthAxios'
 import { useAlert } from '../../../Components/Alert'
+import CreateDepartmentModal from '../manage/CreateDepartmentModal'
+import { FaPlus } from 'react-icons/fa'
 import {
   FiUsers,
   FiX,
@@ -110,7 +112,7 @@ function StarRating({ rating }: { rating: number }) {
 
 // ─── Doctor Card (inside dialog) ─────────────────────────────────────────────
 function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
-  console.log(doctor, 'this is doctor')
+  const { t } = useTranslation()
   const firstName = doctor.doctor.user?.first_name ?? ''
   const lastName = doctor.doctor.user?.last_name ?? ''
   const initials = `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase()
@@ -123,13 +125,11 @@ function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
       transition={{ delay: index * 0.07, duration: 0.38 }}
       className="relative bg-gray-50 dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 overflow-hidden group"
     >
-      {/* Top accent bar */}
       <div
         className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${avatarGrad} rounded-t-2xl`}
       />
 
       <div className="flex items-start gap-3">
-        {/* Avatar */}
         <div
           className={`w-12 h-12 rounded-xl bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md`}
         >
@@ -152,12 +152,11 @@ function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
         </div>
       </div>
 
-      {/* Stat pills */}
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div className="bg-white dark:bg-gray-700/60 rounded-xl p-2.5 text-center">
           <div className="flex items-center justify-center gap-1 mb-0.5">
             <FiDollarSign size={10} className="text-emerald-500" />
-            <span className="text-[9px] text-gray-500 dark:text-gray-400">Exam Fee</span>
+            <span className="text-[9px] text-gray-500 dark:text-gray-400">{t('Admin.Departments.examFee', 'Exam Fee')}</span>
           </div>
           <p className="font-bold text-sm text-gray-800 dark:text-white">
             {doctor.doctor?.price_of_examination != null
@@ -168,7 +167,7 @@ function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
         <div className="bg-white dark:bg-gray-700/60 rounded-xl p-2.5 text-center">
           <div className="flex items-center justify-center gap-1 mb-0.5">
             <FiAward size={10} className="text-violet-500" />
-            <span className="text-[9px] text-gray-500 dark:text-gray-400">Subscription</span>
+            <span className="text-[9px] text-gray-500 dark:text-gray-400">{t('Admin.Departments.subscription', 'Subscription')}</span>
           </div>
           <p className="font-bold text-sm text-gray-800 dark:text-white">
             {doctor.doctor?.subscription != null
@@ -178,7 +177,6 @@ function DoctorCard({ doctor, index }: { doctor: any; index: number }) {
         </div>
       </div>
 
-      {/* Bio */}
       {doctor.doctor?.bio && (
         <p className="mt-3 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
           {doctor.doctor.bio}
@@ -198,6 +196,7 @@ function DoctorsDialog({
   colorScheme: (typeof departmentColors)[0]
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const doctors: any[] = department.doctors ?? []
 
   return (
@@ -216,9 +215,7 @@ function DoctorsDialog({
         transition={{ type: 'spring', stiffness: 280, damping: 24 }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── Header ── */}
         <div className={`relative bg-gradient-to-r ${colorScheme.gradient} p-6 text-white flex-shrink-0`}>
-          {/* subtle dot pattern */}
           <div
             className="absolute inset-0 opacity-10"
             style={{
@@ -229,14 +226,12 @@ function DoctorsDialog({
           />
 
           <div className="relative flex items-start gap-4">
-            {/* Department image / icon */}
-            {department.image ? (
+            {department.imageUrl ? (
               <img
                 onError={(e) => {
                   e.currentTarget.src = '/images/Logo.png';
-
                 }}
-                src={department.image}
+                src={department.imageUrl}
                 alt={department.name}
                 className="w-16 h-16 rounded-2xl object-cover border-2 border-white/30 shadow-lg flex-shrink-0"
               />
@@ -254,13 +249,12 @@ function DoctorsDialog({
               <div className="mt-2 flex items-center gap-1.5 w-fit bg-white/20 rounded-full px-3 py-1">
                 <FiUsers size={12} />
                 <span className="text-xs font-semibold">
-                  {doctors.length} Doctor{doctors.length !== 1 ? 's' : ''}
+                  {doctors.length} {doctors.length !== 1 ? t('Admin.Departments.doctors', 'Doctors') : t('Admin.Departments.doctor', 'Doctor')}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Close button */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 transition-colors flex items-center justify-center"
@@ -270,7 +264,6 @@ function DoctorsDialog({
           </button>
         </div>
 
-        {/* ── Doctor grid ── */}
         <div className="flex-1 overflow-y-auto p-6">
           {doctors.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -280,10 +273,10 @@ function DoctorsDialog({
                 <MdOutlineLocalHospital size={28} className={colorScheme.icon} />
               </div>
               <h3 className="font-semibold text-gray-700 dark:text-gray-300">
-                No doctors assigned
+                {t('Admin.Departments.noDoctorsAssigned', 'No doctors assigned')}
               </h3>
               <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                This department has no doctors yet.
+                {t('Admin.Departments.noDoctorsYet', 'This department has no doctors yet.')}
               </p>
             </div>
           ) : (
@@ -309,6 +302,7 @@ function DepartmentCard({
   index: number
   onClick: () => void
 }) {
+  const { t } = useTranslation()
   const colorScheme = departmentColors[index % departmentColors.length]
   const doctorCount = dept.doctors?.length ?? 0
 
@@ -323,13 +317,10 @@ function DepartmentCard({
       className="text-left w-full group relative bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-2xl border border-gray-100 dark:border-gray-800 transition-all duration-300 overflow-hidden focus:outline-none"
       id={`dept-card-${dept.id}`}
     >
-      {/* Top gradient accent line */}
-
-      {/* Image area */}
       <div className="relative h-36 overflow-hidden">
-        {dept.image ? (
+        {dept.imageUrl ? (
           <img
-            src={dept.image}
+            src={dept.imageUrl}
             alt={dept.name}
             onError={(e) => {
               e.currentTarget.src = '/images/Logo.png';
@@ -345,21 +336,18 @@ function DepartmentCard({
             <MdOutlineLocalHospital size={44} className={`${colorScheme.icon} opacity-50`} />
           </div>
         )}
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
 
-        {/* Doctor count badge */}
         <div className="absolute bottom-3 left-3">
           <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm text-white rounded-full px-2.5 py-1 text-[11px] font-semibold">
             <FiUsers size={11} />
             <span>
-              {doctorCount} Doctor{doctorCount !== 1 ? 's' : ''}
+              {doctorCount} {doctorCount !== 1 ? t('Admin.Departments.doctors', 'Doctors') : t('Admin.Departments.doctor', 'Doctor')}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Text content */}
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-bold text-gray-800 dark:text-white text-xl leading-tight">
@@ -378,12 +366,11 @@ function DepartmentCard({
           {dept.description}
         </p>
 
-        {/* CTA */}
         <div
           className={`mt-4 flex items-center gap-2 ${colorScheme.badge} rounded-xl px-3 py-2`}
         >
           <FiUsers size={12} />
-          <span className="text-xs font-semibold">View Doctors</span>
+          <span className="text-xs font-semibold">{t('Admin.Departments.viewDoctors', 'View Doctors')}</span>
           <FiChevronRight size={12} className="ml-auto" />
         </div>
       </div>
@@ -392,13 +379,15 @@ function DepartmentCard({
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-export default function Page() {
+export default function DepartmentsPage() {
   const [departments, setDepartments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDept, setSelectedDept] = useState<{
     dept: any
     colorIdx: number
   } | null>(null)
+
   const { showAlert } = useAlert()
   const { t } = useTranslation()
 
@@ -406,9 +395,14 @@ export default function Page() {
     try {
       setLoading(true)
       const response = await axiosInstance.get('/api/department')
-      setDepartments(response.data.data.departments)
-    } catch (error) {
-      showAlert('Error', 'Something went wrong', 'error')
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const fetchedDepartments = response.data.data.departments.map((dept: any) => ({
+        ...dept,
+        imageUrl: dept.image ? `${backendUrl}/${dept.image.replace(/^\//, '')}` : undefined,
+      }));
+      setDepartments(fetchedDepartments)
+    } catch (error: any) {
+      showAlert('error', error?.response?.data?.msg || t('Admin.Departments.fetchError', 'Failed to load departments'))
       console.error(error)
     } finally {
       setLoading(false)
@@ -419,8 +413,22 @@ export default function Page() {
     fetchDepartments()
   }, [])
 
+  const handleModalSuccess = () => {
+    fetchDepartments()
+  }
+
   return (
-    <DashboardLayout loading={loading} title={t('Secretary.Sections.title', 'Medical Sections')}>
+    <DashboardLayout loading={loading} title={t('Admin.Departments.title', 'Departments')}>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('Admin.Departments.heading', 'All Departments')}</h2>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-teal-600 text-white rounded-xl shadow-lg hover:opacity-90 transition"
+        >
+          <FaPlus size={14} /> {t('Admin.Departments.createBtn', 'Add Department')}
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {departments.map((dept: any, index: number) => (
           <DepartmentCard
@@ -444,6 +452,12 @@ export default function Page() {
           />
         )}
       </AnimatePresence>
+
+      <CreateDepartmentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleModalSuccess}
+      />
     </DashboardLayout>
   )
 }

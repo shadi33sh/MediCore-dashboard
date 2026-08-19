@@ -9,6 +9,7 @@ import Loading from '../../../Components/loading'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiCalendar, FiCheck, FiClock, FiUser, FiX } from 'react-icons/fi'
 import { MdOutlineLocalHospital } from 'react-icons/md'
+import { useTranslation } from 'react-i18next'
 
 export default function ScheduleAppointmentPage() {
   const searchParams = useSearchParams()
@@ -20,8 +21,8 @@ export default function ScheduleAppointmentPage() {
   const [selectedDoctorName, setSelectedDoctorName] = useState()
   const [isModal, setModal] = useState(false)
   const [loadingAppointments, setAppointmentsLoading] = useState(false)
-
   const [submitLoading, setLoading] = useState(false)
+  const { t, i18n } = useTranslation()
 
   const [selectedDoctorID, setDoctorID] = useState(doctorID || null)
   const [selectedPatientID, setPatientID] = useState(patientID || '')
@@ -76,6 +77,37 @@ export default function ScheduleAppointmentPage() {
 
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null)
   const { showAlert } = useAlert()
+
+  const today = dayjs()
+  const currentMonthLabel = today.toDate().toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const fieldLabels: Record<string, string> = {
+    first_name: t('Secretary.NewAppointmentModal.patientForm.firstName', 'First Name'),
+    last_name: t('Secretary.NewAppointmentModal.patientForm.lastName', 'Last Name'),
+    birth_date: t('Secretary.NewAppointmentModal.patientForm.birthDate', 'Birth Date'),
+    gender: t('Secretary.NewAppointmentModal.patientForm.gender', 'Gender'),
+    age: t('Secretary.NewAppointmentModal.patientForm.age', 'Age'),
+    blood_type: t('Secretary.NewAppointmentModal.patientForm.bloodType', 'Blood Type'),
+    chronic_diseases: t('Secretary.NewAppointmentModal.patientForm.chronicDiseases', 'Chronic Diseases'),
+    medication_allergies: t('Secretary.NewAppointmentModal.patientForm.medicationAllergies', 'Medication Allergies'),
+    permanent_medications: t('Secretary.NewAppointmentModal.patientForm.permanentMedications', 'Permanent Medications'),
+    previous_surgeries: t('Secretary.NewAppointmentModal.patientForm.previousSurgeries', 'Previous Surgeries'),
+    previous_illnesses: t('Secretary.NewAppointmentModal.patientForm.previousIllnesses', 'Previous Illnesses'),
+    medical_analysis: t('Secretary.NewAppointmentModal.patientForm.medicalAnalysis', 'Medical Analysis'),
+  }
+
+  const weekdays = [
+    t('Secretary.NewAppointmentModal.weekdays.sun', 'Sun'),
+    t('Secretary.NewAppointmentModal.weekdays.mon', 'Mon'),
+    t('Secretary.NewAppointmentModal.weekdays.tue', 'Tue'),
+    t('Secretary.NewAppointmentModal.weekdays.wed', 'Wed'),
+    t('Secretary.NewAppointmentModal.weekdays.thu', 'Thu'),
+    t('Secretary.NewAppointmentModal.weekdays.fri', 'Fri'),
+    t('Secretary.NewAppointmentModal.weekdays.sat', 'Sat'),
+  ]
 
   const getMonthlyTable = async () => {
     try {
@@ -154,9 +186,6 @@ export default function ScheduleAppointmentPage() {
 
     return days
   }
-
-  const today = dayjs()
-  const currentMonthLabel = today.format('MMMM YYYY')
 
   useEffect(() => {
     getMonthlyTable()
@@ -241,7 +270,7 @@ export default function ScheduleAppointmentPage() {
     : !!(newPatientData.first_name && newPatientData.last_name && selectedAppointmentFinelTime && !loadingAppointments && selectedTimeSlot)
 
   return (
-    <DashboardLayout title={`Schedule New Appointment · ${currentMonthLabel}`} loading={departments.length === 0}>
+    <DashboardLayout title={`${t('Secretary.NewAppointmentModal.scheduleNewAppointment', 'Schedule New Appointment')} · ${currentMonthLabel}`} loading={departments.length === 0}>
 
       <form className="space-y-6">
 
@@ -273,7 +302,7 @@ export default function ScheduleAppointmentPage() {
               <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
               <input
                 type="text"
-                placeholder="Enter Patient ID"
+                placeholder={t('Secretary.NewAppointmentModal.enterPatientId', 'Enter Patient ID')}
                 value={selectedPatientID}
                 className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-Primary transition"
                 onChange={(e: any) => setPatientID(e.target.value)}
@@ -288,7 +317,7 @@ export default function ScheduleAppointmentPage() {
                 <div key={field}>
                   <input
                     type={field === 'birth_date' ? 'date' : 'text'}
-                    placeholder={field.replace(/_/g, ' ')}
+                    placeholder={fieldLabels[field] || field.replace(/_/g, ' ')}
                     name={field}
                     value={value}
                     onChange={(e: any) =>
@@ -335,7 +364,7 @@ export default function ScheduleAppointmentPage() {
 
             {/* Weekday labels */}
             <div className="grid grid-cols-7 gap-2 text-xs text-center text-gray-400 font-semibold mb-2">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+              {weekdays.map(day => (
                 <div key={day}>{day}</div>
               ))}
             </div>
@@ -539,9 +568,9 @@ export default function ScheduleAppointmentPage() {
                         <FiClock size={14} className="text-blue-500" />
                       </div>
                       <div>
-                        <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Date & Time</p>
+                        <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">{t('Secretary.NewAppointmentModal.dateTime', 'Date & Time')}</p>
                         <p className="text-sm font-bold text-gray-800 dark:text-white">
-                          {new Date(selectedAppointmentFinelTime).toLocaleDateString('en-US', {
+                          {selectedAppointmentFinelTime && new Date(selectedAppointmentFinelTime).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
                             year: 'numeric', month: 'short', day: 'numeric',
                             hour: 'numeric', minute: 'numeric',
                           })}

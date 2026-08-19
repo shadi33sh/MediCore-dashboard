@@ -7,6 +7,7 @@ import { MdOutlineLocalHospital } from "react-icons/md";
 import DoctorModal from "../../../Components/DoctorModal";
 import DashboardLayout from "../secretaryComponents/DashboardLayout";
 import axiosInstance from "../../AuthAxios";
+import { useTranslation } from "react-i18next";
 
 // Section → color palette map
 const sectionColors: Record<string, { gradient: string; ring: string; badge: string }> = {
@@ -63,6 +64,7 @@ function Page() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   const fetchDoctors = async () => {
     try {
@@ -97,7 +99,7 @@ function Page() {
     });
 
   return (
-    <DashboardLayout loading={loading} title="Doctors">
+    <DashboardLayout loading={loading} title={t('Secretary.Doctors.title', 'Doctors')}>
       {/* ── Search + Sort ── */}
       <div className="flex flex-col sm:flex-row sm:items-center mb-8 gap-3">
         <div className="relative w-full max-w-md">

@@ -6,98 +6,31 @@ import DashboardLayout from "./managerComponents/adminDashboardLayout";
 import CreateDoctorModal from "./manage/CreateDoctorModal";
 import CreateSecretaryModal from "./manage/CreateSecretaryModal";
 import CreateDepartmentModal from "./manage/CreateDepartmentModal";
-
-const statistics = [
-  {
-    title: "Total Patients",
-    value: "824",
-    icon: <FaUsers size={30} />,
-    color: "from-indigo-500 to-purple-500"
-  },
-  {
-    title: "Total Doctors",
-    value: "26",
-    icon: <FaUserMd size={30} />,
-    color: "from-green-500 to-emerald-800"
-  },
-  {
-    title: "Appointments Today",
-    value: "41",
-    icon: <FaCalendarAlt size={30} />,
-    color: "from-blue-500 to-cyan-800"
-  },
-  {
-    title: "Medical Sections",
-    value: "11",
-    icon: <FaStethoscope size={30} />,
-    color: "from-pink-500 to-rose-800"
-  },
-  {
-    title: "Canceled Appointments",
-    value: "3",
-    icon: <FaTimesCircle size={30} />,
-    color: "from-red-500 to-red-700"
-  },
-  {
-    title: "Monthly Income",
-    value: "$4,200",
-    icon: <FaMoneyBill size={30} />,
-    color: "from-yellow-500 to-yellow-400"
-  },
-  {
-    title: "Upcoming Appointments",
-    value: "18",
-    icon: <FaCalendarCheck size={30} />,
-    color: "from-teal-500 to-teal-700"
-  },
-  {
-    title: "Visits This Week",
-    value: "113",
-    icon: <FaUserClock size={30} />,
-    color: "from-fuchsia-500 to-violet-700"
-  },
-];
-
-
+import { useTranslation } from "react-i18next";
 
 export default function Page() {
   const [isDoctorModalOpen, setIsDoctorModalOpen] = useState(false);
   const [isSecretaryModalOpen, setIsSecretaryModalOpen] = useState(false);
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
+  const { t } = useTranslation();
+
+
 
   return (
-    <DashboardLayout loading={false} title="Clinic Statistics Overview">
+    <DashboardLayout loading={false} title={t('Admin.Dashboard.title', "Clinic Statistics Overview")}>
       <div className="flex flex-wrap gap-4 mb-6">
         <button onClick={() => setIsDoctorModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl shadow-lg hover:opacity-90 transition">
-          <FaPlus size={14} /> Create Doctor
+          <FaPlus size={14} /> {t('Admin.Dashboard.buttons.createDoctor', 'Create Doctor')}
         </button>
         <button onClick={() => setIsSecretaryModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:opacity-90 transition">
-          <FaPlus size={14} /> Create Secretary
+          <FaPlus size={14} /> {t('Admin.Dashboard.buttons.createSecretary', 'Create Secretary')}
         </button>
         <button onClick={() => setIsDepartmentModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-teal-600 text-white rounded-xl shadow-lg hover:opacity-90 transition">
-          <FaPlus size={14} /> Create Department
+          <FaPlus size={14} /> {t('Admin.Dashboard.buttons.createDepartment', 'Create Department')}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {statistics.map((stat, index) => (
-          <motion.div
-            key={index}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.3 }}
-            className={`p-5 rounded-2xl shadow-xl bg-gradient-to-br ${stat.color} text-white flex flex-col justify-between space-y-3`}
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-white/20 p-2 rounded-full">
-                {stat.icon}
-              </div>
-              <h3 className="text-lg font-semibold">{stat.title}</h3>
-            </div>
-            <p className="text-4xl font-bold text-right">{stat.value}</p>
-          </motion.div>
-        ))}
-      </div>
+
 
       <CreateDoctorModal isOpen={isDoctorModalOpen} onClose={() => setIsDoctorModalOpen(false)} onSuccess={() => { }} />
       <CreateSecretaryModal isOpen={isSecretaryModalOpen} onClose={() => setIsSecretaryModalOpen(false)} onSuccess={() => { }} />

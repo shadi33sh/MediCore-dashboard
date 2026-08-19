@@ -1,0 +1,499 @@
+{
+  "SettingsModal": {
+    "title": "Settings",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "emailAddress": "Email Address",
+    "preferences": "Preferences",
+    "language": "Language",
+    "selectLanguage": "Select preferred language",
+    "english": "English",
+    "arabic": "Arabic",
+    "darkMode": "Dark Mode",
+    "toggleDarkMode": "Toggle light / dark theme",
+    "compactSidebar": "Compact Sidebar",
+    "collapseSidebar": "Collapse the main sidebar",
+    "signOut": "Sign Out"
+  },
+  "Alert": {
+    "defaultError": "An error occurred.",
+    "success": "Success!",
+    "error": "Error!"
+  },
+  "DoctorModal": {
+    "patientIdRequired": "Patient ID is required",
+    "appointmentCreated": "Appointment created successfully!",
+    "instantAppointment": "Instant Appointment",
+    "failedToSchedule": "Failed to schedule",
+    "total": "Total",
+    "booked": "Booked",
+    "available": "Available",
+    "dailySchedule": "Daily Schedule",
+    "time": "Time",
+    "patient": "Patient",
+    "status": "Status",
+    "scheduling": "Scheduling...",
+    "availableText": "Available",
+    "bookSlot": "+ Book Slot",
+    "patientId": "Patient ID",
+    "enterPatientId": "Enter patient ID to book...",
+    "confirmBooking": "Confirm Booking",
+    "cancel": "Cancel"
+  },
+  "SettingsTranslate": {
+    "arabic": "Arabic",
+    "english": "English"
+  },
+  "ToggleModeButton": {
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode"
+  },
+  "Landing": {
+    "nav": {
+      "features": "Features",
+      "benefits": "Benefits",
+      "testimonials": "Testimonials",
+      "signIn": "Sign in"
+    },
+    "hero": {
+      "tagline": "Next-Generation Healthcare Management",
+      "title1": "Revolutionize your",
+      "title2": "medical center",
+      "subtitle": "Streamline operations, enhance patient care, and boost efficiency with a comprehensive management system built for Arabic-speaking healthcare facilities.",
+      "signIn": "Sign in",
+      "watchOverview": "Watch overview",
+      "todaysOverview": "Today's overview",
+      "live": "Live",
+      "patientsToday": "Patients today",
+      "onTimeVisits": "On-time visits",
+      "drName": "Dr. Layla Hassan",
+      "nextAppointment": "Next: 2:30 PM · Room 4",
+      "hipaa": "HIPAA compliant"
+    },
+    "features": {
+      "subtitle": "Capabilities",
+      "title1": "Powerful features for",
+      "title2": "modern healthcare",
+      "desc": "Everything you need to manage your medical center efficiently, from patient records to staff scheduling."
+    },
+    "featuresList": {
+      "multiRole": {
+        "title": "Multi-Role Management",
+        "desc": "Seamlessly manage patients, doctors, and administrators with role-based access control."
+      },
+      "scheduling": {
+        "title": "Smart Scheduling",
+        "desc": "Advanced appointment scheduling with automated reminders and conflict resolution."
+      },
+      "hipaa": {
+        "title": "HIPAA Compliant",
+        "desc": "Enterprise-grade security ensuring complete patient data protection and privacy."
+      },
+      "arabic": {
+        "title": "Arabic Support",
+        "desc": "Full RTL support and localization designed specifically for Arabic-speaking regions."
+      },
+      "realTime": {
+        "title": "Real-time Updates",
+        "desc": "Instant synchronization across all devices with real-time notifications."
+      },
+      "patientCare": {
+        "title": "Patient Care Focus",
+        "desc": "Tools designed to enhance patient experience and improve healthcare outcomes."
+      }
+    },
+    "benefits": {
+      "subtitle": "Why MediCore",
+      "title1": "Built for how clinics",
+      "title2": "actually run",
+      "point1": "Reduce administrative costs by up to 60%",
+      "point2": "Improve patient satisfaction scores",
+      "point3": "Streamline appointment scheduling",
+      "point4": "Ensure HIPAA compliance",
+      "point5": "Support multiple languages including Arabic",
+      "point6": "Real-time analytics and reporting",
+      "card1": {
+        "title": "Patient Management",
+        "desc": "Complete patient profiles with medical history, appointments, and billing."
+      },
+      "card2": {
+        "title": "Staff Coordination",
+        "desc": "Efficient staff scheduling and role-based access management."
+      },
+      "card3": {
+        "title": "Analytics Dashboard",
+        "desc": "Real-time insights into clinic performance and patient flow."
+      }
+    },
+    "testimonials": {
+      "subtitle": "Trusted region-wide",
+      "title": "Healthcare professionals agree",
+      "desc": "See what medical centers across the region are saying about MediCore."
+    },
+    "testimonialsList": {
+      "sarah": {
+        "name": "Dr. Sarah Ahmed",
+        "role": "Chief Medical Officer",
+        "clinic": "Cairo Medical Center",
+        "content": "MediCore transformed our clinic operations. The Arabic interface and intuitive design made adoption seamless across our entire team."
+      },
+      "ahmad": {
+        "name": "Ahmad Al-Rashid",
+        "role": "Clinic Administrator",
+        "clinic": "Riyadh Healthcare",
+        "content": "The multi-role management system is exceptional. We've reduced administrative overhead by 60% since implementing MediCore."
+      },
+      "layla": {
+        "name": "Dr. Layla Hassan",
+        "role": "Pediatrician",
+        "clinic": "Dubai Children's Hospital",
+        "content": "Patient scheduling has never been easier. The smart conflict resolution saves us hours every week."
+      }
+    },
+    "cta": {
+      "title": "Ready to transform your medical center?",
+      "desc": "Join hundreds of healthcare facilities that have revolutionized their operations with MediCore.",
+      "roles": {
+        "doctor": "Doctor",
+        "secretary": "Secretary",
+        "manager": "Manager"
+      }
+    },
+    "footer": {
+      "desc": "Revolutionizing healthcare management for Arabic-speaking regions with cutting-edge technology.",
+      "col1": {
+        "title": "Product",
+        "l1": "Features",
+        "l2": "Pricing",
+        "l3": "Security",
+        "l4": "API"
+      },
+      "col2": {
+        "title": "Company",
+        "l1": "About",
+        "l2": "Careers",
+        "l3": "Contact",
+        "l4": "Blog"
+      },
+      "col3": {
+        "title": "Support",
+        "l1": "Help Center",
+        "l2": "Documentation",
+        "l3": "Training",
+        "l4": "Status"
+      },
+      "copyright": "© 2025 MediCore. All rights reserved."
+    }
+  },
+  "Auth": {
+    "SignIn": {
+      "title": "Sign in to your account",
+      "subtitle": "Enter your credentials to continue to your dashboard.",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "welcomeBack": "Welcome back",
+      "forgotPassword": "Forgot password?",
+      "signInButton": "Sign In",
+      "welcomeTitle1": "Welcome to Medi",
+      "welcomeTitle2": "Core",
+      "welcomeDesc": "The ultimate platform for doctors to manage patients, appointments, and medical records with ease.",
+      "success": "Logged in successfully",
+      "error": "Invalid email or password"
+    },
+    "SignUp": {
+      "title1": "Create",
+      "title2": "Core Account",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phonePlaceholder": "+963XXXXXXXXX",
+      "password": "Password (Min 8 characters)",
+      "confirmPassword": "Confirm Password",
+      "signUpButton": "Sign Up",
+      "alreadyHaveAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "success": "Registration successful. Redirecting to verification...",
+      "error": "Registration failed. Please try again."
+    },
+    "EmailVerification": {
+      "title": "Verify Your Account",
+      "codeInput": "Enter 6-digit code",
+      "verifyButton": "Verify Code",
+      "didntReceive": "Didn't receive a code?",
+      "resendCode": "Resend Code",
+      "success": "Verification successful",
+      "error": "Invalid verification code"
+    }
+  },
+  "Admin": {
+    "Dashboard": {
+      "title": "Clinic Statistics Overview",
+      "stats": {
+        "totalPatients": "Total Patients",
+        "totalDoctors": "Total Doctors",
+        "appointmentsToday": "Appointments Today",
+        "medicalSections": "Medical Sections",
+        "canceledAppointments": "Canceled Appointments",
+        "monthlyIncome": "Monthly Income",
+        "upcomingAppointments": "Upcoming Appointments",
+        "visitsThisWeek": "Visits This Week"
+      },
+      "buttons": {
+        "createDoctor": "Create Doctor",
+        "createSecretary": "Create Secretary",
+        "createDepartment": "Create Department"
+      }
+    },
+    "Sidebar": {
+      "homePage": "Home Page",
+      "doctors": "Doctors",
+      "departments": "Departments",
+      "sections": "Sections",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+    "Departments": {
+      "title": "Departments",
+      "heading": "All Departments",
+      "createBtn": "Add Department",
+      "fetchError": "Failed to load departments",
+      "examFee": "Exam Fee",
+      "subscription": "Subscription",
+      "doctors": "Doctors",
+      "doctor": "Doctor",
+      "noDoctorsAssigned": "No doctors assigned",
+      "noDoctorsYet": "This department has no doctors yet.",
+      "viewDoctors": "View Doctors"
+    },
+    "Doctors": {
+      "title": "Doctors Management",
+      "searchPlaceholder": "Search by doctor name...",
+      "addBtn": "Add New Doctor",
+      "tableTitle": "Registered Doctors",
+      "tableCols": {
+        "name": "Doctor Name",
+        "department": "Department",
+        "phone": "Phone",
+        "email": "Email",
+        "rating": "Rating"
+      },
+      "details": {
+        "summary": "Professional Summary",
+        "noSummary": "No professional summary provided.",
+        "financial": "Financial Details",
+        "examination": "Examination",
+        "subscription": "Subscription"
+      },
+      "noDoctors": "No doctors found",
+      "noDoctorsDesc": "Try adjusting your filters or search term."
+    },
+    "Modals": {
+      "doctorSuccess": "Doctor registration successful",
+      "secretarySuccess": "Secretary account created successfully",
+      "departmentSuccess": "Department added successfully",
+      "error": "Error occurred",
+      "Doctor": {
+        "title": "Register New Doctor",
+        "subtitle": "Add a doctor to the MediCore system",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "department": "Department",
+        "selectDepartment": "Select department",
+        "bio": "Short Bio",
+        "bioPlaceholder": "Brief professional summary",
+        "email": "Email",
+        "phone": "Phone",
+        "subscription": "Subscription Fee",
+        "examPrice": "Exam Price",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "submitBtn": "Register Doctor"
+      },
+      "Secretary": {
+        "title": "Register New Secretary",
+        "subtitle": "Create a secretary account in MediCore",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "submitBtn": "Create Secretary"
+      },
+      "Department": {
+        "title": "Add New Department",
+        "subtitle": "Create a new medical department in MediCore",
+        "name": "Department Name",
+        "namePlaceholder": "e.g. Cardiology",
+        "description": "Description",
+        "descriptionPlaceholder": "Brief description of the department…",
+        "imageLabel": "Department Image",
+        "uploadText": "Click to upload image",
+        "submitBtn": "Add Department"
+      },
+      "UpdateDoctor": {
+        "title": "Update Doctor",
+        "subtitle": "Edit doctor information in MediCore",
+        "success": "Doctor details updated successfully.",
+        "error": "Update failed. Please try again.",
+        "submitBtn": "Update Doctor"
+      }
+    }
+  },
+  "Doctor": {
+    "Sidebar": {
+      "Appointments": "Appointments",
+      "Patients": "Patients",
+      "Articles": "Articles",
+      "ChatBotAI": "Chat Bot AI",
+      "Main": "Main",
+      "Settings": "Settings"
+    },
+    "Articles": {
+      "title": "Doctor Articles"
+    },
+    "Patients": {
+      "title": "My Patients",
+      "searchPlaceholder": "Search by name or phone...",
+      "patientsFound": "patients found",
+      "noRecords": "No patient records found",
+      "patient": "Patient",
+      "id": "ID #",
+      "contact": "Contact",
+      "na": "N/A",
+      "ageGender": "Age & Gender",
+      "years": "yrs",
+      "bloodType": "Blood Type",
+      "newCheckup": "New Checkup",
+      "checkupHistory": "Checkup History",
+      "viewHistory": "View History",
+      "checkupDate": "Checkup Date",
+      "status": "Status",
+      "stable": "Stable",
+      "diagnosis": "Diagnosis",
+      "prescribedMedicine": "Prescribed Medicine",
+      "doctorNotes": "Doctor Notes",
+      "noCheckups": "No checkup reports recorded yet by you.",
+      "medicalBackground": "Medical Background",
+      "chronicDiseases": "Chronic Diseases",
+      "none": "None",
+      "medicationAllergies": "Medication Allergies",
+      "permanentMeds": "Permanent Meds",
+      "surgeriesIllnesses": "Surgeries / Illnesses",
+      "medicalAnalysis": "Medical Analysis",
+      "result": "Result:",
+      "viewFile": "View File"
+    },
+    "Preview": {
+      "title": "Patient Checkup"
+    },
+    "Chatbot": {
+      "title": "Medical Chatbot"
+    }
+  },
+  "Secretary": {
+    "Sidebar": {
+      "Dashboard": "Dashboard",
+      "Schedules": "Schedules",
+      "Doctors": "Doctors",
+      "Sections": "Sections",
+      "ScheduleAppointment": "Schedule Appointment",
+      "Settings": "Settings"
+    },
+    "Sections": {
+      "title": "Medical Sections",
+      "doctors": "Doctors"
+    },
+    "Doctors": {
+      "title": "Doctors"
+    },
+    "Schedules": {
+      "title": "Doctor Appointments",
+      "all": "All",
+      "searchPlaceholder": "Search patient or doctor…",
+      "noAppointments": "No appointments found",
+      "adjustSearch": "Try adjusting your search or filters",
+      "noSchedulesToday": "No schedules today",
+      "noSchedulesFound": "No schedules found",
+      "todaysAppointments": "Today's Appointments",
+      "pendingApproval": "Pending Approval",
+      "acceptedAppointments": "Accepted Appointments",
+      "appointments": "appointments",
+      "appointment": "appointment",
+      "date": "Date",
+      "time": "Time",
+      "doctor": "Doctor",
+      "section": "Section",
+      "patient": "Patient",
+      "actions": "Actions",
+      "accept": "Accept",
+      "reject": "Reject",
+      "enterPatient": "Enter Patient",
+      "entered": "Entered",
+      "patientInfo": "Patient Info",
+      "age": "Age",
+      "gender": "Gender",
+      "status": "Status",
+      "newAppointment": "New Appointment"
+    },
+    "NewAppointmentModal": {
+      "scheduleNewAppointment": "Schedule New Appointment",
+      "patientExists": "Patient exists in system",
+      "enterPatientId": "Enter Patient ID",
+      "selectDepartment": "Select Department",
+      "chooseTimeSlot": "Choose a Time Slot",
+      "booked": "Booked",
+      "selected": "Selected",
+      "available": "Available",
+      "confirmAppointment": "Confirm Appointment",
+      "reviewDetails": "Please review the details below",
+      "dateTime": "Date & Time",
+      "cancel": "Cancel",
+      "schedule": "Schedule",
+      "patientForm": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "birthDate": "Birth Date",
+        "gender": "Gender",
+        "age": "Age",
+        "bloodType": "Blood Type",
+        "chronicDiseases": "Chronic Diseases",
+        "medicationAllergies": "Medication Allergies",
+        "permanentMedications": "Permanent Medications",
+        "previousSurgeries": "Previous Surgeries",
+        "previousIllnesses": "Previous Illnesses",
+        "medicalAnalysis": "Medical Analysis"
+      },
+      "weekdays": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      }
+    },
+    "MonthlyWorkDays": {
+      "title": "Monthly Work Days",
+      "subtitle": "Assign doctors to their active working days for each department.",
+      "saveSchedule": "Save Schedule",
+      "department": "Department",
+      "unassigned": "— Unassigned —",
+      "fetchDepartmentsError": "Failed to fetch departments",
+      "fetchAssignmentsError": "Failed to fetch current assignments",
+      "submitSuccess": "Schedule submitted successfully",
+      "submitError": "Error while adding the work days",
+      "days": {
+        "1": "Sunday",
+        "2": "Monday",
+        "3": "Tuesday",
+        "4": "Wednesday",
+        "5": "Thursday",
+        "6": "Saturday"
+      }
+    }
+  }
+}

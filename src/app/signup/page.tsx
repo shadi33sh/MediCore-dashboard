@@ -5,6 +5,7 @@ import axiosInstance from '../AuthAxios';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '../../Components/Alert';
 import Loading from '../../Components/loading';
+import { useTranslation } from 'react-i18next';
 
 export default function page() {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ export default function page() {
   const [loading, setLoading] = useState(false);
   const navigator = useRouter();
   const { showAlert } = useAlert();
+  const { t } = useTranslation();
 
   const handleChange = (e : any) => {
     setFormData((prev) => ({
@@ -34,10 +36,10 @@ export default function page() {
     try {
       const response = await axiosInstance.post('api/auth/register', formData);
       localStorage.setItem('token', response.data.token.access_token);
-      showAlert('success', 'Registration successful. Redirecting to verification...');
+      showAlert('success', t('Auth.SignUp.success', 'Registration successful. Redirecting to verification...'));
       navigator.push('/email-verification'); // Navigate to email verification page
     } catch (err : any) {
-      showAlert('error', err.response?.data || 'Registration failed. Please try again.');
+      showAlert('error', err.response?.data || t('Auth.SignUp.error', 'Registration failed. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,7 @@ export default function page() {
         className="p-16 rounded-xl text-center md:bg-gray-200/30 md:dark:bg-gray-700/40 w-[580px] flex flex-col items-center gap-8 z-10">
 
         <h1 className="font-bold text-3xl">
-          Create <span className="text-Primary">Medi</span>Core Account
+          {t('Auth.SignUp.title1', 'Create')} <span className="text-Primary">Medi</span>{t('Auth.SignUp.title2', 'Core Account')}
         </h1>
         <img className="w-[120px]" src="/images/Logo.png" alt="Logo" />
 
@@ -65,7 +67,7 @@ export default function page() {
           value={formData.first_name}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="First Name"
+          placeholder={t('Auth.SignUp.firstName', 'First Name')}
           required
         />
         <input
@@ -74,7 +76,7 @@ export default function page() {
           value={formData.last_name}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="Last Name"
+          placeholder={t('Auth.SignUp.lastName', 'Last Name')}
           required
         />
         <input
@@ -83,7 +85,7 @@ export default function page() {
           value={formData.email}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="Email"
+          placeholder={t('Auth.SignUp.email', 'Email')}
           required
         />
         <input
@@ -92,7 +94,7 @@ export default function page() {
           value={formData.phone}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="+963XXXXXXXXX"
+          placeholder={t('Auth.SignUp.phonePlaceholder', '+963XXXXXXXXX')}
           required
         />
         <input
@@ -101,7 +103,7 @@ export default function page() {
           value={formData.password}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="Password (Min 8 characters)"
+          placeholder={t('Auth.SignUp.password', 'Password (Min 8 characters)')}
           required
         />
         <input
@@ -110,13 +112,13 @@ export default function page() {
           value={formData.password_confirmation}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="Confirm Password"
+          placeholder={t('Auth.SignUp.confirmPassword', 'Confirm Password')}
           required
         />
         <div className='w-full h-16 center'>
           { !loading ?
                   <button type="submit" className="p-4 bg-Primary rounded-xl w-full flex justify-center">
-                  <p className="font-bold text-white">Sign In</p>
+                  <p className="font-bold text-white">{t('Auth.SignUp.signUpButton', 'Sign Up')}</p>
                 </button>
                 :
               <Loading/>
@@ -124,7 +126,7 @@ export default function page() {
         </div>
 
         <p className="text-Gray font-semibold">
-          Already have an account? <Link href="/login" className="text-Primary">Sign in</Link>
+          {t('Auth.SignUp.alreadyHaveAccount', 'Already have an account?')} <Link href="/signin" className="text-Primary">{t('Auth.SignUp.signInLink', 'Sign in')}</Link>
         </p>
       </form>
     </div>

@@ -2,11 +2,13 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdCheckCircle, MdError } from "react-icons/md"; // Import success/error icons
+import { useTranslation } from "react-i18next";
 
 const AlertContext = createContext(null);
 
 export const AlertProvider = ({ children }: { children: ReactNode }) => {
   const [alert, setAlert] = useState({ message: "", type: "" });
+  const { t } = useTranslation();
   const showAlert = (type: "success" | "error", message: string | object) => {
     let formattedMessage = "";
 
@@ -24,7 +26,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
           })
           .join("\n");
       } else {
-        formattedMessage = (message as any).msg || "An error occurred.";
+        formattedMessage = (message as any).msg || t('Alert.defaultError', 'An error occurred.');
       }
     }
 
@@ -73,7 +75,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
                   <MdError size={24} />
                 )}
                 <p className="font-bold">
-                  {alert.type === "success" ? "Success!" : "Error!"}
+                  {alert.type === "success" ? t('Alert.success', 'Success!') : t('Alert.error', 'Error!')}
                 </p>
               </div>
 

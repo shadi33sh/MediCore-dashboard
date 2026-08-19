@@ -7,6 +7,7 @@ import Loading from '../../../Components/loading'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiCalendar, FiCheck, FiClock, FiUser, FiX } from 'react-icons/fi'
 import { MdOutlineLocalHospital } from 'react-icons/md'
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean
@@ -29,6 +30,7 @@ export default function NewAppointmentModal({
   const [isModal, setModal] = useState(false)
   const [loadingAppointments, setAppointmentsLoading] = useState(false)
   const [submitLoading, setLoading] = useState(false)
+  const { t, i18n } = useTranslation();
 
   const [selectedDoctorID, setDoctorID] = useState<any>(initialDoctorID)
   const [selectedPatientID, setPatientID] = useState<any>(initialPatientID)
@@ -84,7 +86,35 @@ export default function NewAppointmentModal({
   const { showAlert } = useAlert()
 
   const today = dayjs()
-  const currentMonthLabel = today.format('MMMM YYYY')
+  const currentMonthLabel = today.toDate().toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const fieldLabels: Record<string, string> = {
+    first_name: t('Secretary.NewAppointmentModal.patientForm.firstName', 'First Name'),
+    last_name: t('Secretary.NewAppointmentModal.patientForm.lastName', 'Last Name'),
+    birth_date: t('Secretary.NewAppointmentModal.patientForm.birthDate', 'Birth Date'),
+    gender: t('Secretary.NewAppointmentModal.patientForm.gender', 'Gender'),
+    age: t('Secretary.NewAppointmentModal.patientForm.age', 'Age'),
+    blood_type: t('Secretary.NewAppointmentModal.patientForm.bloodType', 'Blood Type'),
+    chronic_diseases: t('Secretary.NewAppointmentModal.patientForm.chronicDiseases', 'Chronic Diseases'),
+    medication_allergies: t('Secretary.NewAppointmentModal.patientForm.medicationAllergies', 'Medication Allergies'),
+    permanent_medications: t('Secretary.NewAppointmentModal.patientForm.permanentMedications', 'Permanent Medications'),
+    previous_surgeries: t('Secretary.NewAppointmentModal.patientForm.previousSurgeries', 'Previous Surgeries'),
+    previous_illnesses: t('Secretary.NewAppointmentModal.patientForm.previousIllnesses', 'Previous Illnesses'),
+    medical_analysis: t('Secretary.NewAppointmentModal.patientForm.medicalAnalysis', 'Medical Analysis'),
+  }
+
+  const weekdays = [
+    t('Secretary.NewAppointmentModal.weekdays.sun', 'Sun'),
+    t('Secretary.NewAppointmentModal.weekdays.mon', 'Mon'),
+    t('Secretary.NewAppointmentModal.weekdays.tue', 'Tue'),
+    t('Secretary.NewAppointmentModal.weekdays.wed', 'Wed'),
+    t('Secretary.NewAppointmentModal.weekdays.thu', 'Thu'),
+    t('Secretary.NewAppointmentModal.weekdays.fri', 'Fri'),
+    t('Secretary.NewAppointmentModal.weekdays.sat', 'Sat'),
+  ]
 
   const getMonthlyTable = async () => {
     try {
@@ -245,7 +275,7 @@ export default function NewAppointmentModal({
                   </div>
                   <div>
                     <h2 className="text-base font-bold text-gray-800 dark:text-white leading-tight">
-                      Schedule New Appointment
+                      {t('Secretary.NewAppointmentModal.scheduleNewAppointment', 'Schedule New Appointment')}
                     </h2>
                     <p className="text-xs text-gray-400">{currentMonthLabel}</p>
                   </div>
@@ -278,7 +308,7 @@ export default function NewAppointmentModal({
                           <div className="absolute left-1 top-1 bg-white dark:bg-gray-200 w-4 h-4 rounded-full shadow transform transition-transform peer-checked:translate-x-6" />
                         </div>
                         <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                          Patient exists in system
+                          {t('Secretary.NewAppointmentModal.patientExists', 'Patient exists in system')}
                         </span>
                       </label>
                     </div>
@@ -288,7 +318,7 @@ export default function NewAppointmentModal({
                         <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
                         <input
                           type="text"
-                          placeholder="Enter Patient ID"
+                          placeholder={t('Secretary.NewAppointmentModal.enterPatientId', 'Enter Patient ID')}
                           value={selectedPatientID}
                           className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-Primary transition"
                           onChange={(e: any) => setPatientID(e.target.value)}
@@ -302,7 +332,7 @@ export default function NewAppointmentModal({
                           <div key={field}>
                             <input
                               type={field === 'birth_date' ? 'date' : 'text'}
-                              placeholder={field.replace(/_/g, ' ')}
+                              placeholder={fieldLabels[field] || field.replace(/_/g, ' ')}
                               name={field}
                               value={value}
                               onChange={(e: any) =>
@@ -320,7 +350,7 @@ export default function NewAppointmentModal({
                   <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
                     <div className="flex items-center gap-2 mb-3">
                       <MdOutlineLocalHospital className="text-Primary" size={18} />
-                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Select Department</p>
+                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('Secretary.NewAppointmentModal.selectDepartment', 'Select Department')}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       {departments.map((dep: any) => (
@@ -347,7 +377,7 @@ export default function NewAppointmentModal({
                         <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{currentMonthLabel}</p>
                       </div>
                       <div className="grid grid-cols-7 gap-2 text-xs text-center text-gray-400 font-semibold mb-2">
-                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                        {weekdays.map(day => (
                           <div key={day}>{day}</div>
                         ))}
                       </div>
@@ -403,7 +433,7 @@ export default function NewAppointmentModal({
                     <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
                       <div className="flex items-center gap-2 mb-4">
                         <FiClock className="text-Primary" size={16} />
-                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Choose a Time Slot</p>
+                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('Secretary.NewAppointmentModal.chooseTimeSlot', 'Choose a Time Slot')}</p>
                         {selectedDoctorName && (
                           <span className="ml-auto text-xs bg-Primary/10 text-Primary px-3 py-1 rounded-full font-medium">
                             Dr. {selectedDoctorName}
@@ -464,13 +494,13 @@ export default function NewAppointmentModal({
                       {/* Legend */}
                       <div className="flex items-center gap-4 mt-4 text-xs text-gray-400">
                         <span className="flex items-center gap-1.5">
-                          <span className="w-3 h-3 rounded-full bg-rose-400 inline-block" /> Booked
+                          <span className="w-3 h-3 rounded-full bg-rose-400 inline-block" /> {t('Secretary.NewAppointmentModal.booked', 'Booked')}
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <span className="w-3 h-3 rounded-full bg-Primary inline-block" /> Selected
+                          <span className="w-3 h-3 rounded-full bg-Primary inline-block" /> {t('Secretary.NewAppointmentModal.selected', 'Selected')}
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <span className="w-3 h-3 rounded-full bg-gray-200 dark:bg-gray-700 inline-block" /> Available
+                          <span className="w-3 h-3 rounded-full bg-gray-200 dark:bg-gray-700 inline-block" /> {t('Secretary.NewAppointmentModal.available', 'Available')}
                         </span>
                       </div>
                     </div>
@@ -494,7 +524,7 @@ export default function NewAppointmentModal({
                   }
                 >
                   <FiCheck size={16} />
-                  Confirm Appointment
+                  {t('Secretary.NewAppointmentModal.confirmAppointment', 'Confirm Appointment')}
                 </motion.button>
               </div>
             </motion.div>
@@ -526,9 +556,9 @@ export default function NewAppointmentModal({
                         </div>
                         <div>
                           <h2 className="text-lg font-bold text-gray-800 dark:text-white leading-tight">
-                            Confirm Appointment
+                            {t('Secretary.NewAppointmentModal.confirmAppointment', 'Confirm Appointment')}
                           </h2>
-                          <p className="text-xs text-gray-400">Please review the details below</p>
+                          <p className="text-xs text-gray-400">{t('Secretary.NewAppointmentModal.reviewDetails', 'Please review the details below')}</p>
                         </div>
                       </div>
                       <button
@@ -545,9 +575,9 @@ export default function NewAppointmentModal({
                           <FiClock size={14} className="text-blue-500" />
                         </div>
                         <div>
-                          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Date & Time</p>
+                          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">{t('Secretary.NewAppointmentModal.dateTime', 'Date & Time')}</p>
                           <p className="text-sm font-bold text-gray-800 dark:text-white">
-                            {new Date(selectedAppointmentFinelTime).toLocaleDateString('en-US', {
+                            {selectedAppointmentFinelTime && new Date(selectedAppointmentFinelTime).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
                               year: 'numeric', month: 'short', day: 'numeric',
                               hour: 'numeric', minute: 'numeric',
                             })}
@@ -560,7 +590,7 @@ export default function NewAppointmentModal({
                           <FiUser size={14} className="text-emerald-500" />
                         </div>
                         <div>
-                          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Patient</p>
+                          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">{t('Secretary.Schedules.patient', 'Patient')}</p>
                           <p className="text-sm font-bold text-gray-800 dark:text-white">
                             {isPatientInSystem
                               ? `ID: ${selectedPatientID}`
@@ -574,7 +604,7 @@ export default function NewAppointmentModal({
                           <MdOutlineLocalHospital size={15} className="text-violet-500" />
                         </div>
                         <div>
-                          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Doctor</p>
+                          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">{t('Secretary.Schedules.doctor', 'Doctor')}</p>
                           <p className="text-sm font-bold text-gray-800 dark:text-white">Dr. {selectedDoctorName}</p>
                         </div>
                       </div>
@@ -587,7 +617,7 @@ export default function NewAppointmentModal({
                           onClick={() => setModal(false)}
                           className="flex-1 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                         >
-                          Cancel
+                          {t('Secretary.NewAppointmentModal.cancel', 'Cancel')}
                         </button>
                         <motion.button
                           type="button"
@@ -597,7 +627,7 @@ export default function NewAppointmentModal({
                           className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-Primary to-teal-500 text-white text-sm font-bold shadow-lg shadow-Primary/30 flex items-center justify-center gap-2"
                         >
                           <FiCheck size={15} />
-                          Schedule
+                          {t('Secretary.NewAppointmentModal.schedule', 'Schedule')}
                         </motion.button>
                       </div>
                     ) : (

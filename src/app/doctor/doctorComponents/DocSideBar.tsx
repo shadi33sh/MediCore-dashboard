@@ -18,16 +18,17 @@ import {
 } from 'react-icons/md'
 import SettingsModal from '../../../Components/SettingsModal'
 
-const sidebarItems = [
-  { label: 'Appointments', icon: <MdCalendarToday size={18} />, href: '/doctor', badge: '3' },
-  { label: 'Patients', icon: <MdPeople size={18} />, href: '/doctor/patients' },
-  { label: 'Articles', icon: <MdArticle size={18} />, href: '/doctor/articles' },
-  { label: 'Chat Bot AI', icon: <MdSmartToy size={18} />, href: '/doctor/chatbot', pill: 'AI' },
-]
-
-
+import { useTranslation } from "react-i18next"
 
 export default function SideBar() {
+  const { t } = useTranslation();
+
+  const sidebarItems = [
+    { label: t("Doctor.Sidebar.Appointments", "Appointments"), icon: <MdCalendarToday size={18} />, href: '/doctor', badge: '3' },
+    { label: t("Doctor.Sidebar.Patients", "Patients"), icon: <MdPeople size={18} />, href: '/doctor/patients' },
+    { label: t("Doctor.Sidebar.Articles", "Articles"), icon: <MdArticle size={18} />, href: '/doctor/articles' },
+    { label: t("Doctor.Sidebar.ChatBotAI", "Chat Bot AI"), icon: <MdSmartToy size={18} />, href: '/doctor/chatbot', pill: 'AI' },
+  ]
   const [showSettings, setShowSettings] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -204,7 +205,7 @@ export default function SideBar() {
         {/* ── Nav label ── */}
         {!collapsed && (
           <p className="px-5 mb-1.5 text-[10px] font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-600">
-            Main
+            {t("Doctor.Sidebar.Main", "Main")}
           </p>
         )}
 
@@ -275,7 +276,7 @@ export default function SideBar() {
               ${collapsed ? 'justify-center' : ''}`}
           >
             <IoSettings size={18} />
-            {!collapsed && <span className="text-sm">Settings</span>}
+            {!collapsed && <span className="text-sm">{t("Doctor.Sidebar.Settings", "Settings")}</span>}
           </motion.button>
         </div>
       </motion.div>

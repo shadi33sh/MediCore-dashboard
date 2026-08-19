@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IoSearch } from 'react-icons/io5';
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import DashboardLayout from '../../../admin/managerComponents/adminDashboardLayout';
+import { useTranslation } from 'react-i18next';
 
 const doctors = [
   {
@@ -199,6 +200,7 @@ const schedules = [
 export default function Page() {
   const params = useParams<{ section: string }>();
   const sectionName = decodeURIComponent(params.section);
+  const { t } = useTranslation();
 
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('default');
@@ -388,7 +390,7 @@ export default function Page() {
   };
 
   return (
-    <DashboardLayout loading={false} title={`${sectionName} Doctors`}>
+    <DashboardLayout loading={false} title={`${sectionName} ${t('Secretary.Sections.doctors', 'Doctors')}`}>
       <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 py-4">
         <div className="relative w-full max-w-md">
           <IoSearch

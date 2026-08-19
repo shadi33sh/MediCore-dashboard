@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../AuthAxios';
 import { useAlert } from '../../../Components/Alert';
 import Loading from '../../../Components/loading';
-
+import { useTranslation } from 'react-i18next';
 import { FiCheck, FiSave } from 'react-icons/fi';
 
 const weekDays = [
@@ -20,13 +20,14 @@ export default function AddMonthlyWorkDays() {
   const [assignments, setAssignments] = useState({}); // key: `${deptId}-${dayId}` => doctorId
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showAlert } = useAlert();
+  const { t, i18n } = useTranslation();
 
   const getDepartments = async () => {
     try {
       const response = await axiosInstance.get('/api/department');
       setDepartments(response.data.data.departments);
     } catch (error: any) {
-      showAlert('error', 'Failed to fetch departments')
+      showAlert('error', t('Secretary.MonthlyWorkDays.fetchDepartmentsError', 'Failed to fetch departments'));
     }
   };
 
@@ -51,8 +52,7 @@ export default function AddMonthlyWorkDays() {
 
       setAssignments(map);
     } catch (error: any) {
-      showAlert('error', 'Failed to fetch current assignments')
-
+      showAlert('error', t('Secretary.MonthlyWorkDays.fetchAssignmentsError', 'Failed to fetch current assignments'));
     }
   };
 
@@ -85,13 +85,21 @@ export default function AddMonthlyWorkDays() {
 
     try {
       await axiosInstance.post('/api/secretary/leave', mapped);
-      showAlert('success', 'Schedule submitted successfully');
+      showAlert('success', t('Secretary.MonthlyWorkDays.submitSuccess', 'Schedule submitted successfully'));
     } catch (error: any) {
       console.error(error);
-      showAlert('error', 'Error while adding the work days');
+      showAlert('error', t('Secretary.MonthlyWorkDays.submitError', 'Error while adding the work days'));
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const getDeptName = (dept: any) => {
+    if (!dept?.name) return '';
+    if (typeof dept.name === 'object') {
+      return i18n.language === 'ar' ? (dept.name.ar || dept.name.en) : (dept.name.en || dept.name.ar);
+    }
+    return dept.name;
   };
 
   return (
@@ -105,8 +113,12 @@ export default function AddMonthlyWorkDays() {
           <div className="flex-1 pt-4 overflow-y-auto custom-scrollbar">
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white">Monthly Work Days</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Assign doctors to their active working days for each department.</p>
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                  {t('Secretary.MonthlyWorkDays.title', 'Monthly Work Days')}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  {t('Secretary.MonthlyWorkDays.subtitle', 'Assign doctors to their active working days for each department.')}
+                </p>
               </div>
 
               <button
@@ -119,7 +131,7 @@ export default function AddMonthlyWorkDays() {
                 ) : (
                   <>
                     <FiSave size={16} />
-                    <span>Save Schedule</span>
+                    <span>{t('Secretary.MonthlyWorkDays.saveSchedule', 'Save Schedule')}</span>
                   </>
                 )}
               </button>
@@ -131,7 +143,7 @@ export default function AddMonthlyWorkDays() {
                 <thead className="bg-gray-50/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 text-sm border-b border-gray-200 dark:border-gray-700">
                   <tr>
                     <th className="py-4 px-5 text-left text-sm font-bold uppercase tracking-wider sticky left-0 bg-gray-50/90 dark:bg-gray-800/90 backdrop-blur z-10">
-                      Department
+                      {t('Secretary.MonthlyWorkDays.department', 'Department')}
                     </th>
                     {weekDays.map(day => (
                       <th
@@ -140,61 +152,64 @@ export default function AddMonthlyWorkDays() {
                       >
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-Primary"></div>
-                          <span>{day.name}</span>
+                          <span>{t(`Secretary.MonthlyWorkDays.days.${day.id}`, day.name)}</span>
                         </div>
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
-                  {departments.map((dept, index) => (
-                    <tr
-                      key={dept.id}
-                      className="group transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/40"
-                    >
-                      <td className="px-5 py-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/40 z-10 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-Primary/10 flex items-center justify-center flex-shrink-0">
-                            <span className="text-Primary font-bold text-xs">{dept.name.charAt(0)}</span>
+                  {departments.map((dept: any, index) => {
+                    const deptDisplayName = getDeptName(dept);
+                    return (
+                      <tr
+                        key={dept.id}
+                        className="group transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/40"
+                      >
+                        <td className="px-5 py-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/40 z-10 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-Primary/10 flex items-center justify-center flex-shrink-0">
+                              <span className="text-Primary font-bold text-xs">{deptDisplayName ? deptDisplayName.charAt(0) : ''}</span>
+                            </div>
+                            <span className="text-sm whitespace-nowrap">{deptDisplayName}</span>
                           </div>
-                          <span className="text-sm whitespace-nowrap">{dept.name}</span>
-                        </div>
-                      </td>
-                      {weekDays.map(day => {
-                        const key = `${dept.id}-${day.id}`;
-                        const isSelected = !!assignments[key];
-                        return (
-                          <td key={key} className="px-3 py-4">
-                            <select
-                              value={assignments[key] || ''}
-                              onChange={e => handleSelectChange(dept.id, day.id, e.target.value)}
-                              className={`
-                                w-full px-3 py-2 rounded-xl text-sm font-medium
-                                transition-all duration-200 outline-none
-                                focus:ring-2 focus:ring-Primary/40 focus:border-Primary
-                                ${isSelected
-                                  ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800/50 shadow-sm'
-                                  : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 border-dashed'}
-                              `}
-                            >
-                              <option value="" className="text-gray-400 italic">
-                                — Unassigned —
-                              </option>
-                              {dept.doctors.map(doc => (
-                                <option
-                                  key={doc.doctor.id}
-                                  value={doc.doctor.id}
-                                  className="text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 not-italic font-semibold"
-                                >
-                                  Dr. {doc?.doctor.user?.first_name} {doc?.doctor.user?.last_name}
+                        </td>
+                        {weekDays.map(day => {
+                          const key = `${dept.id}-${day.id}`;
+                          const isSelected = !!assignments[key];
+                          return (
+                            <td key={key} className="px-3 py-4">
+                              <select
+                                value={assignments[key] || ''}
+                                onChange={e => handleSelectChange(dept.id, day.id, e.target.value)}
+                                className={`
+                                  w-full px-3 py-2 rounded-xl text-sm font-medium
+                                  transition-all duration-200 outline-none
+                                  focus:ring-2 focus:ring-Primary/40 focus:border-Primary
+                                  ${isSelected
+                                    ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800/50 shadow-sm'
+                                    : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 border-dashed'}
+                                `}
+                              >
+                                <option value="" className="text-gray-400 italic">
+                                  {t('Secretary.MonthlyWorkDays.unassigned', '— Unassigned —')}
                                 </option>
-                              ))}
-                            </select>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                                {dept.doctors.map((doc: any) => (
+                                  <option
+                                    key={doc.doctor.id}
+                                    value={doc.doctor.id}
+                                    className="text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 not-italic font-semibold"
+                                  >
+                                    Dr. {doc?.doctor.user?.first_name} {doc?.doctor.user?.last_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

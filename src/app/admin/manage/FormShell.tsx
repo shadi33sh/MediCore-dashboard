@@ -21,7 +21,7 @@ export default function FormShell({ title, subtitle, icon, accentColor, children
         className="w-full"
       >
         {/* Card */}
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl  dark:border-gray-800 overflow-hidden">
           {/* Gradient header */}
           <div className={`bg-gradient-to-br ${accentColor} px-8 py-7 relative overflow-hidden`}>
             {/* dot pattern */}

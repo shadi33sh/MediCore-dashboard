@@ -6,6 +6,7 @@ import axiosInstance from "../../AuthAxios";
 import DashboardLayout from "../managerComponents/adminDashboardLayout";
 import { IoSearch } from "react-icons/io5";
 import CreateDoctorModal from "../manage/CreateDoctorModal";
+import { useTranslation } from "react-i18next";
 
 function Page() {
   const [doctors, setDoctors] = useState<any[]>([]);
@@ -17,6 +18,7 @@ function Page() {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
+  const { t } = useTranslation();
 
   const fetchDoctors = async () => {
     try {
@@ -108,7 +110,7 @@ function Page() {
                         onClick={() => handleSort("name")}
                       >
                         <div className="flex items-center gap-2">
-                          Doctor Name
+                          {t('Admin.Doctors.tableCols.name', 'Doctor Name')}
                           {sortColumn === "name" && (
                             <span className="text-Primary">{sortOrder === "asc" ? "▲" : "▼"}</span>
                           )}
@@ -119,15 +121,15 @@ function Page() {
                         onClick={() => handleSort("department")}
                       >
                         <div className="flex items-center gap-2">
-                          Department
+                          {t('Admin.Doctors.tableCols.department', 'Department')}
                           {sortColumn === "department" && (
                             <span className="text-Primary">{sortOrder === "asc" ? "▲" : "▼"}</span>
                           )}
                         </div>
                       </th>
-                      <th className="p-4 font-semibold">Phone</th>
-                      <th className="p-4 font-semibold">Email</th>
-                      <th className="p-4 font-semibold text-center">Rating</th>
+                      <th className="p-4 font-semibold">{t('Admin.Doctors.tableCols.phone', 'Phone')}</th>
+                      <th className="p-4 font-semibold">{t('Admin.Doctors.tableCols.email', 'Email')}</th>
+                      <th className="p-4 font-semibold text-center">{t('Admin.Doctors.tableCols.rating', 'Rating')}</th>
                     </tr>
                   </thead>
 
@@ -187,26 +189,26 @@ function Page() {
 
                                     <div className="space-y-4">
                                       <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                                        <FaInfoCircle className="text-Primary" /> Professional Summary
+                                        <FaInfoCircle className="text-Primary" /> {t('Admin.Doctors.details.summary', 'Professional Summary')}
                                       </h4>
                                       <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 min-h-[100px]">
-                                        {item.bio || "No professional summary provided."}
+                                        {item.bio || t('Admin.Doctors.details.noSummary', 'No professional summary provided.')}
                                       </p>
                                     </div>
 
                                     <div className="space-y-4">
                                       <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                                        <FaMoneyBillWave className="text-emerald-500" /> Financial Details
+                                        <FaMoneyBillWave className="text-emerald-500" /> {t('Admin.Doctors.details.financial', 'Financial Details')}
                                       </h4>
                                       <div className="grid grid-cols-2 gap-4">
                                         <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-center">
-                                          <p className="text-xs font-semibold uppercase text-gray-400 mb-2">Examination</p>
+                                          <p className="text-xs font-semibold uppercase text-gray-400 mb-2">{t('Admin.Doctors.details.examination', 'Examination')}</p>
                                           <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
                                             {item.price_of_examination ? `$${Number(item.price_of_examination).toLocaleString()}` : "N/A"}
                                           </p>
                                         </div>
                                         <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-center">
-                                          <p className="text-xs font-semibold uppercase text-gray-400 mb-2">Subscription</p>
+                                          <p className="text-xs font-semibold uppercase text-gray-400 mb-2">{t('Admin.Doctors.details.subscription', 'Subscription')}</p>
                                           <p className="text-2xl font-bold text-Primary dark:text-violet-400">
                                             {item.subscription ? `$${Number(item.subscription).toLocaleString()}` : "N/A"}
                                           </p>
@@ -233,7 +235,7 @@ function Page() {
   };
 
   return (
-    <DashboardLayout title="Doctors Management" loading={!doctors}>
+    <DashboardLayout title={t('Admin.Doctors.title', 'Doctors Management')} loading={!doctors}>
       <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex flex-row gap-4 w-full md:w-auto flex-1">
           {/* Search Input */}
@@ -241,7 +243,7 @@ function Page() {
             <IoSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by doctor name..."
+              placeholder={t('Admin.Doctors.searchPlaceholder', 'Search by doctor name...')}
               className="rounded-2xl border-2 px-12 py-3 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 dark:text-white w-full focus:outline-none focus:border-Primary transition-colors"
               value={searchTerm}
               onChange={(e: any) => setSearchTerm(e.target.value)}
@@ -272,19 +274,19 @@ function Page() {
           onClick={() => setIsCreateModalOpen(true)}
           className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-2xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all font-bold whitespace-nowrap"
         >
-          <FaPlus size={14} /> Add New Doctor
+          <FaPlus size={14} /> {t('Admin.Doctors.addBtn', 'Add New Doctor')}
         </button>
       </div>
 
       {sortedData.length > 0 ? (
-        renderTable("Registered Doctors", sortedData)
+        renderTable(t('Admin.Doctors.tableTitle', 'Registered Doctors'), sortedData)
       ) : (
         <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl">
           <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-full mb-4">
             <FaFileSignature size={48} className="text-gray-400" />
           </div>
-          <p className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">No doctors found</p>
-          <p className="text-gray-500">Try adjusting your filters or search term.</p>
+          <p className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">{t('Admin.Doctors.noDoctors', 'No doctors found')}</p>
+          <p className="text-gray-500">{t('Admin.Doctors.noDoctorsDesc', 'Try adjusting your filters or search term.')}</p>
         </div>
       )}
 

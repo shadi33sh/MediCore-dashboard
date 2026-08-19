@@ -247,17 +247,7 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  /* ── Handlers ── */
-  const handleConfirm = useCallback(() => {
-    setShowModal(false)
-    setShowFloating(false)
 
-    if (activeData?.preview.apointment_id) {
-      router.push(`/doctor/preview/${activeData?.preview?.patient_id}/${activeData?.preview?.apointment_id}`)
-    } else {
-      router.push(`/doctor/preview/${activeData?.patient.id}`)
-    }
-  }, [router])
 
   const handleIgnore = useCallback(() => {
     setShowModal(false)
@@ -276,7 +266,13 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
         {showModal && activeData && (
           <PatientEnteredModal
             data={activeData}
-            onConfirm={handleConfirm}
+            onConfirm={() => {
+
+              router.push(`/doctor/preview/${activeData.preview.patient_id}/${activeData.preview.apointment_id}`)
+              setShowModal(false)
+              setShowFloating(false)
+
+            }}
             onIgnore={handleIgnore}
           />
         )}

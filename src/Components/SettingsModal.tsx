@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import {
   FaUserCircle,
   FaSignOutAlt,
@@ -17,7 +18,7 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggleCompactSidebar }: SettingsModalProps) {
   const [user, setUser] = useState<any>(null);
-  const [language, setLanguage] = useState('English');
+  const { t, i18n } = useTranslation();
   const [isDark, setIsDark] = useState(false);
   const navigator = useRouter();
 
@@ -75,7 +76,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 pb-2">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Settings</h2>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{t('SettingsModal.title', 'Settings')}</h2>
               <button
                 onClick={onClose}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-white"
@@ -104,7 +105,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50/50 dark:bg-white/5 p-3 px-4 rounded-2xl">
-                      <label className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">First Name</label>
+                      <label className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">{t('SettingsModal.firstName', 'First Name')}</label>
                       <input
                         readOnly
                         value={user.first_name || user.name || ''}
@@ -113,7 +114,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
                       />
                     </div>
                     <div className="bg-gray-50/50 dark:bg-white/5 p-3 px-4 rounded-2xl">
-                      <label className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">Last Name</label>
+                      <label className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">{t('SettingsModal.lastName', 'Last Name')}</label>
                       <input
                         readOnly
                         value={user.last_name || ''}
@@ -122,7 +123,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
                       />
                     </div>
                     <div className="col-span-2 bg-gray-50/50 dark:bg-white/5 p-3 px-4 rounded-2xl">
-                      <label className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">Email Address</label>
+                      <label className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">{t('SettingsModal.emailAddress', 'Email Address')}</label>
                       <input
                         readOnly
                         value={user.email || ''}
@@ -136,27 +137,27 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
 
               {/* Preferences Section */}
               <div className="space-y-3">
-                <h3 className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-1">Preferences</h3>
+                <h3 className="text-[8px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4 px-1">{t('SettingsModal.preferences', 'Preferences')}</h3>
 
                 <div className="flex items-center justify-between p-4 rounded-2xl bg-gray-50/50 dark:bg-white/5">
                   <div>
-                    <p className="font-semibold text-gray-800 text-sm dark:text-white">Language</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Select preferred language</p>
+                    <p className="font-semibold text-gray-800 text-sm dark:text-white">{t('SettingsModal.language', 'Language')}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('SettingsModal.selectLanguage', 'Select preferred language')}</p>
                   </div>
                   <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
+                    value={i18n.language}
+                    onChange={(e) => i18n.changeLanguage(e.target.value)}
                     className="p-2 px-4 rounded-xl bg-white dark:bg-white/10 shadow-sm text-sm font-semibold text-gray-700 dark:text-gray-200 focus:outline-none cursor-pointer border-none"
                   >
-                    <option value="English" className="dark:bg-gray-800">English</option>
-                    <option value="Arabic" className="dark:bg-gray-800">Arabic</option>
+                    <option value="en" className="dark:bg-gray-800">{t('SettingsModal.english', 'English')}</option>
+                    <option value="ar" className="dark:bg-gray-800">{t('SettingsModal.arabic', 'Arabic')}</option>
                   </select>
                 </div>
 
                 <div className="flex items-center justify-between p-4 rounded-2xl bg-gray-50/50 dark:bg-white/5">
                   <div>
-                    <p className="font-semibold text-gray-800 text-sm dark:text-white">Dark Mode</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Toggle light / dark theme</p>
+                    <p className="font-semibold text-gray-800 text-sm dark:text-white">{t('SettingsModal.darkMode', 'Dark Mode')}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('SettingsModal.toggleDarkMode', 'Toggle light / dark theme')}</p>
                   </div>
                   <button
                     onClick={toggleDarkMode}
@@ -173,8 +174,8 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
                 {onToggleCompactSidebar && (
                   <div className="flex items-center justify-between p-4 rounded-2xl bg-gray-50/50 dark:bg-white/5">
                     <div>
-                      <p className="font-semibold text-gray-800 text-sm dark:text-white">Compact Sidebar</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Collapse the main sidebar</p>
+                      <p className="font-semibold text-gray-800 text-sm dark:text-white">{t('SettingsModal.compactSidebar', 'Compact Sidebar')}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('SettingsModal.collapseSidebar', 'Collapse the main sidebar')}</p>
                     </div>
                     <button
                       onClick={onToggleCompactSidebar}
@@ -198,7 +199,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
                 className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 font-bold transition-all"
               >
                 <FaSignOutAlt size={18} />
-                <span>Sign Out</span>
+                <span>{t('SettingsModal.signOut', 'Sign Out')}</span>
               </button>
             </div>
           </motion.div>

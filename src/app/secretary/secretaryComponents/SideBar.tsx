@@ -37,32 +37,34 @@ import AddMounthlyWorkDays from "./AddmounthlyLeave";
 import { medicalSections } from "../sections/medicalSections";
 import SettingsModal from "../../../Components/SettingsModal";
 
-const sidebarItems = [
-  {
-    label: "Dashboard",
-    icon: <FaHome size={18} />,
-    href: "/secretary",
-    badge: null,
-  },
-  // { label: 'Statistics', icon: <FaCalendarAlt size={18} />, href: '/secretary/statistics', badge: null },
-  {
-    label: "Schedules",
-    icon: <FaCalendarAlt size={18} />,
-    href: "/secretary/schedules",
-    badge: "3",
-  },
-  {
-    label: "Doctors",
-    icon: <FaUserInjured size={18} />,
-    href: "/secretary/doctors",
-    badge: null,
-  },
-  // { label: 'Appointments', icon: <IoDocument size={18} />, href: '/secretary/appointments', badge: '12' },
-];
-
-
+import { useTranslation } from "react-i18next";
 
 export default function EnhancedSideBar() {
+  const { t } = useTranslation();
+
+  const sidebarItems = [
+    {
+      label: t("Secretary.Sidebar.Dashboard", "Dashboard"),
+      icon: <FaHome size={18} />,
+      href: "/secretary",
+      badge: null,
+    },
+    // { label: 'Statistics', icon: <FaCalendarAlt size={18} />, href: '/secretary/statistics', badge: null },
+    {
+      label: t("Secretary.Sidebar.Schedules", "Schedules"),
+      icon: <FaCalendarAlt size={18} />,
+      href: "/secretary/schedules",
+      badge: "3",
+    },
+    {
+      label: t("Secretary.Sidebar.Doctors", "Doctors"),
+      icon: <FaUserInjured size={18} />,
+      href: "/secretary/doctors",
+      badge: null,
+    },
+    // { label: 'Appointments', icon: <IoDocument size={18} />, href: '/secretary/appointments', badge: '12' },
+  ];
+
   const [showSections, setShowSections] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showReserveForm, setReserve] = useState(false);
@@ -324,7 +326,7 @@ md:static overflow-hidden`}
                     className="flex items-center gap-3 font-medium p-3 flex-1"
                   >
                     <FaUserMd size={18} />
-                    {!collapsed && <span className="flex-1 text-sm font-semibold" >Sections</span>}
+                    {!collapsed && <span className="flex-1 text-sm font-semibold" >{t("Secretary.Sidebar.Sections", "Sections")}</span>}
                   </Link>
                   {/* {!collapsed && (
                     <button
@@ -393,7 +395,7 @@ md:static overflow-hidden`}
                   size={18}
                   className="group-hover:text-white transition-colors"
                 />
-                {!collapsed && <span className=" text-sm font-semibold" >Schedule Appointmen</span>}
+                {!collapsed && <span className=" text-sm font-semibold" >{t("Secretary.Sidebar.ScheduleAppointment", "Schedule Appointment")}</span>}
               </motion.button>
             </div>
           </div>
@@ -407,7 +409,7 @@ md:static overflow-hidden`}
               className="w-full flex items-center gap-3 font-medium p-3 rounded-xl transition-all duration-200 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <IoSettings size={18} />
-              {!collapsed && <span>Settings</span>}
+              {!collapsed && <span>{t("Secretary.Sidebar.Settings", "Settings")}</span>}
             </motion.button>
           </div>
         </div>

@@ -70,7 +70,7 @@ export default function AddArticleForm() {
       window.location.reload();
       return `${process.env.NEXT_PUBLIC_API_URL}${response.data.data}`;
     } catch (error: any) {
-      showAlert("error", "Failed to upload article");
+      showAlert("error", error.response.data.message || "Failed to upload article");
       return null;
     } finally {
       setLoading(false);

@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import { useAlert } from '../../Components/Alert';
 import axiosInstance from '../AuthAxios';
 import Loading from '../../Components/loading';
+import { useTranslation } from 'react-i18next';
 
 export default function VerificationPage() {
   const [formData, setFormData] = useState({ code: '' });
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
+  const { t } = useTranslation();
 
   const handleChange = (e : any) => {
     setFormData((prev) => ({
@@ -23,9 +25,9 @@ export default function VerificationPage() {
     setLoading(true);
     try {
       const response = await axiosInstance.post('api/varify', formData);
-      showAlert('success', 'Verification successful');
+      showAlert('success', t('Auth.EmailVerification.success', 'Verification successful'));
     } catch (err : any) {
-      showAlert('error', 'Invalid verification code');
+      showAlert('error', t('Auth.EmailVerification.error', 'Invalid verification code'));
     } finally {
       setLoading(false);
     }
@@ -41,7 +43,7 @@ export default function VerificationPage() {
       <form
         onSubmit={handleVerifyCode}
         className="p-16 rounded-xl text-center md:bg-gray-200/30 md:dark:bg-gray-700/40 w-[580px] flex flex-col items-center gap-8 z-10">
-        <h1 className="font-bold text-3xl">Verify Your Account</h1>
+        <h1 className="font-bold text-3xl">{t('Auth.EmailVerification.title', 'Verify Your Account')}</h1>
         <img className="w-[120px]" src="/images/Logo.png" alt="Logo" />
 
         {/* Verification Code Input */}
@@ -51,7 +53,7 @@ export default function VerificationPage() {
           value={formData.code}
           onChange={handleChange}
           className="dark:bg-black bg-gray-100 p-4 w-full rounded-xl pl-6"
-          placeholder="Enter 6-digit code"
+          placeholder={t('Auth.EmailVerification.codeInput', 'Enter 6-digit code')}
           required
         />
 
@@ -59,7 +61,7 @@ export default function VerificationPage() {
         <div className="w-full h-16 center">
           {!loading ? (
             <button type="submit" className="p-4 bg-Primary rounded-xl w-full flex justify-center">
-              <p className="font-bold text-white">Verify Code</p>
+              <p className="font-bold text-white">{t('Auth.EmailVerification.verifyButton', 'Verify Code')}</p>
             </button>
           ) : (
             <Loading />
@@ -68,9 +70,9 @@ export default function VerificationPage() {
 
         {/* Resend Code Option */}
         <p className="text-Gray font-semibold">
-          Didn't receive a code?{' '}
+          {t('Auth.EmailVerification.didntReceive', "Didn't receive a code?")}{' '}
           <button type='button' onClick={() => axiosInstance.get('api/resendCode')} className="text-Primary underline">
-            Resend Code
+            {t('Auth.EmailVerification.resendCode', 'Resend Code')}
           </button>
         </p>
       </form>
