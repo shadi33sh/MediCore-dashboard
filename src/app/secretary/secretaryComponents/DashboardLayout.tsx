@@ -1,8 +1,6 @@
 'use client'
 import React from 'react'
-import SideBar from './SideBar'
 import LoadingScreen from '../../../Components/loadingScreen'
-import { OutPatientProvider } from './OutPatientContext'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -13,26 +11,19 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, loading = false, actions }) => {
   return (
-    <OutPatientProvider>
-      <div className="flex w-screen h-screen dark:text-white bg-gray-100 dark:bg-gray-900">
-        <SideBar />
-        <div className="flex-1 md:p-6  md:pl-0 overflow-y-auto scroll-hidden ">
-          <div className="bg-white h-full ml-5 dark:bg-black md:rounded-2xl p-6 shadow-xl   overflow-scroll space-y-6 border-gray-200 dark:border-gray-700 scroll-hidden">
-            {
-              loading ? <LoadingScreen />
-                :
-                <>
-                  <div className="flex justify-between items-center">
-                    {title && (<h2 className="text-3xl  max-md:text-lg max-md:pl-6 font-bold text-gray-800 dark:text-white">{title}</h2>)}
-                    {actions}
-                  </div>
-                  {children}
-                </>
-            }
+    <div className="p-6 space-y-6 h-full relative">
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          <div className="flex justify-between items-center">
+            {title && (<h2 className="text-3xl max-md:text-lg max-md:pl-6 font-bold text-gray-800 dark:text-white">{title}</h2>)}
+            {actions}
           </div>
-        </div>
-      </div>
-    </OutPatientProvider>
+          {children}
+        </>
+      )}
+    </div>
   )
 }
 

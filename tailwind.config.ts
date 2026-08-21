@@ -9,6 +9,9 @@ export default {
   darkMode: 'class', 
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-montserrat)', 'var(--font-cairo)', 'sans-serif'],
+      },
       colors: {
         Primary   : "#297c8f" ,
         Cyan  : "#81D2E4" ,

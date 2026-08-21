@@ -55,15 +55,15 @@ export default function Page() {
   }, [])
 
   const handleDeleteArticle = async (articleId: number) => {
-    if (!window.confirm('Are you sure you want to delete this article?')) return
+    if (!window.confirm(t('Doctor.ArticlesPage.confirmDelete', 'Are you sure you want to delete this article?'))) return
     setDeletingArticleId(articleId)
     try {
       await axiosInstance.delete(`api/deleteArticle/${articleId}`)
       setArticles((prev) => prev.filter((article) => article.id !== articleId))
-      showAlert('success', 'Article deleted successfully.')
+      showAlert('success', t('Doctor.ArticlesPage.deleteSuccess', 'Article deleted successfully.'))
     } catch (err: any) {
       console.error('Error deleting article:', err)
-      showAlert('error', err?.response?.data?.message || 'Failed to delete article')
+      showAlert('error', err?.response?.data?.message || t('Doctor.ArticlesPage.deleteFail', 'Failed to delete article'))
     } finally {
       setDeletingArticleId(null)
     }
@@ -78,8 +78,12 @@ export default function Page() {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
           <div>
-            <h3 className="font-bold text-gray-800 dark:text-white text-base">Publications & Insights</h3>
-            <p className="text-xs text-gray-400">Share knowledge, research, and healthcare tips with the community</p>
+            <h3 className="font-bold text-gray-800 dark:text-white text-base">
+              {t('Doctor.ArticlesPage.headerTitle', 'Publications & Insights')}
+            </h3>
+            <p className="text-xs text-gray-400">
+              {t('Doctor.ArticlesPage.headerDesc', 'Share knowledge, research, and healthcare tips with the community')}
+            </p>
           </div>
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -88,7 +92,7 @@ export default function Page() {
             onClick={() => setAddArticleModal(true)}
           >
             <FiPlus size={16} />
-            Write an Article
+            {t('Doctor.ArticlesPage.writeBtn', 'Write an Article')}
           </motion.button>
         </div>
 
@@ -118,7 +122,9 @@ export default function Page() {
                       <div className="w-8 h-8 rounded-lg bg-Primary/10 flex items-center justify-center text-Primary">
                         <FiFileText size={16} />
                       </div>
-                      <span className="font-bold text-gray-800 dark:text-white">Create New Article</span>
+                      <span className="font-bold text-gray-800 dark:text-white">
+                        {t('Doctor.ArticlesPage.createTitle', 'Create New Article')}
+                      </span>
                     </div>
                     <button
                       onClick={() => setAddArticleModal(false)}
@@ -130,7 +136,10 @@ export default function Page() {
 
                   {/* Body inside modal */}
                   <div className="flex-1 overflow-y-auto">
-                    <AddArticleForm />
+                    <AddArticleForm onArticleAdded={(newArticle) => {
+                      setArticles(prev => [newArticle, ...prev])
+                      setAddArticleModal(false)
+                    }} />
                   </div>
                 </motion.div>
               </motion.div>
@@ -155,13 +164,13 @@ export default function Page() {
                 ? article.doctorName
                 : article.doctor?.user
                   ? `Dr. ${article.doctor.user.first_name} ${article.doctor.user.last_name}`
-                  : 'Medical Expert'
+                  : t('Doctor.ArticlesPage.medicalExpert', 'Medical Expert')
 
               const initials = authorName.replace('Dr. ', '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 
               return (
                 <motion.a
-                  href={`/doctor/articles/${article.id}`}
+                  href={`/article/${article.id}`}
                   target='_blank'
                   key={article.id || index}
                   initial={{ opacity: 0, y: 15 }}
@@ -181,7 +190,7 @@ export default function Page() {
                       }}
                     />
                     <span className="absolute top-4 left-4 text-[10px] font-bold tracking-wide uppercase px-2.5 py-1 bg-white/95 dark:bg-gray-900/95 text-Primary rounded-full shadow-sm">
-                      Health Care
+                      {t('Doctor.ArticlesPage.tag', 'Health Care')}
                     </span>
                   </div>
 
@@ -207,21 +216,21 @@ export default function Page() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => setReviewArticle(article)}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setReviewArticle(article); }}
                         className="px-3 py-2 rounded-2xl text-[11px] font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition"
                       >
-                        Review
+                        {t('Doctor.ArticlesPage.reviewBtn', 'Review')}
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDeleteArticle(article.id)}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteArticle(article.id); }}
                         disabled={deletingArticleId === article.id}
                         className={`px-3 py-2 rounded-2xl text-[11px] font-semibold transition ${deletingArticleId === article.id
                           ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400'
                           : 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/60'
                           }`}
                       >
-                        {deletingArticleId === article.id ? 'Deleting...' : 'Delete'}
+                        {deletingArticleId === article.id ? t('Doctor.ArticlesPage.deletingBtn', 'Deleting...') : t('Doctor.ArticlesPage.deleteBtn', 'Delete')}
                       </button>
                     </div>
                   </div>

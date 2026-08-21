@@ -6,7 +6,7 @@ import { useAlert } from '../../../Components/Alert';
 import { motion } from 'framer-motion'
 import Loading from '../../../Components/loading';
 import { useTranslation } from 'react-i18next';
-export default function page() {
+export default function Page() {
   const { t } = useTranslation();
   const specializations = [
     "family",
@@ -31,266 +31,7 @@ export default function page() {
     "general"
   ];
 
-  const jsonStr = `[
-                  {
-              "status": "success",
-              "message": "Medical analysis completed successfully",
-              "result": {
-                  "response": {
-                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
-                      "recommendations": [
-                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
-                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
-                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
-                      ],
-                      "warnings": [
-                          "This information is for educational purposes only and should not substitute for professional medical advice.",
-                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
-                      ],
-                      "references": [
-                          "American Academy of Dermatology - Hair Loss Treatment",
-                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
-                      ],
-                      "followUp": [
-                          "What specific concerns do you have about hair loss?",
-                          "Have you considered other treatment options besides FUE?"
-                      ]
-                  },
-                  "metadata": {
-                      "specialization": "Dermatology/Hair Restoration",
-                      "confidence": "High",
-                      "requiresPhysicianConsult": true,
-                      "emergencyLevel": "routine",
-                      "topRelatedSpecialties": [
-                          "Dermatology",
-                          "Plastic Surgery",
-                          "Trichology"
-                      ]
-                  }
-              },
-              "cacheTime": 1749134617606,
-              "metadata": {
-                  "language": "en",
-                  "specialization": "family",
-                  "queryTime": "2025-06-05T14:43:37.606Z"
-              }
-          },
-          {
-              "status": "success",
-              "message": "Medical analysis completed successfully",
-              "result": {
-                  "response": {
-                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
-                      "recommendations": [
-                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
-                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
-                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
-                      ],
-                      "warnings": [
-                          "This information is for educational purposes only and should not substitute for professional medical advice.",
-                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
-                      ],
-                      "references": [
-                          "American Academy of Dermatology - Hair Loss Treatment",
-                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
-                      ],
-                      "followUp": [
-                          "What specific concerns do you have about hair loss?",
-                          "Have you considered other treatment options besides FUE?"
-                      ]
-                  },
-                  "metadata": {
-                      "specialization": "Dermatology/Hair Restoration",
-                      "confidence": "High",
-                      "requiresPhysicianConsult": true,
-                      "emergencyLevel": "routine",
-                      "topRelatedSpecialties": [
-                          "Dermatology",
-                          "Plastic Surgery",
-                          "Trichology"
-                      ]
-                  }
-              },
-              "cacheTime": 1749134617606,
-              "metadata": {
-                  "language": "en",
-                  "specialization": "family",
-                  "queryTime": "2025-06-05T14:43:37.606Z"
-              }
-          },
-                  {
-              "status": "success",
-              "message": "Medical analysis completed successfully",
-              "result": {
-                  "response": {
-                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
-                      "recommendations": [
-                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
-                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
-                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
-                      ],
-                      "warnings": [
-                          "This information is for educational purposes only and should not substitute for professional medical advice.",
-                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
-                      ],
-                      "references": [
-                          "American Academy of Dermatology - Hair Loss Treatment",
-                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
-                      ],
-                      "followUp": [
-                          "What specific concerns do you have about hair loss?",
-                          "Have you considered other treatment options besides FUE?"
-                      ]
-                  },
-                  "metadata": {
-                      "specialization": "Dermatology/Hair Restoration",
-                      "confidence": "High",
-                      "requiresPhysicianConsult": true,
-                      "emergencyLevel": "routine",
-                      "topRelatedSpecialties": [
-                          "Dermatology",
-                          "Plastic Surgery",
-                          "Trichology"
-                      ]
-                  }
-              },
-              "cacheTime": 1749134617606,
-              "metadata": {
-                  "language": "en",
-                  "specialization": "family",
-                  "queryTime": "2025-06-05T14:43:37.606Z"
-              }
-          },
-          {
-              "status": "success",
-              "message": "Medical analysis completed successfully",
-              "result": {
-                  "response": {
-                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
-                      "recommendations": [
-                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
-                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
-                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
-                      ],
-                      "warnings": [
-                          "This information is for educational purposes only and should not substitute for professional medical advice.",
-                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
-                      ],
-                      "references": [
-                          "American Academy of Dermatology - Hair Loss Treatment",
-                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
-                      ],
-                      "followUp": [
-                          "What specific concerns do you have about hair loss?",
-                          "Have you considered other treatment options besides FUE?"
-                      ]
-                  },
-                  "metadata": {
-                      "specialization": "Dermatology/Hair Restoration",
-                      "confidence": "High",
-                      "requiresPhysicianConsult": true,
-                      "emergencyLevel": "routine",
-                      "topRelatedSpecialties": [
-                          "Dermatology",
-                          "Plastic Surgery",
-                          "Trichology"
-                      ]
-                  }
-              },
-              "cacheTime": 1749134617606,
-              "metadata": {
-                  "language": "en",
-                  "specialization": "family",
-                  "queryTime": "2025-06-05T14:43:37.606Z"
-              }
-          },
-                  {
-              "status": "success",
-              "message": "Medical analysis completed successfully",
-              "result": {
-                  "response": {
-                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
-                      "recommendations": [
-                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
-                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
-                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
-                      ],
-                      "warnings": [
-                          "This information is for educational purposes only and should not substitute for professional medical advice.",
-                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
-                      ],
-                      "references": [
-                          "American Academy of Dermatology - Hair Loss Treatment",
-                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
-                      ],
-                      "followUp": [
-                          "What specific concerns do you have about hair loss?",
-                          "Have you considered other treatment options besides FUE?"
-                      ]
-                  },
-                  "metadata": {
-                      "specialization": "Dermatology/Hair Restoration",
-                      "confidence": "High",
-                      "requiresPhysicianConsult": true,
-                      "emergencyLevel": "routine",
-                      "topRelatedSpecialties": [
-                          "Dermatology",
-                          "Plastic Surgery",
-                          "Trichology"
-                      ]
-                  }
-              },
-              "cacheTime": 1749134617606,
-              "metadata": {
-                  "language": "en",
-                  "specialization": "family",
-                  "queryTime": "2025-06-05T14:43:37.606Z"
-              }
-          },
-          {
-              "status": "success",
-              "message": "Medical analysis completed successfully",
-              "result": {
-                  "response": {
-                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
-                      "recommendations": [
-                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
-                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
-                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
-                      ],
-                      "warnings": [
-                          "This information is for educational purposes only and should not substitute for professional medical advice.",
-                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
-                      ],
-                      "references": [
-                          "American Academy of Dermatology - Hair Loss Treatment",
-                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
-                      ],
-                      "followUp": [
-                          "What specific concerns do you have about hair loss?",
-                          "Have you considered other treatment options besides FUE?"
-                      ]
-                  },
-                  "metadata": {
-                      "specialization": "Dermatology/Hair Restoration",
-                      "confidence": "High",
-                      "requiresPhysicianConsult": true,
-                      "emergencyLevel": "routine",
-                      "topRelatedSpecialties": [
-                          "Dermatology",
-                          "Plastic Surgery",
-                          "Trichology"
-                      ]
-                  }
-              },
-              "cacheTime": 1749134617606,
-              "metadata": {
-                  "language": "en",
-                  "specialization": "family",
-                  "queryTime": "2025-06-05T14:43:37.606Z"
-              }
-          }
-          ]`
+
 
   // Default specialization is the first one.
   const [selectedSpecialization, setSelectedSpecialization] = useState(specializations[0]);
@@ -380,9 +121,51 @@ export default function page() {
   };
 
   useEffect(() => {
-    const parsed = JSON.parse(jsonStr);
+    const parsed = JSON.parse(`[{
+              "status": "success",
+              "message": "Medical analysis completed successfully",
+              "result": {
+                  "response": {
+                      "message": "FUE, or Follicular Unit Extraction, is a popular hair transplant technique used to treat hair loss. In this minimally invasive procedure, individual hair follicles are extracted from a donor area (usually the back of the scalp) and then transplanted to the balding or thinning areas. FUE is favored for its reduced scarring compared to traditional strip methods and allows for quicker recovery times.",
+                      "recommendations": [
+                          "Consider consulting a dermatologist or a hair restoration specialist for a personalized assessment.",
+                          "Evaluate the potential causes of hair loss, such as genetics, hormonal changes, or medical conditions.",
+                          "Research and understand the FUE procedure, including costs, recovery times, and potential side effects."
+                      ],
+                      "warnings": [
+                          "This information is for educational purposes only and should not substitute for professional medical advice.",
+                          "Consult a qualified healthcare provider for a proper diagnosis and treatment options."
+                      ],
+                      "references": [
+                          "American Academy of Dermatology - Hair Loss Treatment",
+                          "International Society of Hair Restoration Surgery (ISHRS) - FUE Techniques"
+                      ],
+                      "followUp": [
+                          "What specific concerns do you have about hair loss?",
+                          "Have you considered other treatment options besides FUE?"
+                      ]
+                  },
+                  "metadata": {
+                      "specialization": "Dermatology/Hair Restoration",
+                      "confidence": "High",
+                      "requiresPhysicianConsult": true,
+                      "emergencyLevel": "routine",
+                      "topRelatedSpecialties": [
+                          "Dermatology",
+                          "Plastic Surgery",
+                          "Trichology"
+                      ]
+                  }
+              },
+              "cacheTime": 1749134617606,
+              "metadata": {
+                  "language": "en",
+                  "specialization": "family",
+                  "queryTime": "2025-06-05T14:43:37.606Z"
+              }
+          }]`);
     const entries = parsed.map((item: any) => ({
-      user: "what is Fue",
+      user: "what is Flu",
       bot: {
         message: item.result.response.message,
         followUp: item.result.response.followUp,
@@ -391,7 +174,7 @@ export default function page() {
         warnings: item.result.response.warnings
       }
     }));
-    setChatHistory(prev => [...prev, ...entries]);
+    setChatHistory(entries);
   }, []);
 
 
@@ -409,66 +192,83 @@ export default function page() {
             </div>
           )}
           {chatHistory.map((chat, index) => (
-            <div key={index} className="mb-4">
-              <div className='flex my-5 items-center gap-4'>
-                <img src="/images/Doc 4.jpg" className='rounded-full w-6 h-6' alt="" />
-                <p className="font-semibold text-teal-600 dark:text-teal-300 px-6 py-2 text-[14px] rounded-full dark:bg-gray-800 bg-gray-100 w-fit">{chat.user}</p>
+            <div key={index} className="flex flex-col gap-6 mb-8 px-4 md:px-8">
+              {/* User Message */}
+              <div className="flex justify-end items-end gap-2">
+                <div className="bg-Primary text-white px-5 py-3 rounded-3xl rounded-br-sm shadow-md max-w-[85%] md:max-w-[70%]">
+                  <p className="text-[15px] leading-relaxed">{chat.user}</p>
+                </div>
               </div>
-              <div className="ml-4">
-                {/* <p className="text-gray-700 dark:text-gray-300"><strong>Doctor AI:</strong> {chat.bot.message}</p> */}
-                <strong>Doctor Say:</strong>
-                <p>
-                  {chat.bot.message}
-                </p>
-                {chat.bot.recommendations && chat.bot.recommendations.length > 0 && (
-                  <div className="mt-2">
-                    <strong>Recommendations:</strong>
-                    <ul className="list-disc list-inside">
-                      {chat.bot.recommendations.map((rec, idx) => (
-                        <li key={idx} className="text-gray-700 dark:text-gray-300">{rec}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {chat.bot.references && chat.bot.references.length > 0 && (
-                  <div className="mt-2">
-                    <strong>References:</strong>
-                    <ul className="list-disc list-inside">
-                      {chat.bot.references.map((ref, idx) => (
-                        <li key={idx}>
-                          <a
-                            href={ref.match(/https?:\/\/\S+/)?.[0] || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 underline dark:text-blue-300"
-                          >
-                            {ref}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {chat.bot.warnings && chat.bot.warnings.length > 0 && (
-                  <div className="mt-2">
-                    <strong>Warnings:</strong>
-                    <ul className="list-disc list-inside">
-                      {chat.bot.warnings.map((warn, idx) => (
-                        <li key={idx} className="text-red-500 dark:text-red-400">{warn}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {chat.bot.followUp && chat.bot.followUp.length > 0 && (
-                  <div className="mt-2">
-                    <strong>Follow-up Questions:</strong>
-                    <ul className="list-disc list-inside">
-                      {chat.bot.followUp.map((q, idx) => (
-                        <li key={idx} className="text-gray-700 dark:text-gray-300">{q}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+
+              {/* Bot Message */}
+              <div className="flex justify-start items-end gap-3">
+                <img src="/images/Logo.png" className="rounded-full w-9 h-9 shadow-sm object-contain bg-white p-1 border border-gray-100 dark:border-gray-700" alt="AI" />
+                <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 px-6 py-5 rounded-3xl rounded-bl-sm shadow-md  border-gray-100 dark:border-gray-700 max-w-[90%] md:max-w-[80%]">
+                  <p className="text-[15px] leading-relaxed mb-4">
+                    {chat.bot.message}
+                  </p>
+
+                  {chat.bot.recommendations && chat.bot.recommendations.length > 0 && (
+                    <div className="mt-4 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-2xl border border-teal-100 dark:border-teal-900/50">
+                      <strong className="text-teal-700 dark:text-teal-400 text-sm flex items-center gap-2 mb-2">
+                        💡 Recommendations
+                      </strong>
+                      <ul className="list-disc text-sm list-outside ml-4 text-[14px] space-y-1.5 text-gray-700 dark:text-gray-300">
+                        {chat.bot.recommendations.map((rec, idx) => (
+                          <li key={idx}>{rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {chat.bot.references && chat.bot.references.length > 0 && (
+                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-900/50">
+                      <strong className="text-blue-700 dark:text-blue-400 text-sm flex items-center gap-2 mb-2">
+                        🔗 References
+                      </strong>
+                      <ul className="list-disc text-sm list-outside ml-4 text-[14px] space-y-1.5">
+                        {chat.bot.references.map((ref, idx) => (
+                          <li key={idx}>
+                            <a
+                              href={ref.match(/https?:\/\/\S+/)?.[0] || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 underline dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                            >
+                              {ref}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {chat.bot.warnings && chat.bot.warnings.length > 0 && (
+                    <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-900/50">
+                      <strong className="text-red-700 dark:text-red-400 text-sm flex items-center gap-2 mb-2">
+                        ⚠️ Warnings
+                      </strong>
+                      <ul className="list-disc text-sm list-outside ml-4 text-[14px] space-y-1.5 text-red-600 dark:text-red-300">
+                        {chat.bot.warnings.map((warn, idx) => (
+                          <li key={idx}>{warn}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {chat.bot.followUp && chat.bot.followUp.length > 0 && (
+                    <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-600">
+                      <strong className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mb-2">
+                        ❓ Follow-up Questions
+                      </strong>
+                      <ul className="list-disc text-sm list-outside ml-4 text-[14px] space-y-1.5 text-gray-600 dark:text-gray-400">
+                        {chat.bot.followUp.map((q, idx) => (
+                          <li key={idx}>{q}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}

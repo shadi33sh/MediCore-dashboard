@@ -44,17 +44,9 @@ export default function EnhancedSideBar() {
 
   const sidebarItems = [
     {
-      label: t("Secretary.Sidebar.Dashboard", "Dashboard"),
-      icon: <FaHome size={18} />,
-      href: "/secretary",
-      badge: null,
-    },
-    // { label: 'Statistics', icon: <FaCalendarAlt size={18} />, href: '/secretary/statistics', badge: null },
-    {
       label: t("Secretary.Sidebar.Schedules", "Schedules"),
       icon: <FaCalendarAlt size={18} />,
-      href: "/secretary/schedules",
-      badge: "3",
+      href: "/secretary",
     },
     {
       label: t("Secretary.Sidebar.Doctors", "Doctors"),
@@ -80,6 +72,22 @@ export default function EnhancedSideBar() {
   const pathname = usePathname();
   const sidebarRef = useRef(null);
   const searchRef = useRef(null);
+
+  // Load saved sidebar state
+  useEffect(() => {
+    try {
+      const storedCollapsed = localStorage.getItem("secSidebarCollapsed");
+      if (storedCollapsed !== null) {
+        setCollapsed(JSON.parse(storedCollapsed));
+      }
+    } catch { }
+  }, []);
+
+  const handleToggleCollapse = () => {
+    const newVal = !collapsed;
+    setCollapsed(newVal);
+    localStorage.setItem("secSidebarCollapsed", JSON.stringify(newVal));
+  };
 
   // Detect mobile and handle resize
   useEffect(() => {
@@ -175,7 +183,7 @@ export default function EnhancedSideBar() {
         initial={false}
         animate={{
           x: isMobile ? (mobileOpen ? 0 : "-100%") : 0,
-          width: !isMobile && collapsed ? 80 : 320,
+          width: !isMobile && collapsed ? 60 : 320,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={`fixed top-0 max-w-[220px] left-0 h-full z-50 md:z-auto bg-gray-100 dark:bg-gray-900 
@@ -210,7 +218,7 @@ md:static overflow-hidden`}
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => setCollapsed(!collapsed)}
+                  onClick={handleToggleCollapse}
                   className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   {collapsed ? (
@@ -245,9 +253,9 @@ md:static overflow-hidden`}
 
           {/* Mini logo if collapsed */}
           {!isMobile && collapsed && (
-            <div className="p-4 flex justify-center">
+            <div className="pb-4 flex justify-center">
               <div className="w-10 h-10  rounded-lg flex items-center justify-center">
-                <img className="w-6 h-6" src="/images/Logo.png" alt="Logo" />
+                <img className="w-8 h-8" src="/images/Logo.png" alt="Logo" />
               </div>
             </div>
           )}
@@ -420,7 +428,7 @@ md:static overflow-hidden`}
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
         compactSidebar={collapsed}
-        onToggleCompactSidebar={() => setCollapsed(!collapsed)}
+        onToggleCompactSidebar={handleToggleCollapse}
       />
 
       <AnimatePresence>

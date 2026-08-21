@@ -68,7 +68,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
           onClick={onClose}
         >
           <motion.div
-            className="w-full max-w-xl bg-white dark:bg-[#1a1f2c] rounded-[2rem] shadow-2xl z-[70] overflow-hidden flex flex-col max-h-[90vh]"
+            className="w-full max-w-xl bg-gray-200 dark:bg-gray-900 rounded-[2rem]  z-[70] overflow-hidden flex flex-col max-h-[90vh]"
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -165,7 +165,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
                       }`}
                   >
                     <div
-                      className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${isDark ? 'translate-x-7' : 'translate-x-0'
+                      className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${isDark ? 'translate-x-7 rtl:-translate-x-7' : 'translate-x-0'
                         }`}
                     />
                   </button>
@@ -183,7 +183,7 @@ export default function SettingsModal({ isOpen, onClose, compactSidebar, onToggl
                         }`}
                     >
                       <div
-                        className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${compactSidebar ? 'translate-x-7' : 'translate-x-0'
+                        className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${compactSidebar ? 'translate-x-7 rtl:-translate-x-7' : 'translate-x-0'
                           }`}
                       />
                     </button>

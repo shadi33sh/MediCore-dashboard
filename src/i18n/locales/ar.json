@@ -225,6 +225,30 @@
       "resendCode": "إعادة إرسال الرمز",
       "success": "تم التحقق بنجاح",
       "error": "رمز التحقق غير صالح"
+    },
+    "ForgotPassword": {
+      "title": "هل نسيت كلمة المرور؟",
+      "subtitle": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور الخاصة بك.",
+      "submitButton": "إرسال رابط إعادة التعيين",
+      "backToSignIn": "العودة إلى تسجيل الدخول",
+      "recoveryTitle1": "استعادة ",
+      "recoveryTitle2": "كلمة المرور",
+      "recoveryDesc": "لا تقلق، سنساعدك على العودة لإدارة مرضاك ومواعيدك.",
+      "success": "إذا كان هذا البريد الإلكتروني موجوداً، فقد تم إرسال رابط تأكيد.",
+      "error": "فشل في إرسال رابط إعادة التعيين. يرجى المحاولة مرة أخرى."
+    },
+    "ResetPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "أدخل كلمة المرور الجديدة أدناه.",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "submitButton": "إعادة تعيين كلمة المرور",
+      "success": "تم إعادة تعيين كلمة المرور بنجاح.",
+      "errorToken": "الرمز غير صالح أو منتهي الصلاحية.",
+      "errorMatch": "كلمات المرور غير متطابقة.",
+      "errorLength": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+      "backToForgot": "العودة إلى نسيت كلمة المرور",
+      "validating": "جاري التحقق من الرمز..."
     }
   },
   "Admin": {
@@ -238,15 +262,35 @@
         "canceledAppointments": "المواعيد الملغاة",
         "monthlyIncome": "الدخل الشهري",
         "upcomingAppointments": "المواعيد القادمة",
-        "visitsThisWeek": "زيارات هذا الأسبوع"
+        "visitsThisWeek": "زيارات هذا الأسبوع",
+        "activeDepartments": "الأقسام النشطة",
+        "todaysAppointments": "مواعيد اليوم"
+      },
+      "sections": {
+        "topRatedDoctors": "الأطباء الأعلى تقييماً",
+        "secretariesList": "قائمة السكرتارية",
+        "noDoctors": "لم يتم العثور على أطباء",
+        "noSecretaries": "لم يتم العثور على سكرتارية نشطين"
+      },
+      "charts": {
+        "visitsOverview": "نظرة عامة على زيارات المرضى",
+        "thisYear": "هذا العام",
+        "lastYear": "العام الماضي",
+        "appointmentsThisWeek": "مواعيد هذا الأسبوع",
+        "appointmentsSubtitle": "تفصيل حالة جميع الجلسات المحجوزة",
+        "completed": "مكتمل",
+        "pending": "قيد الانتظار",
+        "canceled": "ملغى"
       },
       "buttons": {
         "createDoctor": "إضافة طبيب",
         "createSecretary": "إضافة سكرتير",
-        "createDepartment": "إضافة قسم"
+        "createDepartment": "إضافة قسم",
+        "viewAll": "عرض الكل"
       }
     },
     "Sidebar": {
+      "Main": "الرئيسية",
       "homePage": "الصفحة الرئيسية",
       "doctors": "الأطباء",
       "departments": "الأقسام",
@@ -326,9 +370,17 @@
         "title": "إضافة قسم جديد",
         "subtitle": "إنشاء قسم طبي جديد في MediCore",
         "name": "اسم القسم",
+        "nameEn": "الاسم (بالإنجليزية)",
+        "nameAr": "الاسم (بالعربية)",
         "namePlaceholder": "مثال: أمراض القلب",
+        "nameEnPlaceholder": "مثال: Cardiology",
+        "nameArPlaceholder": "مثال: أمراض القلب",
         "description": "الوصف",
+        "descriptionEn": "الوصف (بالإنجليزية)",
+        "descriptionAr": "الوصف (بالعربية)",
         "descriptionPlaceholder": "وصف مختصر للقسم…",
+        "descriptionEnPlaceholder": "وصف مختصر بالإنجليزية...",
+        "descriptionArPlaceholder": "وصف مختصر بالعربية...",
         "imageLabel": "صورة القسم",
         "uploadText": "اضغط لرفع صورة",
         "submitBtn": "إضافة القسم"
@@ -346,6 +398,7 @@
     "Sidebar": {
       "Appointments": "المواعيد",
       "Patients": "المرضى",
+      "Previews": "سجل الفحوصات",
       "Articles": "المقالات",
       "ChatBotAI": "الذكاء الاصطناعي",
       "Main": "الرئيسية",
@@ -385,6 +438,33 @@
       "medicalAnalysis": "التحاليل الطبية",
       "result": "النتيجة:",
       "viewFile": "عرض الملف"
+    },
+    "PreviewsList": {
+      "title": "جميع الفحوصات",
+      "searchPlaceholder": "البحث باسم المريض أو التشخيص...",
+      "recordsFound": "سجل موجود",
+      "noRecords": "لم يتم العثور على سجلات فحوصات"
+    },
+    "ArticlesPage": {
+      "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المقال؟",
+      "deleteSuccess": "تم حذف المقال بنجاح.",
+      "deleteFail": "فشل في حذف المقال",
+      "headerTitle": "المنشورات والرؤى",
+      "headerDesc": "شارك المعرفة والأبحاث ونصائح الرعاية الصحية مع المجتمع",
+      "writeBtn": "كتابة مقال",
+      "createTitle": "إنشاء مقال جديد",
+      "medicalExpert": "خبير طبي",
+      "tag": "رعاية صحية",
+      "reviewBtn": "مراجعة",
+      "deletingBtn": "جاري الحذف...",
+      "deleteBtn": "حذف",
+      "reviewArticle": "مراجعة المقال",
+      "publishSuccess": "تم نشر المقال بنجاح!",
+      "publishFail": "فشل في رفع المقال",
+      "articleTitle": "عنوان المقال",
+      "titlePlaceholder": "مثال: ١٠ نصائح للحفاظ على صحة قلبك",
+      "content": "المحتوى",
+      "publishBtn": "نشر المقال"
     },
     "Preview": {
       "title": "فحص المريض"
@@ -495,5 +575,18 @@
         "6": "السبت"
       }
     }
+  },
+  "ActivePatient": {
+    "patientEntered": "دخول مريض",
+    "age": "العمر",
+    "gender": "الجنس",
+    "bloodType": "زمرة الدم",
+    "trustScore": "درجة الثقة",
+    "yrs": "سنة",
+    "activePreviewFound": "تم العثور على معاينة نشطة —",
+    "enteredAt": "وقت الدخول:",
+    "goToPreview": "الذهاب للمعاينة",
+    "ignore": "تجاهل",
+    "currentPreview": "المعاينة الحالية"
   }
 }

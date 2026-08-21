@@ -23,6 +23,7 @@ import {
   FiCalendar,
   FiPhone,
   FiRefreshCw,
+  FiImage,
 } from "react-icons/fi";
 import { useActivePatient } from "../../../doctorComponents/ActivePatientContext";
 import PreviewDetailsModal from "../../PreviewDetailsModal";
@@ -43,6 +44,15 @@ interface PatientDetails {
   permanent_medications: string | null;
   birth_date: string | null;
   discount_point: number;
+}
+
+interface MedicalAnalysis {
+  id: number;
+  patient_id: number;
+  preview_id: number;
+  medical_analysis_path: string;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 interface Preview {
@@ -85,6 +95,7 @@ export default function PatientPreviewPage() {
   const [loadingPatient, setLoadingPatient] = useState(true);
   const [patient, setPatient] = useState<PatientDetails | null>(null);
   const [previews, setPreviews] = useState<Preview[]>([]);
+  const [medicalAnalysis, setMedicalAnalysis] = useState<MedicalAnalysis[]>([]);
   const [noActivePatient, setNoActivePatient] = useState(false);
 
   /* ── Mode state ─────────────────────── */
@@ -115,7 +126,7 @@ export default function PatientPreviewPage() {
       try {
         const response = await axiosInstance.get("/api/getActivePatientInfo");
         if (response.data.status) {
-          const { patient: p, previews: pv } = response.data.data;
+          const { patient: p, previews: pv, medicalAnalysis: ma } = response.data.data;
           if (p) {
             setPatient({
               id: p.id,
@@ -135,6 +146,9 @@ export default function PatientPreviewPage() {
 
             const fetchedPreviews: Preview[] = pv || [];
             setPreviews(fetchedPreviews);
+
+            const fetchedAnalysis: MedicalAnalysis[] = ma || [];
+            setMedicalAnalysis(fetchedAnalysis);
 
             const incompletePreview = fetchedPreviews.find(
               (pr) => pr.diagnoseis_type === 0,
@@ -384,6 +398,52 @@ export default function PatientPreviewPage() {
                     </div>
                   )}
               </motion.div>
+
+              {/* ── Medical Analysis Section ── */}
+              {medicalAnalysis.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 }}
+                  className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6"
+                >
+                  <div className="mb-4">
+                    <h2 className="text-xs font-bold uppercase tracking-widest text-Primary flex items-center gap-2">
+                      <FiImage size={14} />
+                      {t('Doctor.Preview.medicalAnalysis', 'Medical Analysis')}
+                      <span className="px-1.5 py-0.5 rounded-full bg-Primary/10 text-Primary text-xs font-bold">
+                        {medicalAnalysis.length}
+                      </span>
+                    </h2>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {medicalAnalysis.map((analysis) => (
+                      <div key={analysis.id} className="relative group rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer hover:border-Primary transition-all">
+                        {/* 
+                          Using a standard img tag with process.env.NEXT_PUBLIC_API_URL or a generic URL for the src.
+                          Since we don't know the exact base URL, we will render it from process.env.NEXT_PUBLIC_API_URL if it's absolute, else relative.
+                        */}
+                        <img
+                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, '') || ''}/storage/${analysis.medical_analysis_path.replace(/^\//, '')}`}
+                          alt="Medical Analysis"
+                          className="w-full h-32 object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            // fallback if the path is actually fully qualified or doesn't need /storage/
+                            e.currentTarget.src = analysis.medical_analysis_path.startsWith('http')
+                              ? analysis.medical_analysis_path
+                              : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, '') || ''}${analysis.medical_analysis_path.startsWith('/') ? '' : '/'}${analysis.medical_analysis_path}`;
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                        <div className="absolute bottom-2 left-2 right-2 flex justify-between items-center text-xs text-white bg-black/50 backdrop-blur-md px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span>View Image</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
 
 
               {/* ── Form (shown after selection or "New Preview") ── */}

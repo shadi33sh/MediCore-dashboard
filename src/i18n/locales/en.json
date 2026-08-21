@@ -225,6 +225,30 @@
       "resendCode": "Resend Code",
       "success": "Verification successful",
       "error": "Invalid verification code"
+    },
+    "ForgotPassword": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your email address and we will send you a link to reset your password.",
+      "submitButton": "Send Reset Link",
+      "backToSignIn": "Back to Sign In",
+      "recoveryTitle1": "Password ",
+      "recoveryTitle2": "Recovery",
+      "recoveryDesc": "Don't worry, we'll help you get back to managing your patients and appointments.",
+      "success": "If this email exists, a confirmation link has been sent.",
+      "error": "Failed to send reset link. Please try again."
+    },
+    "ResetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password below.",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submitButton": "Reset Password",
+      "success": "Password has been reset successfully.",
+      "errorToken": "Invalid or expired token.",
+      "errorMatch": "Passwords do not match.",
+      "errorLength": "Password must be at least 8 characters.",
+      "backToForgot": "Back to Forgot Password",
+      "validating": "Validating token..."
     }
   },
   "Admin": {
@@ -238,15 +262,35 @@
         "canceledAppointments": "Canceled Appointments",
         "monthlyIncome": "Monthly Income",
         "upcomingAppointments": "Upcoming Appointments",
-        "visitsThisWeek": "Visits This Week"
+        "visitsThisWeek": "Visits This Week",
+        "activeDepartments": "Active Departments",
+        "todaysAppointments": "Today's Appointments"
+      },
+      "sections": {
+        "topRatedDoctors": "Top Rated Doctors",
+        "secretariesList": "Secretaries List",
+        "noDoctors": "No top doctors found",
+        "noSecretaries": "No active secretaries found"
+      },
+      "charts": {
+        "visitsOverview": "Patient Visits Overview",
+        "thisYear": "This Year",
+        "lastYear": "Last Year",
+        "appointmentsThisWeek": "Appointments This Week",
+        "appointmentsSubtitle": "Status breakdown of all booked sessions",
+        "completed": "Completed",
+        "pending": "Pending",
+        "canceled": "Canceled"
       },
       "buttons": {
         "createDoctor": "Create Doctor",
         "createSecretary": "Create Secretary",
-        "createDepartment": "Create Department"
+        "createDepartment": "Create Department",
+        "viewAll": "View All"
       }
     },
     "Sidebar": {
+      "Main": "Main",
       "homePage": "Home Page",
       "doctors": "Doctors",
       "departments": "Departments",
@@ -326,9 +370,17 @@
         "title": "Add New Department",
         "subtitle": "Create a new medical department in MediCore",
         "name": "Department Name",
+        "nameEn": "Name (English)",
+        "nameAr": "Name (Arabic)",
         "namePlaceholder": "e.g. Cardiology",
+        "nameEnPlaceholder": "e.g. Cardiology",
+        "nameArPlaceholder": "e.g. أمراض القلب",
         "description": "Description",
+        "descriptionEn": "Description (English)",
+        "descriptionAr": "Description (Arabic)",
         "descriptionPlaceholder": "Brief description of the department…",
+        "descriptionEnPlaceholder": "Brief description in English...",
+        "descriptionArPlaceholder": "Brief description in Arabic...",
         "imageLabel": "Department Image",
         "uploadText": "Click to upload image",
         "submitBtn": "Add Department"
@@ -346,6 +398,7 @@
     "Sidebar": {
       "Appointments": "Appointments",
       "Patients": "Patients",
+      "Previews": "All Checkups",
       "Articles": "Articles",
       "ChatBotAI": "Chat Bot AI",
       "Main": "Main",
@@ -386,6 +439,33 @@
       "result": "Result:",
       "viewFile": "View File"
     },
+    "PreviewsList": {
+      "title": "All Checkups",
+      "searchPlaceholder": "Search by patient name or diagnosis...",
+      "recordsFound": "records found",
+      "noRecords": "No checkup records found"
+    },
+    "ArticlesPage": {
+      "confirmDelete": "Are you sure you want to delete this article?",
+      "deleteSuccess": "Article deleted successfully.",
+      "deleteFail": "Failed to delete article",
+      "headerTitle": "Publications & Insights",
+      "headerDesc": "Share knowledge, research, and healthcare tips with the community",
+      "writeBtn": "Write an Article",
+      "createTitle": "Create New Article",
+      "medicalExpert": "Medical Expert",
+      "tag": "Health Care",
+      "reviewBtn": "Review",
+      "deletingBtn": "Deleting...",
+      "deleteBtn": "Delete",
+      "reviewArticle": "Review Article",
+      "publishSuccess": "Article published successfully!",
+      "publishFail": "Failed to upload article",
+      "articleTitle": "Article Title",
+      "titlePlaceholder": "e.g. 10 Tips to Keep Your Heart Healthy",
+      "content": "Content",
+      "publishBtn": "Publish Article"
+    },
     "Preview": {
       "title": "Patient Checkup"
     },
@@ -396,7 +476,7 @@
   "Secretary": {
     "Sidebar": {
       "Dashboard": "Dashboard",
-      "Schedules": "Schedules",
+      "Schedules": "Appointments",
       "Doctors": "Doctors",
       "Sections": "Sections",
       "ScheduleAppointment": "Schedule Appointment",
@@ -495,5 +575,18 @@
         "6": "Saturday"
       }
     }
+  },
+  "ActivePatient": {
+    "patientEntered": "Patient Entered",
+    "age": "Age",
+    "gender": "Gender",
+    "bloodType": "Blood Type",
+    "trustScore": "Trust Score",
+    "yrs": "yrs",
+    "activePreviewFound": "Active preview found —",
+    "enteredAt": "Entered at:",
+    "goToPreview": "Go to Preview",
+    "ignore": "Ignore",
+    "currentPreview": "Current Preview"
   }
 }

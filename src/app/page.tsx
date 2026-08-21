@@ -175,105 +175,39 @@ export default function MediCoreLanding() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-28 pb-16">
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden h-[97vh] flex flex-col  ">
         {/* Ambient background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute -top-10 -left-10 w-[28rem] h-[28rem] bg-Primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-[24rem] h-[24rem] bg-amber-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40rem] h-[40rem] bg-Primary/10 rounded-full blur-[100px]" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
-            {/* Copy */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-Primary/30 bg-Primary/5 text-Primary text-xs font-semibold uppercase tracking-wide mb-8">
-                <Zap className="w-3.5 h-3.5" />
-                {t('Landing.hero.tagline', 'Next-Generation Healthcare Management')}
-              </div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-16 z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-Primary/30 bg-Primary/5 text-Primary text-xs font-semibold uppercase tracking-wide mb-8">
+            <Zap className="w-3.5 h-3.5" />
+            {t('Landing.hero.tagline', 'Next-Generation Healthcare Management')}
+          </div>
 
-              <h1 className=" text-5xl md:text-6xl lg:text-[4.2rem] font-semibold leading-[1.05] mb-7 text-slate-900 dark:text-white">
-                {t('Landing.hero.title1', 'Revolutionize your')}
-                <span className="block italic text-Primary">{t('Landing.hero.title2', 'medical center')}</span>
-              </h1>
+          <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold mb-8 text-slate-900 dark:text-white lin">
+            {t('Landing.hero.title1', 'Revolutionize your')}{' '}
+            <span className="text-Primary ">{t('Landing.hero.title2', 'medical center')}</span>
+          </h1>
 
-              <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-xl leading-relaxed">
-                {t('Landing.hero.subtitle', 'Streamline operations, enhance patient care, and boost efficiency with a comprehensive management system built for Arabic-speaking healthcare facilities.')}
-              </p>
+          <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+            {t('Landing.hero.subtitle', 'Streamline operations, enhance patient care, and boost efficiency with a comprehensive management system built for Arabic-speaking healthcare facilities.')}
+          </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                <Link
-                  href="/signin"
-                  className="group bg-Primary hover:bg-Primary/90 text-white px-8 py-4 rounded-full text-base font-semibold shadow-lg shadow-Primary/20 transition-all duration-300 flex items-center"
-                >
-                  {t('Landing.hero.signIn', 'Sign in')}
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <button className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-Primary font-medium transition-colors">
-                  <span className="w-11 h-11 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center group-hover:border-Primary transition-colors">
-                    <Play className="w-4 h-4 ml-0.5" />
-                  </span>
-                  {t('Landing.hero.watchOverview', 'Watch overview')}
-                </button>
-              </div>
-            </div>
-
-            {/* Signature vitals panel */}
-            <div className="relative">
-              <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-900/10 border border-slate-200 dark:border-slate-800 p-7 relative overflow-hidden">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    {t('Landing.hero.todaysOverview', "Today's overview")}
-                  </span>
-                  <span className="flex items-center gap-1.5 text-xs font-medium text-Primary">
-                    <span className="w-1.5 h-1.5 rounded-full bg-Primary animate-pulse" />
-                    {t('Landing.hero.live', 'Live')}
-                  </span>
-                </div>
-
-                {/* ECG signature line */}
-                <svg viewBox="0 0 400 90" className="w-full h-20 mb-6" fill="none">
-                  <path
-                    d="M0 45 H120 L140 45 L155 15 L172 75 L188 30 L200 45 H400"
-                    className="stroke-Primary"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-Primary/8 p-4">
-                    <div className="text-2xl  font-semibold text-Primary">128</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      {t('Landing.hero.patientsToday', 'Patients today')}
-                    </div>
-                  </div>
-                  <div className="rounded-2xl bg-amber-400/10 p-4">
-                    <div className="text-2xl  font-semibold text-amber-500">94%</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      {t('Landing.hero.onTimeVisits', 'On-time visits')}
-                    </div>
-                  </div>
-                  <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4 col-span-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm font-semibold">{t('Landing.hero.drName', 'Dr. Layla Hassan')}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400">
-                          {t('Landing.hero.nextAppointment', 'Next: 2:30 PM · Room 4')}
-                        </div>
-                      </div>
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-Primary to-amber-400" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* floating chip */}
-              <div className="absolute -bottom-5 -left-5 bg-white dark:bg-slate-900 rounded-2xl shadow-xl px-4 py-3 flex items-center gap-2.5 border border-slate-200 dark:border-slate-800">
-                <Shield className="w-5 h-5 text-Primary" />
-                <span className="text-xs font-semibold">{t('Landing.hero.hipaa', 'HIPAA compliant')}</span>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <Link
+              href="/signin"
+              className="group bg-Primary hover:bg-Primary/90 text-white px-8 py-4 rounded-full text-base font-semibold shadow-lg shadow-Primary/20 transition-all duration-300 flex items-center"
+            >
+              {t('Landing.hero.signIn', 'Sign in')}
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <button className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-Primary font-medium transition-all px-8 py-4 rounded-full border border-slate-200 dark:border-slate-800 hover:border-Primary/30 hover:bg-slate-50 dark:hover:bg-slate-900">
+              <Play className="w-4 h-4 text-Primary" />
+              {t('Landing.hero.watchOverview', 'Watch overview')}
+            </button>
           </div>
         </div>
       </section>
@@ -287,7 +221,7 @@ export default function MediCoreLanding() {
             </span>
             <h2 className=" text-4xl md:text-5xl font-semibold mt-3 mb-6">
               {t('Landing.features.title1', 'Powerful features for')}
-              <span className="block italic text-Primary">{t('Landing.features.title2', 'modern healthcare')}</span>
+              <span className="block  text-Primary">{t('Landing.features.title2', 'modern healthcare')}</span>
             </h2>
             <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
               {t('Landing.features.desc', 'Everything you need to manage your medical center efficiently, from patient records to staff scheduling.')}
@@ -335,7 +269,7 @@ export default function MediCoreLanding() {
               </span>
               <h2 className=" text-4xl md:text-5xl font-semibold mt-3 mb-8">
                 {t('Landing.benefits.title1', 'Built for how clinics')}
-                <span className="block italic">{t('Landing.benefits.title2', 'actually run')}</span>
+                <span className="block ">{t('Landing.benefits.title2', 'actually run')}</span>
               </h2>
               <div className="space-y-5">
                 {[
@@ -437,8 +371,8 @@ export default function MediCoreLanding() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {[
-              t('Landing.cta.roles.doctor', 'Doctor'), 
-              t('Landing.cta.roles.secretary', 'Secretary'), 
+              t('Landing.cta.roles.doctor', 'Doctor'),
+              t('Landing.cta.roles.secretary', 'Secretary'),
               t('Landing.cta.roles.manager', 'Manager')
             ].map((role) => (
               <button

@@ -1,13 +1,7 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaBars,
-  FaTimes,
-} from 'react-icons/fa'
+
 import { IoSettings } from 'react-icons/io5'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -15,17 +9,22 @@ import {
   MdPeople,
   MdArticle,
   MdSmartToy,
+  MdHistory,
 } from 'react-icons/md'
 import SettingsModal from '../../../Components/SettingsModal'
 
 import { useTranslation } from "react-i18next"
+import { FaBars, FaChevronLeft, FaChevronRight, FaEdit, FaTimes } from 'react-icons/fa'
+import EditProfileModal from './EditProfileModal'
+import Link from 'next/link'
 
 export default function SideBar() {
   const { t } = useTranslation();
 
   const sidebarItems = [
-    { label: t("Doctor.Sidebar.Appointments", "Appointments"), icon: <MdCalendarToday size={18} />, href: '/doctor', badge: '3' },
+    { label: t("Doctor.Sidebar.Appointments", "Appointments"), icon: <MdCalendarToday size={18} />, href: '/doctor' },
     { label: t("Doctor.Sidebar.Patients", "Patients"), icon: <MdPeople size={18} />, href: '/doctor/patients' },
+    { label: t("Doctor.Sidebar.Previews", "All Checkups"), icon: <MdHistory size={18} />, href: '/doctor/previews' },
     { label: t("Doctor.Sidebar.Articles", "Articles"), icon: <MdArticle size={18} />, href: '/doctor/articles' },
     { label: t("Doctor.Sidebar.ChatBotAI", "Chat Bot AI"), icon: <MdSmartToy size={18} />, href: '/doctor/chatbot', pill: 'AI' },
   ]
@@ -33,6 +32,7 @@ export default function SideBar() {
   const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [showEditProfile, setShowEditProfile] = useState(false)
   const [user, setUser] = useState<any>(null)
 
   const pathname = usePathname()
@@ -42,10 +42,23 @@ export default function SideBar() {
   // ── Load user from localStorage ──────────────────────────────────────────
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('user')
-      if (stored) setUser(JSON.parse(stored))
+      const storedUser = localStorage.getItem('user')
+      if (storedUser) setUser(JSON.parse(storedUser))
     } catch { setUser(null) }
+
+    try {
+      const storedCollapsed = localStorage.getItem('docSidebarCollapsed')
+      if (storedCollapsed !== null) {
+        setCollapsed(JSON.parse(storedCollapsed))
+      }
+    } catch { }
   }, [])
+
+  const handleToggleCollapse = () => {
+    const newVal = !collapsed
+    setCollapsed(newVal)
+    localStorage.setItem('docSidebarCollapsed', JSON.stringify(newVal))
+  }
 
   // ── Responsive ───────────────────────────────────────────────────────────
   useEffect(() => {
@@ -109,18 +122,18 @@ export default function SideBar() {
       {/* ── Sidebar panel ── */}
       <motion.div
         ref={sidebarRef}
-        initial={false}
+        initial={{ width: !isMobile && collapsed ? 50 : 280 }}
         animate={{
           x: isMobile ? (mobileOpen ? 0 : '-100%') : 0,
-          width: !isMobile && collapsed ? 80 : 280,
+          width: !isMobile && collapsed ? 50 : 280,
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className={`fixed top-0 left-0 h-full z-50 md:z-auto bg-gray-100 dark:bg-gray-900 
+        className={`fixed top-0 left-0 max-w-[230px] w-[200px] h-full z-50 md:z-auto bg-gray-100 dark:bg-gray-900 
           ${isMobile ? 'w-[85%] max-w-sm' : ''} md:static overflow-hidden flex flex-col`}
       >
 
         {/* ── Logo row ── */}
-        <div className="flex items-center justify-between p-5">
+        <div className={`flex items-center p-5 ${collapsed && !isMobile ? 'justify-center flex-col gap-5' : 'justify-between'}`}>
           {!collapsed && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -136,7 +149,7 @@ export default function SideBar() {
           )}
 
           {collapsed && !isMobile && (
-            <div className="w-9 h-9 mx-auto">
+            <div className="w-9 h-9">
               <img className="w-full h-full" src="/images/Logo.png" alt="Logo" />
             </div>
           )}
@@ -146,12 +159,12 @@ export default function SideBar() {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setCollapsed(!collapsed)}
+                onClick={handleToggleCollapse}
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 {collapsed
-                  ? <FaChevronRight size={14} className="text-gray-500 dark:text-gray-400" />
-                  : <FaChevronLeft size={14} className="text-gray-500 dark:text-gray-400" />}
+                  ? <FaChevronRight size={14} className="text-gray-500 dark:text-gray-400 rtl:rotate-180" />
+                  : <FaChevronLeft size={14} className="text-gray-500 dark:text-gray-400 rtl:rotate-180" />}
               </motion.button>
             )}
             {isMobile && (
@@ -175,14 +188,18 @@ export default function SideBar() {
 
             {/* Avatar */}
             <div className="relative flex-shrink-0">
-              <div className="w-11 h-11 rounded-full bg-Primary/10 border-2 border-Primary flex items-center justify-center text-sm font-bold text-Primary">
-                {initials}
+              <div className="w-11 h-11 rounded-full bg-Primary/10 border-2 border-Primary flex items-center justify-center text-sm font-bold text-Primary overflow-hidden">
+                {user?.img_path || user?.avatar ? (
+                  <img src={user.img_path || user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  initials
+                )}
               </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-800" />
+              <span className="absolute bottom-0 right-0 rtl:right-auto rtl:left-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-800" />
             </div>
 
             {/* Info */}
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-gray-900 dark:text-white truncate leading-tight">
                 {fullName}
               </p>
@@ -191,14 +208,27 @@ export default function SideBar() {
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 truncate mt-0.5">{email}</p>
               )}
             </div>
+
+            {/* Edit Button */}
+            <button
+              onClick={() => setShowEditProfile(true)}
+              title={t('Doctor.Profile.Edit', 'Edit Profile')}
+              className="p-1.5 text-gray-400 hover:text-Primary bg-white dark:bg-gray-700/50 hover:bg-Primary/10 dark:hover:bg-Primary/20 rounded-lg transition-colors border border-gray-200 dark:border-gray-600 shadow-sm"
+            >
+              <FaEdit size={14} />
+            </button>
           </div>
         ) : (
           /* Collapsed mini-avatar */
           <div className="relative mx-auto mb-4 flex-shrink-0 w-fit">
-            <div className="w-9 h-9 rounded-full bg-Primary/10 border-2 border-Primary flex items-center justify-center text-xs font-bold text-Primary">
-              {initials}
+            <div className="w-9 h-9 rounded-full bg-Primary/10 border-2 border-Primary flex items-center justify-center text-xs font-bold text-Primary overflow-hidden">
+              {user?.img_path || user?.avatar ? (
+                <img src={user.img_path || user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
-            <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-900" />
+            <span className="absolute bottom-0 right-0 rtl:right-auto rtl:left-0 w-2 h-2 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-900" />
           </div>
         )}
 
@@ -255,7 +285,7 @@ export default function SideBar() {
                     </>
                   )}
                   {collapsed && item.badge && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
+                    <span className="absolute -top-1 -right-1 rtl:-right-auto rtl:-left-1 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
                       {item.badge}
                     </span>
                   )}
@@ -282,11 +312,19 @@ export default function SideBar() {
       </motion.div>
 
       {/* ── Settings Modal ── */}
-      <SettingsModal 
-        isOpen={showSettings} 
-        onClose={() => setShowSettings(false)} 
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
         compactSidebar={collapsed}
-        onToggleCompactSidebar={() => setCollapsed(!collapsed)}
+        onToggleCompactSidebar={handleToggleCollapse}
+      />
+
+      {/* ── Edit Profile Modal ── */}
+      <EditProfileModal
+        isOpen={showEditProfile}
+        onClose={() => setShowEditProfile(false)}
+        user={user}
+        onUpdate={setUser}
       />
     </>
   )

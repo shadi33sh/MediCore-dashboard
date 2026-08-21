@@ -1,11 +1,14 @@
 'use client'
 import React, {
-  createContext, useContext, useState, useEffect, useCallback, ReactNode,
+  createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef,
 } from 'react'
 import Pusher from 'pusher-js'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiUser, FiX, FiArrowRight, FiActivity } from 'react-icons/fi'
+import AuthAxios from '../../AuthAxios'
+import axiosInstance from '../../AuthAxios'
+import { useTranslation } from 'react-i18next'
 
 /* ─────────────────────── Types ─────────────────────── */
 
@@ -71,6 +74,8 @@ function PatientEnteredModal({
   onConfirm: () => void
   onIgnore: () => void
 }) {
+  const { t } = useTranslation()
+
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -103,7 +108,7 @@ function PatientEnteredModal({
               <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-900 animate-pulse" />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-Primary">Patient Entered</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-Primary">{t('ActivePatient.patientEntered', 'Patient Entered')}</p>
               <h3 className="text-lg font-extrabold text-gray-800 dark:text-white">
                 {data.patient.first_name} {data.patient.last_name}
               </h3>
@@ -113,10 +118,10 @@ function PatientEnteredModal({
           {/* Patient quick info */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             {[
-              { label: 'Age', value: `${data.patient.age} yrs` },
-              { label: 'Gender', value: data.patient.gender },
-              { label: 'Blood Type', value: data.patient.blood_type },
-              { label: 'Trust Score', value: `${data.patient.honest_score}%` },
+              { label: t('ActivePatient.age', 'Age'), value: `${data.patient.age} ${t('ActivePatient.yrs', 'yrs')}` },
+              { label: t('ActivePatient.gender', 'Gender'), value: data.patient.gender },
+              { label: t('ActivePatient.bloodType', 'Blood Type'), value: data.patient.blood_type },
+              { label: t('ActivePatient.trustScore', 'Trust Score'), value: `${data.patient.honest_score}%` },
             ].map(({ label, value }) => (
               <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl px-3 py-2">
                 <p className="text-xs text-gray-400">{label}</p>
@@ -130,7 +135,7 @@ function PatientEnteredModal({
             <div className="flex items-center gap-2 bg-Primary/5 border border-Primary/20 rounded-xl px-4 py-2.5 mb-5">
               <FiActivity size={14} className="text-Primary flex-shrink-0" />
               <p className="text-xs text-gray-600 dark:text-gray-300">
-                Active preview found —{' '}
+                {t('ActivePatient.activePreviewFound', 'Active preview found —')}{' '}
                 <span className="font-bold text-Primary">#{data.preview.id}</span>
                 {' '}({data.preview.status}, {data.preview.date})
               </p>
@@ -138,7 +143,7 @@ function PatientEnteredModal({
           )}
 
           {/* Timestamp */}
-          <p className="text-xs text-gray-400 mb-5">Entered at: {data.timestamp}</p>
+          <p className="text-xs text-gray-400 mb-5">{t('ActivePatient.enteredAt', 'Entered at:')} {data.timestamp}</p>
 
           {/* Actions */}
           <div className="flex gap-3">
@@ -149,7 +154,7 @@ function PatientEnteredModal({
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-Primary to-teal-500 text-white font-bold text-sm shadow-lg shadow-Primary/20"
             >
               <FiArrowRight size={15} />
-              Go to Preview
+              {t('ActivePatient.goToPreview', 'Go to Preview')}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.03 }}
@@ -158,7 +163,7 @@ function PatientEnteredModal({
               className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
             >
               <FiX size={14} />
-              Ignore
+              {t('ActivePatient.ignore', 'Ignore')}
             </motion.button>
           </div>
         </div>
@@ -170,6 +175,8 @@ function PatientEnteredModal({
 /* ─────────────────────── Floating Button ─────────────────────── */
 
 function FloatingCurrentPreview({ data, onClick }: { data: ActivePatientData; onClick: () => void }) {
+  const { t } = useTranslation()
+
   return (
     <motion.button
       initial={{ opacity: 0, x: 60 }}
@@ -178,13 +185,13 @@ function FloatingCurrentPreview({ data, onClick }: { data: ActivePatientData; on
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-[9998] flex items-center gap-2.5 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-Primary to-teal-500 text-white font-bold text-sm shadow-xl shadow-Primary/30 hover:shadow-2xl transition-all"
+      className="fixed bottom-6 ltr:right-6  rtl:left-6 z-[9998] flex items-center gap-2.5 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-Primary to-teal-500 text-white font-bold text-sm shadow-xl shadow-Primary/30 hover:shadow-2xl transition-all"
     >
       <span className="relative flex h-2.5 w-2.5">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white" />
       </span>
-      Current Preview
+      {t('ActivePatient.currentPreview', 'Current Preview')}
       <span className="ml-1 bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
         {data.patient.first_name}
       </span>
@@ -196,9 +203,13 @@ function FloatingCurrentPreview({ data, onClick }: { data: ActivePatientData; on
 
 export function ActivePatientProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
+  const pathname = usePathname()
   const [activeData, setActiveData] = useState<ActivePatientData | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [showFloating, setShowFloating] = useState(false)
+
+  const showModalRef = useRef(showModal)
+  useEffect(() => { showModalRef.current = showModal }, [showModal])
 
   const clearActiveData = useCallback(() => {
     // setActiveData(null)
@@ -206,6 +217,51 @@ export function ActivePatientProvider({ children }: { children: ReactNode }) {
   }, [])
 
   console.log(activeData)
+
+  /* ── API Polling — Fetch active patient every 30s ── */
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const fetchActivePatient = async () => {
+      if (pathname.includes('/doctor/preview/')) {
+        setShowFloating(false)
+        setShowModal(false)
+        return
+      }
+
+      try {
+        const res = await axiosInstance.get('/api/getActivePatientInfo')
+        console.log(res.data.data)
+
+        if (res.data.data?.patient) {
+          const p = res.data.data.patient
+          const pv = res.data.data.previews || []
+          const incompletePreview = pv.find((pr: any) => pr.diagnoseis_type === 0)
+
+          setActiveData({
+            patient: p,
+            preview: incompletePreview,
+            message: "Active patient fetched via polling",
+            timestamp: new Date().toLocaleTimeString(),
+          })
+
+          if (!showModalRef.current) {
+            setShowFloating(true)
+          }
+        } else {
+          setActiveData(null)
+          setShowFloating(false)
+        }
+      } catch (error) {
+        console.error('[Polling] Error fetching active patient info:', error)
+      }
+    }
+
+    fetchActivePatient()
+    const intervalId = setInterval(fetchActivePatient, 6000)
+
+    return () => clearInterval(intervalId)
+  }, [pathname])
 
   /* ── Pusher subscription — reads doctor_id from the stored user object ── */
   useEffect(() => {

@@ -3,6 +3,7 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiX, FiCalendar } from 'react-icons/fi'
+import { useTranslation } from 'react-i18next'
 
 type Article = {
   id: number
@@ -49,6 +50,8 @@ function renderArticleContent(body: string) {
 }
 
 export default function ArticleReviewModal({ article, isOpen, onClose }: ArticleReviewModalProps) {
+  const { t } = useTranslation()
+
   if (!article) return null
 
   const formattedDate = article.created_at ? new Date(article.created_at).toLocaleDateString(undefined, {
@@ -59,7 +62,7 @@ export default function ArticleReviewModal({ article, isOpen, onClose }: Article
     ? article.doctorName
     : article.doctor?.user
       ? `Dr. ${article.doctor.user.first_name} ${article.doctor.user.last_name}`
-      : 'Medical Expert'
+      : t('Doctor.ArticlesPage.medicalExpert', 'Medical Expert')
 
   return (
     <AnimatePresence>
@@ -81,7 +84,7 @@ export default function ArticleReviewModal({ article, isOpen, onClose }: Article
           >
             <div className="flex items-center justify-between gap-4 px-6 py-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-Primary font-semibold">Review Article</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-Primary font-semibold">{t('Doctor.ArticlesPage.reviewArticle', 'Review Article')}</p>
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{article.title}</h2>
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-2">

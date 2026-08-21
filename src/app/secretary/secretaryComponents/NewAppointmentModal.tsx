@@ -268,7 +268,7 @@ export default function NewAppointmentModal({
               onClick={(e) => e.stopPropagation()}
             >
               {/* ── Header ── */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex-shrink-0">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800/10/80 flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-2xl bg-Primary/10 flex items-center justify-center">
                     <FiCalendar className="text-Primary" size={17} />
@@ -293,7 +293,7 @@ export default function NewAppointmentModal({
                 <form className="space-y-5">
 
                   {/* ── Patient Section ── */}
-                  <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+                  <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/10 shadow-sm p-5">
                     <div className="flex items-center gap-4 mb-4">
                       <label className="flex items-center gap-3 cursor-pointer select-none">
                         <div className="relative">
@@ -347,7 +347,7 @@ export default function NewAppointmentModal({
                   </div>
 
                   {/* ── Department Pills ── */}
-                  <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+                  <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/10 shadow-sm p-5">
                     <div className="flex items-center gap-2 mb-3">
                       <MdOutlineLocalHospital className="text-Primary" size={18} />
                       <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('Secretary.NewAppointmentModal.selectDepartment', 'Select Department')}</p>
@@ -371,7 +371,7 @@ export default function NewAppointmentModal({
 
                   {/* ── Calendar ── */}
                   {selectedDepartmentID && (
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/10 shadow-sm p-5">
                       <div className="flex items-center gap-2 mb-4">
                         <FiCalendar className="text-Primary" size={16} />
                         <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{currentMonthLabel}</p>
@@ -430,7 +430,7 @@ export default function NewAppointmentModal({
 
                   {/* ── Time Slots ── */}
                   {doctorAppiontments && (
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800/10 shadow-sm p-5">
                       <div className="flex items-center gap-2 mb-4">
                         <FiClock className="text-Primary" size={16} />
                         <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('Secretary.NewAppointmentModal.chooseTimeSlot', 'Choose a Time Slot')}</p>
@@ -510,7 +510,7 @@ export default function NewAppointmentModal({
               </div>
 
               {/* ── Sticky footer ── */}
-              <div className="flex justify-end px-6 py-4 border-t border-gray-100 dark:border-gray-800 flex-shrink-0">
+              <div className="flex justify-end px-6 py-4 border-t border-gray-100 dark:border-gray-800/10 flex-shrink-0">
                 <motion.button
                   type="button"
                   onClick={() => setModal(true)}

@@ -134,7 +134,7 @@ function Page() {
           const docSection = doctor.section || "Unknown";
           const docRating = doctor.rating || 0;
           const docPhone = doctor.phone || "N/A";
-          const docImage = doctor.image;
+          const docImage = doctor.img_url;
           const docSchedules = doctor.schedules || [];
           const colors = sectionColors[docSection] ?? fallbackColor;
 

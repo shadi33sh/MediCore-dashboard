@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Props) {
-  const [formData, setFormData] = useState({ name: '', description: '', image: null as File | null });
+  const [formData, setFormData] = useState({ name_en: '', name_ar: '', description_en: '', description_ar: '', image: null as File | null });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
@@ -26,17 +26,17 @@ export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Pr
     setLoading(true);
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('name_en', formData.name);
-      formDataToSend.append('name_ar', formData.name);
-      formDataToSend.append('description_en', formData.description);
-      formDataToSend.append('description_ar', formData.description);
+      formDataToSend.append('name_en', formData.name_en);
+      formDataToSend.append('name_ar', formData.name_ar);
+      formDataToSend.append('description_en', formData.description_en);
+      formDataToSend.append('description_ar', formData.description_ar);
       if (formData.image) formDataToSend.append('image', formData.image);
 
       await axiosInstance.post('api/admin/department', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      setFormData({ name: '', description: '', image: null });
+      setFormData({ name_en: '', name_ar: '', description_en: '', description_ar: '', image: null });
       setPreviewImage(null);
       showAlert('success', t('Admin.Modals.departmentSuccess', 'Department added successfully'));
       if (onSuccess) onSuccess();
@@ -88,24 +88,45 @@ export default function CreateDepartmentModal({ isOpen, onClose, onSuccess }: Pr
               accentColor="from-cyan-500 to-teal-600"
             >
               <form onSubmit={handleSubmit} className="space-y-5">
-                <Field
-                  label={t('Admin.Modals.Department.name', 'Department Name')}
-                  icon={<FiTag size={15} />}
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder={t('Admin.Modals.Department.namePlaceholder', 'e.g. Cardiology')}
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <Field
+                    label={t('Admin.Modals.Department.nameEn', 'Name (English)')}
+                    icon={<FiTag size={15} />}
+                    type="text"
+                    name="name_en"
+                    value={formData.name_en}
+                    onChange={handleChange}
+                    placeholder={t('Admin.Modals.Department.nameEnPlaceholder', 'e.g. Cardiology')}
+                  />
+                  <Field
+                    label={t('Admin.Modals.Department.nameAr', 'Name (Arabic)')}
+                    icon={<FiTag size={15} />}
+                    type="text"
+                    name="name_ar"
+                    value={formData.name_ar}
+                    onChange={handleChange}
+                    placeholder={t('Admin.Modals.Department.nameArPlaceholder', 'امراض القلب')}
+                  />
+                </div>
 
-                <TextareaField
-                  label={t('Admin.Modals.Department.description', 'Description')}
-                  icon={<FiFileText size={15} />}
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder={t('Admin.Modals.Department.descriptionPlaceholder', 'Brief description of the department…')}
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <TextareaField
+                    label={t('Admin.Modals.Department.descriptionEn', 'Description (English)')}
+                    icon={<FiFileText size={15} />}
+                    name="description_en"
+                    value={formData.description_en}
+                    onChange={handleChange}
+                    placeholder={t('Admin.Modals.Department.descriptionEnPlaceholder', 'Brief description in English...')}
+                  />
+                  <TextareaField
+                    label={t('Admin.Modals.Department.descriptionAr', 'Description (Arabic)')}
+                    icon={<FiFileText size={15} />}
+                    name="description_ar"
+                    value={formData.description_ar}
+                    onChange={handleChange}
+                    placeholder={t('Admin.Modals.Department.descriptionArPlaceholder', 'وصف مختصر بالعربية...')}
+                  />
+                </div>
 
                 {/* Image upload */}
                 <div className="space-y-1.5">
